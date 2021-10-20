@@ -14,6 +14,40 @@ VALUES  (55, 22, 500, '2021-05-18'),
 		(33, 22, 750, '2021-05-21'),
 		(11, 44, 300, '2021-05-22')
 
-SELECT
+SELECT *
 FROM Transactions
-GR
+
+SELECT sender_id, SUM(amount) debit
+FROM Transactions
+GROUP BY sender_id
+ORDER BY sender_id
+
+
+SELECT receiver_id, SUM(amount) credit
+FROM Transactions
+GROUP BY receiver_id
+ORDER BY receiver_id
+
+SELECT  A.sender_id, B.receiver_id , SUM(DISTINCT B.amount)-SUM(DISTINCT A.amount)
+FROM Transactions A
+FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
+GROUP BY A.sender_id, B.receiver_id
+
+
+SELECT  COALESCE(SUM(DISTINCT B.amount),0)-COALESCE(SUM(DISTINCT A.amount),0) Net_change
+FROM Transactions A
+FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
+GROUP BY A.sender_id, B.receiver_id
+
+SELECT  COALESCE(A.sender_id , B.receiver_id) Account_id
+FROM Transactions A
+FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
+GROUP BY A.sender_id, B.receiver_id
+
+
+SELECT  COALESCE(A.sender_id , B.receiver_id) Account_id, COALESCE(SUM(DISTINCT B.amount),0)-COALESCE(SUM(DISTINCT A.amount),0) Net_change
+FROM Transactions A
+FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
+GROUP BY A.sender_id, B.receiver_id
+
+
