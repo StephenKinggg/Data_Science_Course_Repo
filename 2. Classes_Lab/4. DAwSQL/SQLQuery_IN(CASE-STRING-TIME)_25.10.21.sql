@@ -121,3 +121,138 @@ FROM sale.customer
 --Question:
 -- Ayný sipariþte hem Electric Bikes, hem Comfort Bicycles hem de Children Bicycles ürünlerini sipariþ veren müþterileri bulunuz.
 
+
+/*
+SELECT C.order_item, C.product_id
+FROM sale.order_item C,
+(SELECT A.category_id, A.category_name, B.product_id
+FROM product.category A , product.product B
+WHERE A.category_id=B.category_id
+AND A.category_name IN ('Electric Bikes' , 'Comfort Bicycles','Children Bicycles')))
+
+
+SELECT order_id, product_id
+FROM sale.order_item C, 
+(SELECT A.category_id, A.category_name, B.product_id
+FROM product.category A , product.product B
+WHERE A.category_id=B.category_id
+AND A.category_name IN ('Electric Bikes' , 'Comfort Bicycles','Children Bicycles'))
+ORDER BY C.order_id
+*/
+
+/*
+WITH T1 AS
+		(SELECT O.order_id, C.first_name, C.last_name
+		FROM sale.customer C, sale.orders O
+		WHERE C.customer_id=O.customer_id),
+
+WITH T2 AS
+		(SELECT I.order_id, I.product_id
+		FROM sale.order_item I, sale.orders O
+		WHERE I.order_id=O.order_id),
+	T3 AS
+		(SELECT A.category_id, A.category_name, B.product_id
+		FROM product.category A , product.product B
+		WHERE A.category_id=B.category_id
+		AND A.category_name IN ('Electric Bikes' , 'Comfort Bicycles','Children Bicycles'))
+SELECT T2.order_id, T3.product_id,T3.category_name
+FROM T2,T3
+WHERE T2.product_id=T3.product_id
+ORDER BY T2.order_id
+*/
+
+SELECT C.first_name, C.last_name
+FROM sale.orders S, sale.customer C,
+(SELECT order_id
+FROM sale.order_item O,
+(SELECT A.category_id, A.category_name, B.product_id
+FROM product.category A , product.product B
+WHERE A.category_id=B.category_id
+AND A.category_name='Electric Bikes') E
+WHERE O.product_id=E.product_id
+
+INTERSECT
+
+SELECT order_id
+FROM sale.order_item O,
+(SELECT A.category_id, A.category_name, B.product_id
+FROM product.category A , product.product B
+WHERE A.category_id=B.category_id
+AND A.category_name='Comfort Bicycles') C
+WHERE O.product_id=C.product_id
+
+INTERSECT
+
+SELECT order_id
+FROM sale.order_item O,
+(SELECT A.category_id, A.category_name, B.product_id
+FROM product.category A , product.product B
+WHERE A.category_id=B.category_id
+AND A.category_name='Children Bicycles') C1
+WHERE O.product_id=C1.product_id) ORD
+WHERE ORD.order_id=S.order_id
+AND S.customer_id=C.customer_id
+
+
+--DATE FUNCTIONS
+--Date Types
+
+
+CREATE TABLE t_date_time (
+	A_time time,
+	A_date date,
+	A_smalldatetime smalldatetime,
+	A_datetime datetime,
+	A_datetime2 datetime2,
+	A_datetimeoffset datetimeoffset
+	)
+
+SELECT *
+FROM t_date_time
+
+SELECT Getdate() as [now]
+
+INSERT t_date_time
+VALUES(Getdate(),Getdate(),Getdate(),Getdate(),Getdate(),Getdate())
+
+SELECT Getdate() as [now]
+
+
+SELECT CONVERT (varchar, GETDATE(), 6)
+
+--convert a varchar to date
+
+SELECT CONVERT (DATE, '25 Oct 21', 6)  -- Varcharý 6 numaralý sitil date dönüþtürdü.
+
+SELECT CONVERT (DATE, '25 Oct 21', 2)
+
+SELECT	A_date,
+		DATENAME(DW, A_date) [DAY],
+		DAY (A_date) [DAY2],
+		MONTH(A_date),
+		YEAR (A_date),
+		A_time,
+		DATEPART (NANOSECOND, A_time),
+		DATEPART (MONTH, A_date)
+FROM	t_date_time
+
+SELECT	A_date,
+		DATENAME(DW, A_date) [DAY]
+FROM	t_date_time
+
+SELECT	A_date,
+		DATENAME(WEEKDAY, A_date) [weekDAY]
+FROM	t_date_time
+
+SELECT	A_date,
+		MONTH(A_date) [month]
+FROM	t_date_time
+
+SELECT	A_date,
+	DATEPART (NANOSECOND, A_time)
+FROM	t_date_time
+
+
+SELECT	A_date,
+	DATEPART (WEEK, A_date)[week]
+FROM	t_date_time
