@@ -1,53 +1,49 @@
-DROP TABLE IF EXISTS Transactions
-CREATE TABLE Transactions 
-	(sender_id INT,
-	receiver_id INT NOT NULL,
-	amount INT NOT NULL,
-	transaction_date DATE)
+DROP TABLE IF EXISTS conver_rate
+CREATE TABLE conver_rate
+	(Visitor_ID INT NOT NULL,
+	Adv_ID VARCHAR(50),
+	Actionn VARCHAR(50)
+	)
 
-INSERT INTO Transactions (sender_id,receiver_id,amount,transaction_date )
-VALUES  (55, 22, 500, '2021-05-18'),
-		(11, 33, 350, '2021-05-19'),
-		(22, 11, 650, '2021-05-19'),
-		(22, 33, 900, '2021-05-20'),
-		(33, 11, 500, '2021-05-21'),
-		(33, 22, 750, '2021-05-21'),
-		(11, 44, 300, '2021-05-22')
+INSERT INTO conver_rate(Visitor_ID, Adv_ID, Actionn )
+VALUES  (1, 'A', 'Left'),
+		(2, 'A', 'Order'),
+		(3, 'B', 'Left'),
+		(4, 'A', 'Order'),
+		(5, 'A', 'Review'),
+		(6, 'A', 'Left'),
+		(7, 'B', 'Left'),
+		(8, 'B', 'Order'),
+		(9, 'B', 'Review'),
+		(10, 'A','Review')
+		
 
 SELECT *
-FROM Transactions
+FROM conver_rate
 
-SELECT sender_id, SUM(amount) debit
-FROM Transactions
-GROUP BY sender_id
-ORDER BY sender_id
-
-
-SELECT receiver_id, SUM(amount) credit
-FROM Transactions
-GROUP BY receiver_id
-ORDER BY receiver_id
-
-SELECT  A.sender_id, B.receiver_id , SUM(DISTINCT B.amount)-SUM(DISTINCT A.amount)
-FROM Transactions A
-FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
-GROUP BY A.sender_id, B.receiver_id
+SELECT Adv_ID, COUNT(Actionn) Total_Action
+FROM conver_rate
+GROUP BY Adv_ID
 
 
-SELECT  COALESCE(SUM(DISTINCT B.amount),0)-COALESCE(SUM(DISTINCT A.amount),0) Net_change
-FROM Transactions A
-FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
-GROUP BY A.sender_id, B.receiver_id
-
-SELECT  COALESCE(A.sender_id , B.receiver_id) Account_id
-FROM Transactions A
-FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
-GROUP BY A.sender_id, B.receiver_id
+SELECT adv_id,subtotal
+FROM (SELECT Adv_ID, actionn, COUNT(Actionn) subtotal
+FROM conver_rate
+GROUP BY Adv_ID, actionn) T1
+WHERE T1.actionn='Order'
 
 
-SELECT  COALESCE(A.sender_id , B.receiver_id) Account_id, COALESCE(SUM(DISTINCT B.amount),0)-COALESCE(SUM(DISTINCT A.amount),0) Net_change
-FROM Transactions A
-FULL OUTER JOIN Transactions B ON A.sender_id=B.receiver_id
-GROUP BY A.sender_id, B.receiver_id
+SELECT C1.adv_id Adv_Type, ((T2.subtotal*1.0) / (C1.Total_Action)*1.0) Conversion_Rate
+FROM (SELECT Adv_ID, COUNT(Actionn) Total_Action
+FROM conver_rate
+GROUP BY Adv_ID) C1 ,
+(SELECT adv_id,subtotal
+FROM (SELECT Adv_ID, actionn, COUNT (Actionn) subtotal
+FROM conver_rate
+GROUP BY Adv_ID, actionn) T1
+WHERE T1.actionn='Order') T2
+WHERE C1.adv_id=T2.Adv_ID
+
+
 
 
