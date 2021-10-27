@@ -71,7 +71,7 @@ WHERE order_date LIKE '%2018%'),
 T3 AS 
 (SELECT store_id, store_name
 FROM sale.store)
-SELECT TOP 1 T3.store_id, T3.store_name, SUM(T1.quantity*T1.list_price) Total_Order_Sales
+SELECT TOP 1 T3.store_id, T3.store_name, SUM(T1.list_price) Total_Order_Sales
 FROM T1,T2,T3
 WHERE T1.order_id=T2.order_id
 AND T2.store_id=T3.store_id
@@ -103,7 +103,7 @@ WHERE order_date LIKE '%2018%'),
 T3 AS 
 (SELECT staff_id, first_name, last_name
 FROM sale.staff)
-SELECT  TOP 1 T3.staff_id, T3.first_name,T3.last_name, SUM(T1.quantity*T1.list_price) Total_Order_Sales--T1.order_id, T1.quantity, T1.product_id,T2.order_date, T2.store_id, T3.store_name
+SELECT  TOP 1 T3.staff_id, T3.first_name,T3.last_name, SUM(T1.list_price) Total_Order_Sales--T1.order_id, T1.quantity, T1.product_id,T2.order_date, T2.store_id, T3.store_name
 FROM T1,T2,T3
 WHERE T1.order_id=T2.order_id
 AND T2.staff_id=T3.staff_id
