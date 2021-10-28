@@ -248,4 +248,30 @@ SELECT SUBSTRING('CHARACTER', 1,3)  --1 DEN ÝTÝBAREN 3 KARAKTER ALMAK ÝSTÝYORUM.
 
 SELECT SUBSTRING('CHARACTER', -1,3)  --ÝLK KARAKTER 1 DEN BAÞLAR ÖNCESÝ 0 VE -1 DÝYE DEVAM EDER.
 
+--LOWER
+
+SELECT LOWER ('CHARACTER')
+
+--UPPER
+
+SELECT UPPER(LEFT('character',1)) + LOWER(SUBSTRING('character',2,LEN('character'))) --characterin ilk harfini büyük yaptýk.
+
+--STRING_SPLIT
+--- Bir tablo oluþturduðundan kurallý yazýlýr.
+
+SELECT value 
+FROM string_split('ALÝ, MEHMET, AYÞE', ',') --virgülle ayrýlmýþ olanlarý sütun halinde yazar.
+
+--TRIM
+---LTRIM soldaki boþluklarý yok eder.
+---RTRIM saðdaki boþluklarý yok eder.
+
+SELECT TRIM('  CHA  RACTER  ') --ÝKÝ TARAFTAKÝ BOÞLUÐU ATAR ANCAK ARADAKÝLERE DOKUNMAZ.
+
+SELECT LTRIM('  CHARACTER  ') --SOLDAKÝ BOÞLUKLARI ATAR.
+
+SELECT RTRIM('  CHARACTER  ')
+
+SELECT TRIM('&' FROM '& CHARACTER %&') --HER ÝKÝ TARAFTAKÝ & ÝÞARETÝNÝ ATTI.
+
 
