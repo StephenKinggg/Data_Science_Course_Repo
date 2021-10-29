@@ -8,8 +8,17 @@
 
 --1. Join all the tables and create a new table called combined_table. (market_fact, cust_dimen, orders_dimen, prod_dimen, shipping_dimen)
 
-
-
+CREATE VIEW combined_table AS
+(SELECT A.Ord_id,A.Order_Date,A.Order_Priority,
+		B.Cust_id,B.Customer_Name,B.Customer_Segment,B.Province,B.Region,
+		C.Order_ID,C.Ship_id,C.Ship_Date,C.Ship_Mode,
+		D.Prod_id,D.Product_Category,D.Product_Sub_Category,
+		E.Discount,E.Order_Quantity,E.Product_Base_Margin,E.Sales
+FROM orders_dimen A, cust_dimen B, shipping_dimen C, prod_dimen D, market_fact E
+WHERE A.Ord_id=E.Ord_id
+AND E.Cust_id=B.Cust_id
+AND E.Ship_id=C.Ship_id
+AND E.Prod_id=D.Prod_id)
 
 
 --///////////////////////
@@ -17,8 +26,19 @@
 
 --2. Find the top 3 customers who have the maximum count of orders.
 
+SELECT *
+FROM market_fact
 
-
+WITH T1 AS
+(
+SELECT TOP 3 Cust_id, SUM(Order_Quantity) Total_Order_Q
+FROM market_fact
+GROUP BY Cust_id
+ORDER BY Total_Order_Q DESC
+)
+SELECT A.Cust_id, A.Customer_Name
+FROM cust_dimen A, T1
+WHERE T1.Cust_id=A.Cust_id
 
 
 --/////////////////////////////////

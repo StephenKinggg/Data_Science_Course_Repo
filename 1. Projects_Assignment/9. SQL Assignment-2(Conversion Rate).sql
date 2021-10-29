@@ -33,15 +33,14 @@ GROUP BY Adv_ID, actionn) T1
 WHERE T1.actionn='Order'
 
 
-SELECT C1.Adv_ID Adv_Type, ((T2.subtotal*1.0) / (C1.Total_Action)*1.0) Conversion_Rate
+SELECT C1.Adv_ID Adv_Type, CAST((T2.subtotal*1.0) / (C1.Total_Action)*1.0 AS DECIMAL(16,2)) Conversion_Rate
 FROM (SELECT Adv_ID, COUNT(Actionn) Total_Action
-FROM conver_rate
-GROUP BY Adv_ID) C1 ,
-(SELECT Adv_ID,subtotal
-FROM (SELECT Adv_ID, actionn, COUNT (Actionn) subtotal
-FROM conver_rate
-GROUP BY Adv_ID, actionn) T1
-WHERE T1.actionn='Order') T2
+	FROM conver_rate
+	GROUP BY Adv_ID) C1 ,(SELECT Adv_ID,subtotal
+						 FROM (SELECT Adv_ID, actionn, COUNT (Actionn) subtotal
+								FROM conver_rate
+								GROUP BY Adv_ID, actionn) T1
+						  WHERE T1.actionn='Order') T2
 WHERE C1.Adv_ID=T2.Adv_ID
 
 
