@@ -73,3 +73,55 @@ SELECT	order_id,
 			ELSE DATEDIFF(YY, order_date, GETDATE())
 		END
 FROM sale.orders
+
+--STRING
+
+SELECT LEN('Clarusway')
+
+SELECT UPPER('clarusway')
+
+SELECT LOWER('CLARUSWAY')
+
+SELECT SUBSTRING('Sun is shining', 4, 4)
+
+SELECT TRIM('ca' FROM 'cadillac')
+
+SELECT TRIM('123' FROM '123321312clarusway.com3212231') AS tr
+
+SELECT RTRIM('@','@@@clar@usway@@@@') AS rtr
+
+
+SELECT REPLACE('I do it my way.','do','did') AS song_name;
+
+SELECT INSTR('Reinvent yourself', 'yourself') AS start_position
+
+SELECT ('Tomorrow' | ' ' | 'Never' | ' ' | 'Dies')
+
+SELECT ('gustavo0@adventure-works.com')
+
+SELECT CHARINDEX('@','gustavo0@adventure-works.com')
+
+SELECT SUBSTRING('gustavo0@adventure-works.com',1,9)
+
+SELECT SUBSTRING('gustavo0@adventure-works.com',1,CHARINDEX('@','gustavo0@adventure-works.com')-1)
+
+SELECT *
+FROM sale.customer
+
+SELECT first_name, last_name, first_name+ ' '+ last_name as full_name
+FROM sale.customer
+
+SELECT 'name :' + first_name, 'surname:' + last_name full_name
+FROM sale.customer
+
+/*
+SELECT first_name, 
+       last_name,
+	   C.full_name,
+	   LEFT(C.full_name, CHARINDEX(' ', C.full_name)-1),
+	   RIGHT(C.full_name, 6)
+	   LEN(C.full_name)-CHARINDEX(' ',C. full_name)
+FROM sale.customer , (SELECT 'name :' + first_name, 'surname:' + last_name as full_name
+					FROM sale.customer) C
+*/
+
