@@ -93,9 +93,10 @@ SELECT *
 FROM combined_table
 ORDER BY DaysTakenForDelivery 
 
-SELECT A.customer_Name, A.Order_Date, A.Ship_Date, MAX(A.DaysTakenForDelivery)  
-FROM combined_table A, cust_dimen C
-WHERE C.Cust_id=A.Cust_id
+SELECT TOP 1 Max(A.DaysTakenForDelivery)  
+FROM combined_table A
+GROUP BY A.Cust_id
+
 
 
 
