@@ -25,19 +25,20 @@ SELECT * FROM T1
 
 
 DROP TABLE IF EXISTS combined_table
-CREATE TABLE combined_table
-  AS  
-(SELECT E.Ord_id,E.Cust_id,E.Ship_id,E.Prod_id, 
+CREATE TABLE combined_table AS
+
+SELECT * INTO combined_table
+FROM (SELECT E.Ord_id,E.Cust_id,E.Ship_id,E.Prod_id, 
 	   A.Order_Date,A.Order_Priority,
 	   B.Customer_Name,B.Customer_Segment,B.Province,B.Region,
 	   C.Ship_Date,C.Ship_Mode,
 	   D.Product_Category,D.Product_Sub_Category,
 	   E.Discount,E.Order_Quantity,E.Product_Base_Margin,E.Sales
-FROM market_fact E 
-JOIN orders_dimen A ON A.Ord_id=E.Ord_id
-JOIN cust_dimen B ON B.Cust_id=E.Cust_id
-JOIN shipping_dimen C ON C.Ship_id=E.Ship_id
-JOIN prod_dimen D ON D.Prod_id=E.Prod_id);
+	   FROM market_fact E 
+	   JOIN orders_dimen A ON A.Ord_id=E.Ord_id
+	   JOIN cust_dimen B ON B.Cust_id=E.Cust_id
+	   JOIN shipping_dimen C ON C.Ship_id=E.Ship_id
+	   JOIN prod_dimen D ON D.Prod_id=E.Prod_id) A
 
 
 SELECT *
@@ -84,16 +85,18 @@ FROM combined_table
 --4. Find the customer whose order took the maximum time to get delivered.
 --Use "MAX" or "TOP"
 
-WITH T1 AS
-(
-SELECT A.Ord_id, A.Ship_id, B.Order_Date, C.Ship_Date, A.Cust_id 
-FROM market_fact A, orders_dimen B, shipping_dimen C
-WHERE A.Ord_id=B.Ord_id
-AND A.Ship_id=C.Ship_id
-)
-SELECT *, DATEDIFF(Day,Order_Date, Ship_Date) DaysTakenForDelivery  
-FROM T1
-ORDER BY DaysTakenForDelivery DESC
+
+SELECT *
+FROM cust_dimen
+
+SELECT *
+FROM combined_table
+ORDER BY DaysTakenForDelivery 
+
+SELECT A.customer_Name, A.Order_Date, A.Ship_Date, MAX(A.DaysTakenForDelivery)  
+FROM combined_table A, cust_dimen C
+WHERE C.Cust_id=A.Cust_id
+
 
 
 
