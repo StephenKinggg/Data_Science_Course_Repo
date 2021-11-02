@@ -1,5 +1,12 @@
+-----///    2021-10-20 DAwSQL Session 3 (Organize Complex Queries)
+
+
+--- FROM THE LAST SESSION
+
 DROP TABLE IF EXISTS sale.sales_summary;
+
 --Summary Table
+
 SELECT	C.brand_name as Brand, D.category_name as Category, B.model_year as Model_Year,
 		ROUND (SUM (A.quantity * A.list_price * (1 - A.discount)), 0) total_sales_price
 INTO	sale.sales_summary
@@ -10,6 +17,12 @@ AND		B.category_id = D.category_id
 GROUP BY
 		C.brand_name, D.category_name, B.model_year
 
+
+-- ROLLUP
+
+--brand, category, model_year sütunlarý için Rollup kullanarak total sales hesaplamasý yapýn.
+--üç sütun için 4 farklý gruplama varyasyonu üretmek istiyoruz.
+
 SELECT *
 FROM sale.sales_summary
 
@@ -17,6 +30,19 @@ SELECT brand, Category, Model_Year, SUM(total_sales_price) total_price
 FROM sale.sales_summary
 GROUP BY
 		ROLLUP(brand, Category, Model_Year)
+
+--brand, category, model_year sütunlarý için cube kullanarak total sales hesaplamasý yapýn.
+
+--üç sütun için 8 farklý gruplama varyasyonu oluþturuyor	
+
+
+
+SELECT	brand, Category, Model_Year, SUM(total_sales_price) total_price
+FROM	sale.sales_summary
+GROUP BY
+		CUBE (brand, Category, Model_Year)
+ORDER BY
+		brand, Category
 
 
 --PIVOT 
@@ -34,6 +60,7 @@ SELECT Category, Model_Year, SUM(total_sales_price) Total_Prices
 FROM sale.sales_summary
 GROUP BY Category, Model_Year
 ORDER BY 1,2 --BÝRÝNCÝ VE ÝKÝNCÝ SÜTUNA GÖRE DEMEK SELECT TEKÝ. GROUP BY DA BU ÖZELLÝK YOK.
+
 
 SELECT Category, Model_Year, SUM(total_sales_price) Total_Prices
 FROM SALE.sales_summary -- BU KAYNAK TABLO. BUNA GÖRE toplam satýþ miktarýný hesaplamak istiyoruzb
@@ -77,9 +104,11 @@ PIVOT
 	) AS P1
 
 -- SUBQUERIES
+
 --order id lere göre toplam list price larý hesaplayalým.
 
 --Toplam list_price getirip her order_id nin yazýna yazdý.
+
 SELECT order_id,
 	(SELECT SUM(list_price) FROM sale.order_item B)
 FROM sale.order_item A
@@ -87,10 +116,11 @@ FROM sale.order_item A
 --Correlated Subquery
 
 SELECT DISTINCT order_id,
-	(SELECT SUM(list_price) FROM sale.order_item B WHERE A.order_id=B.order_id)
-FROM sale.order_item A
+		(SELECT SUM(list_price) FROM sale.order_item B WHERE A.order_id = B.order_id) SUM_PRICE
+FROM	sale.order_item A
 
 --Yukarýdakini GROUP BY ile yaptýk.
+
 SELECT order_id, SUM(list_price)
 FROM sale.order_item
 GROUP BY order_id
@@ -120,12 +150,18 @@ WHERE manager_id = (
 					WHERE first_name='Jane' AND last_name='Destrey'
 				)
 
+
+SELECT	first_name, last_name
+from	sale.staff
+where	manager_id in (select staff_id from sale.staff where first_name= 'Jane')
+
 /* Bazi arkadaslar goruyorum sorguda ‘Jane’ yerine ‘jane’ kullanmis. 
 Default olarak SQL Server case-insensitive oldugu icin problem olmuyor. 
 Ama database olustururken istersek ‘COLLATION’ ile case-sensitive bir 
 database olusturabiliriz. Bu da benden bir interview sorusu..*/
 
 --Multiple row Subqueries
+
 --Holbrok þehrinde oturan müþterilerin sipariþ tariherini listeleyin.
 
 
@@ -141,22 +177,22 @@ WHERE customer_id IN (SELECT customer_id
 					  WHERE city='Holbrook'
 					  )
 
-SELECT *
-FROM sale.customer A
-INNER JOIN 
 
---Abby Parks ile ayný tarihte sipariþ veren tüm müþterilerin listeleyelim.
+
+-- Abby	Parks isimli müþterinin alýþveriþ yaptýðý tarihte/tarihlerde alýþveriþ yapan tüm müþterileri listeleyin.
+-- Müþteri adý, soyadý ve sipariþ tarihi bilgilerini listeleyin.
 
 SELECT *
 FROM sale.orders A
 WHERE order_date IN (SELECT order_date
 					FROM sale.orders A
 					WHERE customer_id =
-								(SELECT order_date
+								(SELECT B.customer_id
 								 FROM sale.customer B
-								WHERE first_name='Abby' AND last_name='Parks'
+								WHERE B.first_name='Abby' AND B.last_name='Parks'
 					  ))
 --Abby nin sipariþ verdiði tarihler
+
 SELECT *
 FROM sale.customer A
 INNER JOIN sale.orders B ON A.customer_id=B.customer_id
@@ -173,6 +209,7 @@ ON A.order_date=B.order_date
 INNER JOIN sale.customer C ON A.customer_id=C.customer_id
 
 --2.çözüm
+
 select c.first_name, c.last_name
 from sale.orders o 
 join sale.customer c on o.customer_id=c.customer_id
@@ -183,7 +220,9 @@ where o.order_date in
 									select customer_id
 									from sale.customer 
 									where first_name='Abby' and last_name='Parks'))
+
 --3.çözüm
+
 SELECT B.first_name, B.last_name, A.order_date
 FROM sale.orders A 
 INNER JOIN sale.customer B 
@@ -204,10 +243,9 @@ WHERE A.order_date IN  (
 SELECT product_name, list_price
 FROM product.product
 WHERE list_price > ALL (
-					SELECT list_price
-					FROM product.product A
-					INNER JOIN product.category B ON A.category_id=B.category_id
-					WHERE B.category_name='Electric Bike')
+						SELECT	list_price
+						FROM	product.product A INNER JOIN product.category B ON A.category_id = B.category_id
+						WHERE	B.category_name = 'Electric Bikes')
 AND model_year = 2020
 					
 
@@ -215,16 +253,16 @@ AND model_year = 2020
 SELECT product_name, list_price
 FROM product.product
 WHERE list_price > ANY (
-					SELECT list_price
-					FROM product.product A
-					INNER JOIN product.category B ON A.category_id=B.category_id
-					WHERE B.category_name='Electric Bike')	
+						SELECT	list_price
+						FROM	product.product A INNER JOIN product.category B ON A.category_id = B.category_id
+						WHERE	B.category_name = 'Electric Bikes')	
 AND model_year = 2020
 
 /* EXIST ve NOT EXIST içteki tablonun ne döndürdüðü ile 
 deðil döndürüp döndürmediði ile ilgileniyor.*/
 
 ----Abby Parks isimli bir müþteri olduðundan dýþtaki query döner.
+
 SELECT B.first_name, B.last_name, A.order_date
 FROM sale.orders A 
 INNER JOIN sale.customer B 
@@ -237,6 +275,7 @@ WHERE EXISTS  (
 					   WHERE first_name = 'Abby' and last_name= 'Parks')
 
 --Abby Parks isimli bir müþteri olduðundan boþ döner.
+
 SELECT B.first_name, B.last_name, A.order_date
 FROM sale.orders A 
 INNER JOIN sale.customer B 
@@ -249,6 +288,7 @@ WHERE NOT EXISTS  (
 					   WHERE first_name = 'Abby' and last_name= 'Parks')
 
 --AbbAy Parks isimli bir müþteri varsa bu boþ döner ancak yoksa dýþtaki query nin hepsi gelir. 
+
 SELECT B.first_name, B.last_name, A.order_date
 FROM sale.orders A 
 INNER JOIN sale.customer B 

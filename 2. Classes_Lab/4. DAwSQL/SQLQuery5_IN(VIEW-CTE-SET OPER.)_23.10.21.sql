@@ -44,8 +44,8 @@ FROM NEW_PRODUCTS
 
 --CTE(Common Table Expression)
 
---Sharyn Hopkins isimli müþterinin son sipariþinden önce sipariþ vermiþ ve San Diego þehrinde ikamet eden müþterileri listeleyin.
-
+-- Sharyn Hopkins isimli müþterinin son sipariþinden önce sipariþ vermiþ 
+--ve San Diego þehrinde ikamet eden müþterileri listeleyin.
 
 SELECT *
 FROM sale.customer
@@ -130,6 +130,7 @@ SELECT *
 FROM T1
 
 --SET OPERATORS
+
 --Sacramento þehrindeki müþteriler ile Monroe þehrindeki müþterilerin soyisimlerini listeleyin.
 
 
@@ -209,10 +210,10 @@ FROM product.product A, product.brand B
 WHERE A.brand_id=B.brand_id
 AND A.model_year='2019'
 
---Question:
---2018,2019 VE 2020 yýllarýnýn tümünde sipariþi olan müþterilerin bilgilerini getiren bir liste.
+--Question: 2018,2019 VE 2020 yýllarýnýn tümünde sipariþi olan müþterilerin bilgilerini getiren bir liste.
 
 --Bu þekilde çözünce 3 kere customer tablosuna gittiðimizden dolayý bu alltakine göre daha uzun sürüyor.
+
 SELECT A.first_name, A.last_name
 FROM sale.customer A, sale.orders B  
 WHERE A.customer_id=B.customer_id
@@ -246,6 +247,7 @@ FROM sale.orders
 WHERE order_date BETWEEN '2020-01-01' AND '2020-12-31'
 
 -- Bu çözümde ise sadece customer tablosuna bir kez gidiyoruz. 
+
 SELECT first_name, last_name
 FROM sale.customer
 WHERE customer_id IN( SELECT customer_id

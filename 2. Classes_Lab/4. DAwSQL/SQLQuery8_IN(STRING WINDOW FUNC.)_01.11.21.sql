@@ -88,6 +88,10 @@ SELECT email, LEFT(email,CHARINDEX('.', email)-1 )
 FROM sale.customer
 
 --Question: Customer tablosundan contact bilgilerine bakarak eðerek tel bilgisi null deðilse telefon bilgisini, eðer null ise email bilgisini getir.
+--her müþteriye ulaþabileceðim telefon veya email bilgisini istiyorum.
+--Müþterinin telefon bilgisi varsa email bilgisine gerek yok.
+--telefon bilgisi yoksa email adresi iletiþim bilgisi olarak gelsin.
+--beklenen sütunlar: customer_id, first_name, last_name, contact
 
 SELECT *, COALESCE(phone, email) as contact
 FROM sale.customer
@@ -116,7 +120,7 @@ WHERE ISNUMERIC(SUBSTRING(street, 3,1)) =1
 
 --2.yöntem:
 
-SELECT street, SUBSTRING(street, 3,1)
+SELECT street, SUBSTRING(street, 3,1)  --3.karakterde olan sayýlarý getirdi bize.
 FROM sale.customer
 WHERE SUBSTRING(street, 3,1) LIKE '[0-9]'
 
@@ -124,13 +128,13 @@ WHERE SUBSTRING(street, 3,1) LIKE '[0-9]'
 
 SELECT street, SUBSTRING(street, 3,1)
 FROM sale.customer
-WHERE SUBSTRING(street, 3,1) LIKE '[a-z]'
+WHERE SUBSTRING(street, 3,1) NOT LIKE '[a-z]' --3.karakteri harf olmayanlarý yazdýrdý.
 
 --4.yöntem
 
 SELECT street, SUBSTRING(street, 3,1)
 FROM sale.customer
-WHERE SUBSTRING(street, 3,1) LIKE '[^0-9]'
+WHERE SUBSTRING(street, 3,1) NOT LIKE '[^0-9]' --3.karakteri rakam olmayanlarýn dýþýndakileri getirdi.
 
 --WINDOW FUNCTIONS
 
@@ -140,6 +144,8 @@ WHERE SUBSTRING(street, 3,1) LIKE '[^0-9]'
 SELECT product_id
 FROM product.stock
 
+
+--Using Group By
 SELECT product_id
 FROM product.stock
 GROUP BY product_id
@@ -180,3 +186,17 @@ FROM product.product
 SELECT DISTINCT category_id, MIN(list_price) OVER(PARTITION BY category_id)
 FROM product.product
 
+---window frames
+
+
+SELECT	category_id, product_id,
+		COUNT(*) OVER() NOTHING,
+		COUNT(*) OVER(PARTITION BY category_id) countofprod_by_cat,
+		COUNT(*) OVER(PARTITION BY category_id ORDER BY product_id) countofprod_by_cat_2,
+		COUNT(*) OVER(PARTITION BY category_id ORDER BY product_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) prev_with_current,
+		COUNT(*) OVER(PARTITION BY category_id ORDER BY product_id ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) current_with_following,
+		COUNT(*) OVER(PARTITION BY category_id ORDER BY product_id ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) whole_rows,
+		COUNT(*) OVER(PARTITION BY category_id ORDER BY product_id ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) specified_columns_1,
+		COUNT(*) OVER(PARTITION BY category_id  ROWS BETWEEN 2 PRECEDING AND 3 FOLLOWING) specified_columns_2
+FROM	product.product
+ORDER BY category_id, product_id

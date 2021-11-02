@@ -1,3 +1,10 @@
+---- 16.10.2021 Session-2 (Advanced Grouping Operations) ---------
+
+---Join
+
+-- Maðaza çalýþanlarýný yaptýklarý satýþlar ile birlikte listeleyin
+
+
 SELECT S.staff_id, S.first_name, S.last_name, O.*
 FROM sale.staff S
 INNER JOIN sale.orders O ON S.staff_id=O.staff_id

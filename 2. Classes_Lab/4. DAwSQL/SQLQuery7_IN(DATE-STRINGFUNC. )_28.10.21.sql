@@ -1,13 +1,15 @@
---28.10.21
+---------- 28.10.2021 DAwSQL Session-6 (Date & String Functions)
+
+--DATEDIFF
 
 SELECT *
 FROM t_date_time
 
 SELECT GETDATE()
 
-SELECT A_time, A_date, GETDATE()
-		DATEDIFF(MINUTE, A_time, GETDATE()) AS minute_diff
-		DATEDIFF(WEEK, A_TIME, '2011-11-30') AS week_diff
+SELECT A_time, A_date, GETDATE(),
+		DATEDIFF(MINUTE, A_time, GETDATE()) AS minute_diff,
+		DATEDIFF(WEEK, A_date, '2011-11-30') AS week_diff
 FROM t_date_time
 
 
@@ -22,6 +24,8 @@ FROM sale.orders
 
 SELECT ABS(DATEDIFF(DAY,order_date, shipped_date)) DATE_DIFF, order_date,shipped_date  -- küçük olaný yani yeni olaný önce yazmamýz gerekir.
 FROM sale.orders  
+
+----DATEADD
 
 SELECT ORDER_DATE,
 		DATEADD(YEAR, 5, order_date)  --order date 5 yýl ekledik. Bunlar tabloda bir deðiþiklik yapmýyor.
@@ -86,6 +90,7 @@ select  order_id,  DATEDIFF ( day, order_date, shipped_date) DATE_DIFF,
 from sale.orders
 
 --3.yöntem:
+
 select order_id, order_date, shipped_date, 
 case when shipped_date is null then 'Not Shipped'
 	when datediff(day, order_date, shipped_date) = 0 then 'Fast'
@@ -194,9 +199,16 @@ FROM T1
 GROUP BY day_name
 
 
+
+
 --Question: Aylara göre state lerin sipariþ sayýlarýný döndürelim.
 
---STRING
+-------String Functions
+
+--LEN
+
+SELECT LEN(1231354658)
+
 
 SELECT LEN('WELCOME')
 

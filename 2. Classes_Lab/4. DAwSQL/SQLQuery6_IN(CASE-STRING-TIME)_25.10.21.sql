@@ -1,5 +1,7 @@
---25.10.21 
+-------25.10.2021 Session 5 (Except, Case Ex., Date & String Functions)
+
 -- EXCEPT
+
 -- 2018 model bisiklet markalarýndan hangilerinin 2019 model bisikleti yoktur?
 
 
@@ -52,7 +54,9 @@ ON C.product_id=D.product_id
 
 
 --CASE Expression
+
 --Question:
+
 -- Order_Status isimli alandaki deðerlerin ne anlama geldiðini içeren yeni bir alan oluþturum.
 --1=Pending, 2=Processing, 3=Rejected, 4=Completed
 
@@ -117,6 +121,9 @@ SELECT email, substring(email,
         charindex('.',email,charindex('@',email,1)+1)-charindex('@',email,1)-1) as email_service_provider
 FROM sale.customer
 
+SELECT charindex('.',email,charindex('@',email,1)+1)
+FROM sale.customer
+
 
 --Question:
 -- Ayný sipariþte hem Electric Bikes, hem Comfort Bicycles hem de Children Bicycles ürünlerini sipariþ veren müþterileri bulunuz.
@@ -163,35 +170,64 @@ ORDER BY T2.order_id
 
 SELECT C.first_name, C.last_name
 FROM sale.orders S, sale.customer C,
-(SELECT order_id
-FROM sale.order_item O,
-(SELECT A.category_id, A.category_name, B.product_id
-FROM product.category A , product.product B
-WHERE A.category_id=B.category_id
-AND A.category_name='Electric Bikes') E
-WHERE O.product_id=E.product_id
+	(SELECT order_id
+	FROM sale.order_item O,
+		(SELECT A.category_id, A.category_name, B.product_id
+		FROM product.category A , product.product B
+		WHERE A.category_id=B.category_id
+		AND A.category_name='Electric Bikes') E
+	WHERE O.product_id=E.product_id
 
-INTERSECT
+		INTERSECT
 
-SELECT order_id
-FROM sale.order_item O,
-(SELECT A.category_id, A.category_name, B.product_id
-FROM product.category A , product.product B
-WHERE A.category_id=B.category_id
-AND A.category_name='Comfort Bicycles') C
-WHERE O.product_id=C.product_id
+	SELECT order_id
+	FROM sale.order_item O,
+		(SELECT A.category_id, A.category_name, B.product_id
+		FROM product.category A , product.product B
+		WHERE A.category_id=B.category_id
+		AND A.category_name='Comfort Bicycles') C
+	WHERE O.product_id=C.product_id
 
-INTERSECT
+		INTERSECT
 
-SELECT order_id
-FROM sale.order_item O,
-(SELECT A.category_id, A.category_name, B.product_id
-FROM product.category A , product.product B
-WHERE A.category_id=B.category_id
-AND A.category_name='Children Bicycles') C1
-WHERE O.product_id=C1.product_id) ORD
+	SELECT order_id
+	FROM sale.order_item O,
+		(SELECT A.category_id, A.category_name, B.product_id
+		FROM product.category A , product.product B
+		WHERE A.category_id=B.category_id
+		AND A.category_name='Children Bicycles') C1
+	WHERE O.product_id=C1.product_id) ORD
 WHERE ORD.order_id=S.order_id
 AND S.customer_id=C.customer_id
+
+--2.Yöntem:
+
+SELECT	A.first_name, A.last_name
+FROM	sales.customers A, sales.orders B
+WHERE	A.customer_id = B.customer_id AND
+		B.order_id IN	(
+						SELECT	A.order_id
+						FROM	sales.order_items A, production.products B
+						WHERE	A.product_id = B.product_id AND
+								B.category_id = (SELECT	category_id
+												FROM	production.categories
+												WHERE	category_name = 'Electric Bikes')
+						INTERSECT
+						SELECT	A.order_id
+						FROM	sales.order_items A, production.products B
+						WHERE	A.product_id = B.product_id AND
+								B.category_id = (SELECT	category_id
+												FROM	production.categories
+												WHERE	category_name = 'Comfort Bicycles')
+						INTERSECT
+						SELECT	A.order_id
+						FROM	sales.order_items A, production.products B
+						WHERE	A.product_id = B.product_id AND
+								B.category_id = (SELECT	category_id
+												FROM	production.categories
+												WHERE	category_name = 'Children Bicycles')
+						)
+
 
 
 --DATE FUNCTIONS
@@ -225,6 +261,8 @@ SELECT CONVERT (varchar, GETDATE(), 6)
 SELECT CONVERT (DATE, '25 Oct 21', 6)  -- Varcharý 6 numaralý sitil date dönüþtürdü.
 
 SELECT CONVERT (DATE, '25 Oct 21', 2)
+
+---Functions for return date or time parts
 
 SELECT	A_date,
 		DATENAME(DW, A_date) [DAY],
