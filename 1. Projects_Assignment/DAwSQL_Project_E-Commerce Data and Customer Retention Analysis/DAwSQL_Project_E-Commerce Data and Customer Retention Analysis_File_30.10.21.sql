@@ -6,24 +6,6 @@
 
 --1. Join all the tables and create a new table called combined_table. (market_fact, cust_dimen, orders_dimen, prod_dimen, shipping_dimen)
 
-WITH T1 AS
-(
-SELECT A.Ord_id,B.Cust_id,C.Ship_id,D.Prod_id, 
-	   A.Order_Date,A.Order_Priority,
-	   B.Customer_Name,B.Customer_Segment,B.Province,B.Region,
-	   C.Ship_Date,C.Ship_Mode,
-	   D.Product_Category,D.Product_Sub_Category,
-	   E.Discount,E.Order_Quantity,E.Product_Base_Margin,E.Sales
-FROM market_fact E 
-JOIN orders_dimen A ON A.Ord_id=E.Ord_id
-JOIN cust_dimen B ON E.Cust_id=B.Cust_id
-JOIN shipping_dimen C ON E.Ship_id=C.Ship_id
-JOIN prod_dimen D ON E.Prod_id=D.Prod_id
-)
-CREATE TABLE combined_table AS
-SELECT * FROM T1
-
-
 DROP TABLE IF EXISTS combined_table
 CREATE TABLE combined_table AS
 
@@ -86,31 +68,71 @@ FROM combined_table
 --Use "MAX" or "TOP"
 
 
-SELECT *
-FROM cust_dimen
 
-SELECT *
+SELECT Ord_id, Ship_id, Order_Priority, Order_Date, Ship_Date, DaysTakenForDelivery
 FROM combined_table
-ORDER BY DaysTakenForDelivery 
 
-SELECT TOP 1 Max(A.DaysTakenForDelivery)  
+
+SELECT TOP 1 A.Cust_id, A.Order_Date, A.Ship_Date, A.DaysTakenForDelivery
 FROM combined_table A
-GROUP BY A.Cust_id
-
-
-
-
+WHERE A.DaysTakenForDelivery = (SELECT MAX(B.DaysTakenForDelivery) DaysTakenForDelivery
+							   FROM combined_table B)
 
 
 --////////////////////////////////
 
 
-
 --5. Count the total number of unique customers in January and how many of them came back every month over the entire year in 2011
 --You can use such date functions and subqueries
 
+SELECT DISTINCT(A.Cust_id)
+FROM combined_table A
+WHERE DATENAME(MONTH, A.Order_Date)='January'
 
 
+
+
+SELECT COUNT(DISTINCT A.Cust_id) , DATENAME(MONTH, A.Order_Date)
+FROM combined_table A
+WHERE DATENAME(MONTH, A.Order_Date)='January'
+GROUP BY DATENAME(MONTH, A.Order_Date)
+
+
+SELECT *
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+
+
+
+
+
+/*
+SELECT	SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='February' THEN 1 END) FEBRUARY,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='March' THEN 1 END) MARCH,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='April' THEN 1 END) APRIL,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='May' THEN 1 END) MAY,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='June' THEN 1 END) JUNE,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='July' THEN 1 END) JULY,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='August' THEN 1 END) AUGUST,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='September' THEN 1 END) SEPTEMBER,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='October' THEN 1 END) OCTOER,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='November' THEN 1 END) NOVEMBER,
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='December' THEN 1 END) DECEMBER
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+*/
+
+SELECT COUNT(DISTINCT A.Cust_id) , DATENAME(MONTH, A.Order_Date)
+FROM combined_table A
+WHERE DATENAME(MONTH, A.Order_Date)='January'
+GROUP BY DATENAME(MONTH, A.Order_Date)
+
+
+SELECT COUNT(DISTINCT A.Cust_id), DATENAME(MONTH, A.Order_Date)
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+GROUP BY DATENAME(MONTH, A.Order_Date)
 
 
 --////////////////////////////////////////////
