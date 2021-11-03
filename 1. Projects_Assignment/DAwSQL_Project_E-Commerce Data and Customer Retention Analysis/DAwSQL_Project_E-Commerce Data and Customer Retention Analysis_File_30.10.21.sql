@@ -90,24 +90,32 @@ FROM combined_table A
 WHERE DATENAME(MONTH, A.Order_Date)='January'
 
 
+SELECT B.Cust_id
+FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+					FROM combined_table A
+					WHERE DATENAME(MONTH, A.Order_Date)='January'
+					GROUP BY A.Cust_id) B
+WHERE B.Cust_Unique=1
 
 
-SELECT COUNT(DISTINCT A.Cust_id) , DATENAME(MONTH, A.Order_Date)
+
+SELECT DATENAME(MONTH, A.Order_Date) [MONTH], COUNT(A.Cust_id) Num_Cust 
 FROM combined_table A
-WHERE DATENAME(MONTH, A.Order_Date)='January'
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+AND A.Cust_id IN (
+					SELECT B.Cust_id
+					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+							FROM combined_table A
+							WHERE DATENAME(MONTH, A.Order_Date)='January'
+							GROUP BY A.Cust_id) B
+					WHERE B.Cust_Unique=1
+				)
 GROUP BY DATENAME(MONTH, A.Order_Date)
 
 
-SELECT *
-FROM combined_table A
-WHERE DATENAME(YEAR, A.Order_Date)=2011
-
-
-
-
-
 /*
-SELECT	SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
+SELECT	COUNT(A.Cust_id), 
+		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
 		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='February' THEN 1 END) FEBRUARY,
 		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='March' THEN 1 END) MARCH,
 		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='April' THEN 1 END) APRIL,
@@ -121,18 +129,41 @@ SELECT	SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUAR
 		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='December' THEN 1 END) DECEMBER
 FROM combined_table A
 WHERE DATENAME(YEAR, A.Order_Date)=2011
+AND A.Cust_id IN (
+					SELECT B.Cust_id
+					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+							FROM combined_table A
+							WHERE DATENAME(MONTH, A.Order_Date)='January'
+							GROUP BY A.Cust_id) B
+					WHERE B.Cust_Unique=1
+				)
+GROUP BY A.Cust_id
 */
 
-SELECT COUNT(DISTINCT A.Cust_id) , DATENAME(MONTH, A.Order_Date)
-FROM combined_table A
-WHERE DATENAME(MONTH, A.Order_Date)='January'
-GROUP BY DATENAME(MONTH, A.Order_Date)
-
-
-SELECT COUNT(DISTINCT A.Cust_id), DATENAME(MONTH, A.Order_Date)
+SELECT	COUNT(A.Cust_id), 
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='February' THEN 1 END) FEBRUARY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='March' THEN 1 END) MARCH,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='April' THEN 1 END) APRIL,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='May' THEN 1 END) MAY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='June' THEN 1 END) JUNE,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='July' THEN 1 END) JULY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='August' THEN 1 END) AUGUST,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='September' THEN 1 END) SEPTEMBER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='October' THEN 1 END) OCTOER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='November' THEN 1 END) NOVEMBER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='December' THEN 1 END) DECEMBER
 FROM combined_table A
 WHERE DATENAME(YEAR, A.Order_Date)=2011
-GROUP BY DATENAME(MONTH, A.Order_Date)
+AND A.Cust_id IN (
+					SELECT B.Cust_id
+					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+							FROM combined_table A
+							WHERE DATENAME(MONTH, A.Order_Date)='January'
+							GROUP BY A.Cust_id) B
+					WHERE B.Cust_Unique=1
+				)
+GROUP BY A.Cust_id
 
 
 --////////////////////////////////////////////
