@@ -59,3 +59,103 @@ FROM product.product
 SELECT category_id, list_price,
 	   RANK() OVER(PARTITION BY category_id ORDER BY list_price) Rank_Number
 FROM product.product
+--RANK VE DENSE_RANK arasýndaki farka dikkat!!!!!!
+SELECT category_id, list_price,
+	   DENSE_RANK() OVER(PARTITION BY category_id ORDER BY list_price) Rank_Number
+FROM product.product
+
+
+--Question: Müþterilerin sipariþ ettikleri ürün sayýlarýnýn kümülatif daðýlýmýný yazýnýz.
+
+SELECT *
+FROM sale.orders
+
+SELECT *
+FROM sale.order_item
+
+WITH T1 AS
+(
+SELECT A.customer_id,
+	  SUM(quantity) prod_quantity  --müþterilerin sipariþlerinde verdiði toplam ürün sayýsý.
+FROM sale.orders A, sale.order_item B
+WHERE A.order_id=B.order_id
+GROUP BY A.customer_id
+)
+SELECT DISTINCT prod_quantity, ROUND(CUME_DIST() OVER(ORDER BY prod_quantity),2) CUM_DIST
+FROM T1
+ORDER BY 1
+
+
+WITH T1 AS
+(
+SELECT A.customer_id,
+	  SUM(quantity) prod_quantity  --müþterilerin sipariþlerinde verdiði toplam ürün sayýsý.
+FROM sale.orders A, sale.order_item B
+WHERE A.order_id=B.order_id
+GROUP BY A.customer_id
+)
+SELECT DISTINCT prod_quantity, ROUND(PERCENT_RANK() OVER(ORDER BY prod_quantity),2) CUM_DIST
+FROM T1
+ORDER BY 1
+
+--Question: Yukarýdaki tabloya göre müþterileri sipariþ verdikleri ürün sayýsýna göre 5 farklý gruba bölün.
+
+WITH T1 AS
+(
+SELECT A.customer_id,
+	  SUM(quantity) prod_quantity  --müþterilerin sipariþlerinde verdiði toplam ürün sayýsý.
+FROM sale.orders A, sale.order_item B
+WHERE A.order_id=B.order_id
+GROUP BY A.customer_id
+)
+SELECT DISTINCT customer_id, prod_quantity, NTILE(5) OVER(ORDER BY prod_quantity) CUM_DIST --Buradaki order by ise bize ntile func uygulanýrken bunun içinde sýralama yapar.
+FROM T1
+ORDER BY 1  --Buradaki order by en son karþýmýza gelen tabloyu sýralar.
+
+
+-- Question: Sipariþlerin ortalama ürün fiyatlarýný ve tüm sipariþlerin ortalama net tutarý yani indirim düþülmüþ halini yazýnýz.
+
+
+SELECT *, list_price*quantity*(1-discount)
+FROM sale.order_item
+
+SELECT DISTINCT order_id, 
+AVG(list_price) OVER(PARTITION BY order_id) Avg_Price,
+AVG(list_price*quantity*(1-discount)) OVER() Avg_Net_Amount  --Tüm tablonun ortalama net tutarlarýný getirdik.
+FROM sale.order_item
+
+
+SELECT DISTINCT order_id, 
+AVG(list_price) OVER(PARTITION BY order_id) Avg_Price,
+AVG(list_price*quantity*(1-discount)) OVER(PARTITION BY order_id) Avg_Net_Amount   --Burada ise sipariþlerin ortalama net tutarlarýný getirdik.
+FROM sale.order_item
+
+
+
+WITH T1 AS
+(
+SELECT DISTINCT order_id, 
+AVG(list_price) OVER(PARTITION BY order_id) Avg_Price,
+AVG(list_price*quantity*(1-discount)) OVER() Avg_Net_Amount   --Burada ise sipariþlerin ortalama net tutarlarýný getirdik.
+FROM sale.order_item
+)
+SELECT *
+FROM T1
+WHERE Avg_Price > Avg_Net_Amount 
+
+--Question : 2018 yýlýnda store larýn haftalýk kümülatif sipariþ sayýlarýný yazdýrýnýz
+
+SELECT *
+FROM sale.store
+
+SELECT *
+FROM sale.orders
+
+
+SELECT B.store_id, B.store_name, A.order_date, DATEPART(WEEK, order_date) week_of_year,
+		  COUNT(*) OVER(PARTITION BY B.store_id, DATEPART(WEEK, order_date))  cnt_order_per_week,
+		  COUNT(*) OVER(PARTITION BY B.store_id ORDER BY DATEPART(WEEK, order_date))
+FROM sale.orders A, sale.store B
+WHERE A.store_id=B.store_id
+AND DATEPART(YEAR,order_date)=2018  --YEAR(order_date)=2018 kullanýlabilir
+ORDER BY 1,3

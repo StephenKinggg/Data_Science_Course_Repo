@@ -252,10 +252,16 @@ FROM combined_table
 WHERE Prod_id ='Prod_14'
 )
 SELECT DISTINCT A.Cust_id,
-				SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id ORDER BY Prod_id) P11,
-FROM combined_table A, T1
+				SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id ORDER BY A.Prod_id) P11,
+				SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id ORDER BY C.Prod_id) P14,
+				SUM(A.Order_Quantity) OVER(PARTITION BY A.Prod_id) TOTAL_PRODUCT,
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN A.Prod_id ='Prod_11'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN C.Prod_id ='Prod_14'  THEN C.Order_Quantity END)/(SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id)))
+FROM combined_table A, T1, combined_table C
 WHERE A.Cust_id=T1.Cust_id
+AND C.Cust_id=T1.Cust_id
 AND A.Prod_id='Prod_11'
+AND C.Prod_id='Prod_14'
 
 
 
