@@ -85,11 +85,35 @@ WHERE A.DaysTakenForDelivery = (SELECT MAX(B.DaysTakenForDelivery) DaysTakenForD
 --5. Count the total number of unique customers in January and how many of them came back every month over the entire year in 2011
 --You can use such date functions and subqueries
 
-SELECT DISTINCT(A.Cust_id)
+
+SELECT DISTINCT(A.Cust_id)  --2011 yýlý Ocak ayýndaki Cust_id leri distinct olarak bulduk.
 FROM combined_table A
 WHERE DATENAME(MONTH, A.Order_Date)='January'
+AND DATENAME(YEAR, A.Order_Date)=2011
+
+SELECT COUNT(DISTINCT(A.Cust_id))  --Bunlarýn sayýsýný bulduk.
+FROM combined_table A
+WHERE DATENAME(MONTH, A.Order_Date)='January'
+AND DATENAME(YEAR, A.Order_Date)=2011
 
 
+SELECT DATEPART(MONTH, A.Order_Date) [MONTH], Count(DISTINCT A.Cust_id) Monthly_Num_Of_Cust
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+AND A.Cust_id IN (SELECT DISTINCT(A.Cust_id)
+		 FROM combined_table A
+		 WHERE DATENAME(MONTH, A.Order_Date)='JanuarY'
+		 AND DATENAME(YEAR, A.Order_Date)=2011 )
+GROUP BY DATEPART(MONTH, A.Order_Date)
+
+/*DATENAME ve DATEPART fonksiyonlarý belli bir tarih dilimindeki tarihlerin istenilen kýsýmlarýnýn geriye döndürülmesini saðlayan fonksiyonlardýr. Ýkisinin farkýna gelince, DATENAME fonksiyonu belli bir tarih içindeki aya ait ismi, güne ait ismi dönerken, DATEPART fonksiyonu ile ayýn veya günün sayýsal yani nümerik deðerini elde ederiz. Kullaným olarak syntax aþaðýdaki gibidir :
+
+DATENAME(tarihverisininhangikýsmý,tarihverisi)
+DATEPART(tarihverisininhangikýsmý,tarihverisi)
+*/
+
+----
+/*
 SELECT B.Cust_id
 FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
 					FROM combined_table A
@@ -98,7 +122,7 @@ FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
 WHERE B.Cust_Unique=1
 
 
-
+----
 SELECT DATENAME(MONTH, A.Order_Date) [MONTH], COUNT(A.Cust_id) Num_Cust 
 FROM combined_table A
 WHERE DATENAME(YEAR, A.Order_Date)=2011
@@ -112,33 +136,8 @@ AND A.Cust_id IN (
 				)
 GROUP BY DATENAME(MONTH, A.Order_Date)
 
-
+----
 /*
-SELECT	COUNT(A.Cust_id), 
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='February' THEN 1 END) FEBRUARY,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='March' THEN 1 END) MARCH,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='April' THEN 1 END) APRIL,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='May' THEN 1 END) MAY,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='June' THEN 1 END) JUNE,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='July' THEN 1 END) JULY,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='August' THEN 1 END) AUGUST,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='September' THEN 1 END) SEPTEMBER,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='October' THEN 1 END) OCTOER,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='November' THEN 1 END) NOVEMBER,
-		SUM(CASE WHEN DATENAME(MONTH, A.Order_Date) ='December' THEN 1 END) DECEMBER
-FROM combined_table A
-WHERE DATENAME(YEAR, A.Order_Date)=2011
-AND A.Cust_id IN (
-					SELECT B.Cust_id
-					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
-							FROM combined_table A
-							WHERE DATENAME(MONTH, A.Order_Date)='January'
-							GROUP BY A.Cust_id) B
-					WHERE B.Cust_Unique=1
-				)
-GROUP BY A.Cust_id
-*/
 
 SELECT	COUNT(A.Cust_id), 
 		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
@@ -165,6 +164,23 @@ AND A.Cust_id IN (
 				)
 GROUP BY A.Cust_id
 
+---
+select yr, [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]
+from
+(select datepart(month,minDate) mth, datepart(year,minDate) yr, count(*) cnt
+ from (select min(OrderDate) minDate, max(OrderDate) maxDate
+       from tblOrder
+       group by email) sq
+ where datediff(month, minDate, maxDate) > 0
+ group by datepart(month,minDate), datepart(year,minDate)) src
+PIVOT
+(max(cnt) 
+ for mth in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]) ) pvt
+
+ */
+
+
+
 
 --////////////////////////////////////////////
 
@@ -172,8 +188,21 @@ GROUP BY A.Cust_id
 --6. write a query to return for each user the time elapsed between the first purchasing and the third purchasing, 
 --in ascending order by Customer ID
 --Use "MIN" with Window Functions
+*/
 
+WITH T1 AS
+(
+SELECT Cust_id, Order_Date,
+DENSE_RANK() OVER(PARTITION BY Cust_id ORDER BY Order_Date) DENSE_NUMBER,
+MIN(Order_Date) OVER(PARTITION BY Cust_id ORDER BY Order_Date) FIRST_ORDER_DATE
+FROM combined_table 
+)
 
+SELECT DISTINCT A.Cust_id, T1.Order_Date, T1.DENSE_NUMBER, T1.FIRST_ORDER_DATE, DATEDIFF(DAY,T1.FIRST_ORDER_DATE, T1.Order_Date) DAYS_ELAPSED
+FROM combined_table A, T1
+WHERE A.Cust_id = T1.Cust_id
+AND T1.DENSE_NUMBER=3
+ORDER BY A.Cust_id
 
 
 
@@ -182,6 +211,39 @@ GROUP BY A.Cust_id
 --7. Write a query that returns customers who purchased both product 11 and product 14, 
 --as well as the ratio of these products to the total number of products purchased by the customer.
 --Use CASE Expression, CTE, CAST AND such Aggregate Functions
+
+
+WITH T1 AS
+(
+SELECT Cust_id
+FROM combined_table
+WHERE Prod_id ='Prod_11'
+
+INTERSECT
+
+SELECT Cust_id
+FROM combined_table
+WHERE Prod_id ='Prod_14'
+)
+SELECT DISTINCT A.Cust_id, 
+	   CASE WHEN A.cust_id=T1.Cust_id AND Prod_id ='Prod_11' THEN A.Order_Quantity END AS P11,
+	   CASE WHEN A.cust_id=T1.Cust_id AND Prod_id ='Prod_14' THEN A.Order_Quantity END AS P14,
+	   SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id) TOTAL_PRODUCT
+FROM combined_table A, T1
+WHERE A.Cust_id=T1.Cust_id
+
+
+
+
+
+
+
+
+
+GROUP BY Cust_id
+HAVING COUNT(DISTINCT CASE WHEN Prod_id='Prod_11' THEN 1 END) P11
+AND COUNT(DISTINCT CASE WHEN Prod_id in 'Prod_14' THEN Product_id END) P14
+
 
 
 
