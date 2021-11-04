@@ -36,3 +36,26 @@ SELECT A.staff_id, A.first_name, A.last_name, B.order_id, B.order_date,
 FROM sale.staff A, sale.orders B                 --order_id ye göre sýraladýðýmýzda bir önceki satýrýn order_date getiriyor ancak bu gelen satýr o kiþiye ait olmayabilir. Bütün sipariþleri bütün olarak deðerlendirdi.
 WHERE A.staff_id=B.staff_id                      --Bundan partition by yapmamýz gerekir.
 ORDER BY A.staff_id
+
+--Question: Herbir personelin bir sonraki satýþýnýn sipariþ tarihini yazdýrýnýz.
+
+SELECT B.order_id,A.staff_id, A.first_name, A.last_name, B.order_date,
+		LEAD(order_date) OVER(PARTITION BY A.staff_id ORDER BY order_id)  --order_date kullanmamýz uygun olmayabilir bunun yerine order_id ile bir sýralama yapmamýz gerekiyor.
+FROM sale.staff A, sale.orders B                 --order_id ye göre sýraladýðýmýzda bir önceki satýrýn order_date getiriyor ancak bu gelen satýr o kiþiye ait olmayabilir. Bütün sipariþleri bütün olarak deðerlendirdi.
+WHERE A.staff_id=B.staff_id                      --Bundan partition by yapmamýz gerekir.
+ORDER BY A.staff_id
+
+
+-- Analytic Numbering Functions
+
+--Question: herbir kategori içinbisikletLERÝN FÝYAT SIRALAMASINI yapýnýz.
+
+SELECT category_id, list_price,
+	   ROW_NUMBER() OVER(PARTITION BY category_id ORDER BY list_price)
+FROM product.product
+
+--Question: Ayný soruyu ayný fiyatlý bisikletler ayný sýra numarasýný alacak þekilde yapýnýz.
+
+SELECT category_id, list_price,
+	   RANK() OVER(PARTITION BY category_id ORDER BY list_price) Rank_Number
+FROM product.product

@@ -237,6 +237,8 @@ WHERE A.Cust_id=T1.Cust_id
 
 
 
+
+
 WITH T1 AS
 (
 SELECT Cust_id
