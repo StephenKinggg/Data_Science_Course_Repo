@@ -152,10 +152,29 @@ SELECT *
 FROM sale.orders
 
 
-SELECT B.store_id, B.store_name, A.order_date, DATEPART(WEEK, order_date) week_of_year,
+SELECT DISTINCT B.store_id, B.store_name, DATEPART(WEEK, order_date) week_of_year, --A.order_date kullanmýþtýk bu durumda tekrar getiriyor. DISTINCT kullaným farkýna dikkat edelim.
 		  COUNT(*) OVER(PARTITION BY B.store_id, DATEPART(WEEK, order_date))  cnt_order_per_week,
-		  COUNT(*) OVER(PARTITION BY B.store_id ORDER BY DATEPART(WEEK, order_date))
+		  COUNT(*) OVER(PARTITION BY B.store_id ORDER BY DATEPART(WEEK, order_date))  cnt_cumulative
 FROM sale.orders A, sale.store B
 WHERE A.store_id=B.store_id
 AND DATEPART(YEAR,order_date)=2018  --YEAR(order_date)=2018 kullanýlabilir
-ORDER BY 1,3
+ORDER BY 1
+
+
+--Question: 2018-03-12' ve '2018-04-12' arasýnda satýlan ürün sayýsýnýn 7 günlük hareketli ortalamasýný hesaplayýn. Yani satýra bakacak ve kendisi ve öncesi 6 günün ortalamasýný hesaplayacak.
+
+SELECT *
+FROM sale.orders
+
+
+SELECT *
+FROM sale.order_item
+
+SELECT A.order_date, A.Sum_Qua, AVG(A.Sum_Qua) OVER(ORDER BY A.order_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS Mov_7_days
+FROM
+(SELECT DISTINCT O.order_date, SUM(T.quantity) OVER(PARTITION BY O.Order_date) AS Sum_Qua
+FROM sale.orders O 
+JOIN sale.order_item T ON O.order_id=T.order_id
+WHERE O.order_date BETWEEN '2018-03-12' AND '2018-04-12') A
+
+

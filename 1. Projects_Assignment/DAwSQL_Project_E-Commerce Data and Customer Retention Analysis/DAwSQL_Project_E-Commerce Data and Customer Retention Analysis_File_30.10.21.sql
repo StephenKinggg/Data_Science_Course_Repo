@@ -225,19 +225,18 @@ SELECT Cust_id
 FROM combined_table
 WHERE Prod_id ='Prod_14'
 )
-SELECT DISTINCT A.Cust_id, 
-	   CASE WHEN Prod_id = 'Prod_11' THEN A.Order_Quantity  END AS P11,
-	   CASE WHEN Prod_id ='Prod_14' THEN A.Order_Quantity END AS P14,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id) TOTAL_PRODUCT,
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_11'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_14'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id)))
+SELECT DISTINCT A.Cust_id,
+	    SUM(CASE WHEN A.Prod_id='Prod_11' THEN A.Order_Quantity ELSE 0 END) AS P11,
+		SUM(CASE WHEN A.Prod_id='Prod_14' THEN A.Order_Quantity ELSE 0 END) AS P14,
+		SUM(A.Order_Quantity) AS TOTAL,
+		CONVERT(NUMERIC(3,2), 1.0 * (SUM(CASE WHEN A.Prod_id='Prod_11' THEN A.Order_Quantity ELSE 0 END))/(SUM(A.Order_Quantity))) Ratio_P11,
+		CONVERT(NUMERIC(3,2), 1.0 * (SUM(CASE WHEN A.Prod_id='Prod_14' THEN A.Order_Quantity ELSE 0 END))/(SUM(A.Order_Quantity))) Ratio_P14
 FROM combined_table A, T1
 WHERE A.Cust_id=T1.Cust_id
+GROUP BY A.Cust_id
 
 
-
-
-
+/* ALTTAKÝ SORUN GROUP BY YAPMAMIÞ OLMAK. 
 
 WITH T1 AS
 (
@@ -254,49 +253,15 @@ WHERE Prod_id ='Prod_14'
 SELECT DISTINCT A.Cust_id,
 				SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id ORDER BY A.Prod_id) P11,
 				SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id ORDER BY C.Prod_id) P14,
-				SUM(A.Order_Quantity) OVER(PARTITION BY A.Prod_id) TOTAL_PRODUCT,
-				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN A.Prod_id ='Prod_11'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
-				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN C.Prod_id ='Prod_14'  THEN C.Order_Quantity END)/(SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id)))
+			
+				SUM(C.Order_Quantity) OVER(PARTITION BY T1.Cust_id ORDER BY A.Prod_id ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) TOTAL_PRODUCT,
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN A.Prod_id ='Prod_11' THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN C.Prod_id ='Prod_14' THEN C.Order_Quantity END)/(SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id)))
 FROM combined_table A, T1, combined_table C
-WHERE A.Cust_id=T1.Cust_id
+WHERE A.Cust_id=C.Cust_id
 AND C.Cust_id=T1.Cust_id
 AND A.Prod_id='Prod_11'
 AND C.Prod_id='Prod_14'
-
-
-
-
-/*SELECT DISTINCT A.Cust_id, 
-	   CASE WHEN Prod_id ='Prod_11'  THEN A.Order_Quantity END AS P11,
-	   CASE WHEN Prod_id ='Prod_14' THEN A.Order_Quantity END AS P14,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY CASE WHEN Prod_id ='Prod_11'  THEN A.Order_Quantity END) P11,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY CASE WHEN Prod_id ='Prod_14'  THEN A.Order_Quantity END) P14,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id) TOTAL_PRODUCT,
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_11'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_14'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id)))
-FROM combined_table A, T1
-WHERE A.Cust_id=T1.Cust_id
-
-SELECT DISTINCT A.Cust_id, 
-	   SUM(A.Order_Quantity) OVER(PARTITION BY CASE WHEN Prod_id ='Prod_11' THEN A.Cust_id END) P11,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY CASE WHEN Prod_id ='Prod_14' THEN A.Cust_id END) P14,
-	   SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id) TOTAL_PRODUCT,
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_11'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
-	   CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN Prod_id ='Prod_14'  THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id)))
-FROM combined_table A, T1
-WHERE A.Cust_id=T1.Cust_id*/
-
-
-
-
-
-
-
-GROUP BY Cust_id
-HAVING COUNT(DISTINCT CASE WHEN Prod_id='Prod_11' THEN 1 END) P11
-AND COUNT(DISTINCT CASE WHEN Prod_id in 'Prod_14' THEN Product_id END) P14
-
-
 
 
 
@@ -309,9 +274,14 @@ AND COUNT(DISTINCT CASE WHEN Prod_id in 'Prod_14' THEN Product_id END) P14
 
 
 --1. Create a view that keeps visit logs of customers on a monthly basis. (For each log, three field is kept: Cust_id, Year, Month)
---Use such date functions. Don't forget to call up columns you might need later.
+--Use such date functions. Don't forget to call up columns you might need later.*/
 
+CREATE VIEW Cust_Log AS
+SELECT Cust_id, DATEPART(YEAR,Order_Date) [Year], DATEPART(MONTH,Order_Date) [Month]
+FROM combined_table
 
+SELECT DISTINCT cust_id, [Year], [Month]
+FROM Cust_Log
 
 
 --//////////////////////////////////
@@ -321,6 +291,19 @@ AND COUNT(DISTINCT CASE WHEN Prod_id in 'Prod_14' THEN Product_id END) P14
 --Don't forget to call up columns you might need later.
 
 
+SELECT cust_id, [Year],[Month]
+FROM Cust_Log
+ORDER BY Cust_id, [YEAR]
+
+
+SELECT DISTINCT cust_id, [Year], [Month],
+		COUNT([Month]) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log
+FROM Cust_Log
+
+--Eðer sadece aya göre gruplandýrýrsak ayný cust_id içindeki ayný ay sayýlarýný yazýyor.
+--Eðer sadece yýla göre gruplandýrýrsak ayný cust_id içindeki ayný yýl sayýlarýný yazýyor.
+--Eðer sadece cus_id göre gruplandýrýrsak ayný aylara göre kümülatif bir toplam veriyor.
+--Bundan dolayý 
 
 
 
