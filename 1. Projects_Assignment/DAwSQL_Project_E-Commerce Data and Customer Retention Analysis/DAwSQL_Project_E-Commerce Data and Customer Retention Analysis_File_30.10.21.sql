@@ -295,7 +295,7 @@ SELECT cust_id, [Year],[Month]
 FROM Cust_Log
 ORDER BY Cust_id, [YEAR]
 
-
+CREATE VIEW Monthly_Visit AS
 SELECT DISTINCT cust_id, [Year], [Month],
 		COUNT([Month]) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log
 FROM Cust_Log
@@ -307,7 +307,6 @@ FROM Cust_Log
 
 
 
-
 --//////////////////////////////////
 
 
@@ -315,6 +314,9 @@ FROM Cust_Log
 --You can number the months with "DENSE_RANK" function.
 --then create a new column for each month showing the next month using the numbering you have made. (use "LEAD" function.)
 --Don't forget to call up columns you might need later.
+
+
+
 
 
 
