@@ -411,13 +411,13 @@ FROM Label_Gap
 --1. Find the number of customers retained month-wise. (You can use time gaps)
 --Use Time Gaps
 
-
+CREATE VIEW Retention_Month_Val AS
 SELECT * ,
 	COUNT(Cust_id) OVER(PARTITION BY [Year],Current_Month,Next_Month_Visit) Retention_Month
 FROM(SELECT *
 	FROM Time_Gaps
 	WHERE Time_Gap=1) A
-ORDER BY Cust_id
+--ORDER BY Cust_id
 
 
 --//////////////////////
@@ -436,22 +436,35 @@ ORDER BY Cust_id
 SELECT *
 FROM Time_Gaps
 
-SELECT  [Year],[Month],Count(Cust_id) 
+SELECT *
+FROM Label_Gap
+
+SELECT *
+FROM Next_Month_Visit
+
+SELECT *
+FROM Retention_Month_Val
+
+
+SELECT B.[Year],B.[Month], B.Current_Month,B.Count_Month_Previous,B.Count_Month_Next, C.Next_Month_Visit--, (1.0*Count_Month_Next/Count_Month_Previous)/100
+FROM (
+SELECT *,
+		LAG(Count_Cust,1) OVER(ORDER BY [Year],[Month]) Count_Month_Previous,
+		LEAD(Count_Cust,1) OVER(ORDER BY [Year],[Month]) Count_Month_Next
+FROM (		
+SELECT  [Year],[Month],Count(Cust_id) Count_Cust,
+		DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
 FROM   Time_Gaps
 GROUP BY [Year],[Month]
-ORDER BY [Year],[Month]
+) A
+) B , Next_Month_Visit C
+WHERE B.Current_Month=C.Current_Month
+ORDER BY B.Current_Month
 
 
-SELECT  Cust_id,[Year],[Month]
-FROM   Time_Gaps
-GROUP BY Cust_id,[Year],[Month]
-ORDER BY Cust_id,[Year],[Month]
 
 
-SELECT cust_id,
-           visit_month lead(visit_month, 1) over (partition BY cust_id ORDER BY cust_id, visit_month)
-FROM Time_Gaps
-
+/*
 CREATE VIEW Cust_Types AS
 SELECT *,
 		CASE
@@ -461,8 +474,10 @@ SELECT *,
        END AS cust_type
 FROM Time_Gaps
 
+
 SELECT *
 FROM Cust_Types
+
 
 SELECT Current_Month,
 	   COUNT(cust_id)
