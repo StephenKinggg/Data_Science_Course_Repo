@@ -296,9 +296,19 @@ FROM Cust_Log
 ORDER BY Cust_id, [YEAR]
 
 CREATE VIEW Monthly_Visit AS
-SELECT DISTINCT cust_id, [Year], [Month],
-		COUNT([Month]) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log
+SELECT DISTINCT Cust_id, [Year], [Month],
+		COUNT(*) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log  --COUNT([Month]) ile COUNT(*) burada ayný sonucu veriyor.
 FROM Cust_Log
+
+
+--2.yöntem:
+
+CREATE VIEW Monthly_Visit AS
+SELECT  Cust_id, [Year],[Month], COUNT(*) Num_of_Log
+FROM    Cust_Log
+GROUP BY Cust_id,[Year],[Month]
+
+
 
 --Eðer sadece aya göre gruplandýrýrsak ayný cust_id içindeki ayný ay sayýlarýný yazýyor.
 --Eðer sadece yýla göre gruplandýrýrsak ayný cust_id içindeki ayný yýl sayýlarýný yazýyor.
@@ -316,8 +326,39 @@ FROM Cust_Log
 --Don't forget to call up columns you might need later.
 
 
+SELECT *
+FROM Monthly_Visit
+ORDER BY 1,2,3,4
+---
+
+SELECT  *,
+        DENSE_RANK () OVER (ORDER BY [YEAR] , [MONTH]) CURRENT_MONTH
+FROM    Monthly_Visit
+ORDER BY 1,2,3,4
+---
+
+CREATE VIEW Next_Month_Visit AS
+SELECT *, 
+		LEAD(Current_Month,1) OVER(PARTITION BY Cust_id ORDER BY Current_Month)  Next_Month_Visit
+FROM (
+		SELECT *,
+				DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
+		FROM Monthly_Visit
+) A
 
 
+
+--2.Yöntem:
+
+CREATE VIEW Next_Month_Visit AS
+SELECT *, 
+		LEAD(Current_Month,1) OVER(PARTITION BY Cust_id ORDER BY Current_Month) AS Next_Výsýt_Month
+FROM(
+SELECT DISTINCT Cust_id, [Year], [Month],
+		COUNT([Month]) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log,
+		DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
+FROM Cust_Log
+) A
 
 
 --/////////////////////////////////
@@ -328,10 +369,12 @@ FROM Cust_Log
 --Don't forget to call up columns you might need later.
 
 
+CREATE VIEW Time_Gaps AS
+SELECT *, (Next_Month_Visit-Current_Month) Time_Gap
+FROM Next_Month_Visit
 
-
-
-
+SELECT * 
+FROM Time_Gaps
 
 --/////////////////////////////////////////
 
@@ -342,10 +385,15 @@ FROM Cust_Log
 --	Labeled as regular if the customer has made a purchase every month.
 --  Etc.
 
+CREATE VIEW Label_Gap AS
+SELECT DISTINCT Cust_id,
+		AVG(Time_Gap) OVER(PARTITION BY Cust_id) Avg_Time_Gap,
+		CASE WHEN AVG(Time_Gap) OVER(PARTITION BY Cust_id) > 0 THEN 'Irregular' ELSE 'Churn' END  Cust_Label
+FROM Time_Gaps
 
 
-
-
+SELECT *
+FROM Label_Gap
 
 
 
@@ -364,7 +412,12 @@ FROM Cust_Log
 --Use Time Gaps
 
 
-
+SELECT * ,
+	COUNT(Cust_id) OVER(PARTITION BY [Year],Current_Month,Next_Month_Visit) Retention_Month
+FROM(SELECT *
+	FROM Time_Gaps
+	WHERE Time_Gap=1) A
+ORDER BY Cust_id
 
 
 --//////////////////////
@@ -380,9 +433,43 @@ FROM Cust_Log
 --You should pay attention to the join type and join columns between your views or tables.
 
 
+SELECT *
+FROM Time_Gaps
+
+SELECT  [Year],[Month],Count(Cust_id) 
+FROM   Time_Gaps
+GROUP BY [Year],[Month]
+ORDER BY [Year],[Month]
 
 
+SELECT  Cust_id,[Year],[Month]
+FROM   Time_Gaps
+GROUP BY Cust_id,[Year],[Month]
+ORDER BY Cust_id,[Year],[Month]
 
+
+SELECT cust_id,
+           visit_month lead(visit_month, 1) over (partition BY cust_id ORDER BY cust_id, visit_month)
+FROM Time_Gaps
+
+CREATE VIEW Cust_Types AS
+SELECT *,
+		CASE
+             WHEN time_gap=1 THEN 'retained'
+             WHEN time_gap>1 THEN 'lagger'
+             WHEN time_gap IS NULL THEN 'lost'
+       END AS cust_type
+FROM Time_Gaps
+
+SELECT *
+FROM Cust_Types
+
+SELECT Current_Month,
+	   COUNT(cust_id)
+FROM Cust_Types
+WHERE cust_type='retained'
+GROUP BY Current_Month
+ORDER BY Current_Month
 
 
 ---///////////////////////////////////
