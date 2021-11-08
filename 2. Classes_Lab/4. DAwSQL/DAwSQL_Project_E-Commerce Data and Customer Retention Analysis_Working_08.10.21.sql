@@ -34,7 +34,6 @@ FROM combined_table
 SELECT *
 FROM market_fact
 
-
 WITH T1 AS
 (
 SELECT TOP 3 Cust_id, count(Order_Quantity) count_of_order
@@ -107,6 +106,80 @@ AND A.Cust_id IN (SELECT DISTINCT(A.Cust_id)
 		 AND DATENAME(YEAR, A.Order_Date)=2011 )
 GROUP BY DATEPART(MONTH, A.Order_Date)
 
+/*DATENAME ve DATEPART fonksiyonlarý belli bir tarih dilimindeki tarihlerin istenilen kýsýmlarýnýn geriye döndürülmesini saðlayan fonksiyonlardýr. Ýkisinin farkýna gelince, DATENAME fonksiyonu belli bir tarih içindeki aya ait ismi, güne ait ismi dönerken, DATEPART fonksiyonu ile ayýn veya günün sayýsal yani nümerik deðerini elde ederiz. Kullaným olarak syntax aþaðýdaki gibidir :
+
+DATENAME(tarihverisininhangikýsmý,tarihverisi)
+DATEPART(tarihverisininhangikýsmý,tarihverisi)
+*/
+
+----
+/*
+SELECT B.Cust_id
+FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+					FROM combined_table A
+					WHERE DATENAME(MONTH, A.Order_Date)='January'
+					GROUP BY A.Cust_id) B
+WHERE B.Cust_Unique=1
+
+
+----
+SELECT DATENAME(MONTH, A.Order_Date) [MONTH], COUNT(A.Cust_id) Num_Cust 
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+AND A.Cust_id IN (
+					SELECT B.Cust_id
+					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+							FROM combined_table A
+							WHERE DATENAME(MONTH, A.Order_Date)='January'
+							GROUP BY A.Cust_id) B
+					WHERE B.Cust_Unique=1
+				)
+GROUP BY DATENAME(MONTH, A.Order_Date)
+
+----
+/*
+
+SELECT	COUNT(A.Cust_id), 
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='January' THEN 1 END) JANUARY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='February' THEN 1 END) FEBRUARY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='March' THEN 1 END) MARCH,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='April' THEN 1 END) APRIL,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='May' THEN 1 END) MAY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='June' THEN 1 END) JUNE,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='July' THEN 1 END) JULY,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='August' THEN 1 END) AUGUST,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='September' THEN 1 END) SEPTEMBER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='October' THEN 1 END) OCTOER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='November' THEN 1 END) NOVEMBER,
+		COUNT(CASE WHEN DATENAME(MONTH, A.Order_Date) ='December' THEN 1 END) DECEMBER
+FROM combined_table A
+WHERE DATENAME(YEAR, A.Order_Date)=2011
+AND A.Cust_id IN (
+					SELECT B.Cust_id
+					FROM (SELECT A.Cust_id, CASE WHEN COUNT(A.Cust_id) = 1 THEN 1 END Cust_Unique
+							FROM combined_table A
+							WHERE DATENAME(MONTH, A.Order_Date)='January'
+							GROUP BY A.Cust_id) B
+					WHERE B.Cust_Unique=1
+				)
+GROUP BY A.Cust_id
+
+---
+select yr, [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]
+from
+(select datepart(month,minDate) mth, datepart(year,minDate) yr, count(*) cnt
+ from (select min(OrderDate) minDate, max(OrderDate) maxDate
+       from tblOrder
+       group by email) sq
+ where datediff(month, minDate, maxDate) > 0
+ group by datepart(month,minDate), datepart(year,minDate)) src
+PIVOT
+(max(cnt) 
+ for mth in ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12]) ) pvt
+
+ */
+
+
 
 
 --////////////////////////////////////////////
@@ -115,7 +188,7 @@ GROUP BY DATEPART(MONTH, A.Order_Date)
 --6. write a query to return for each user the time elapsed between the first purchasing and the third purchasing, 
 --in ascending order by Customer ID
 --Use "MIN" with Window Functions
-
+*/
 
 WITH T1 AS
 (
@@ -163,6 +236,34 @@ WHERE A.Cust_id=T1.Cust_id
 GROUP BY A.Cust_id
 
 
+/* ALTTAKÝ SORUN GROUP BY YAPMAMIÞ OLMAK. 
+
+WITH T1 AS
+(
+SELECT Cust_id
+FROM combined_table
+WHERE Prod_id ='Prod_11'
+
+INTERSECT
+
+SELECT Cust_id
+FROM combined_table
+WHERE Prod_id ='Prod_14'
+)
+SELECT DISTINCT A.Cust_id,
+				SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id ORDER BY A.Prod_id) P11,
+				SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id ORDER BY C.Prod_id) P14,
+			
+				SUM(C.Order_Quantity) OVER(PARTITION BY T1.Cust_id ORDER BY A.Prod_id ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) TOTAL_PRODUCT,
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN A.Prod_id ='Prod_11' THEN A.Order_Quantity END)/(SUM(A.Order_Quantity) OVER(PARTITION BY A.Cust_id))),
+				CONVERT(NUMERIC(3,2), 1.0 * (CASE WHEN C.Prod_id ='Prod_14' THEN C.Order_Quantity END)/(SUM(C.Order_Quantity) OVER(PARTITION BY C.Cust_id)))
+FROM combined_table A, T1, combined_table C
+WHERE A.Cust_id=C.Cust_id
+AND C.Cust_id=T1.Cust_id
+AND A.Prod_id='Prod_11'
+AND C.Prod_id='Prod_14'
+
+
 
 --/////////////////
 
@@ -194,12 +295,25 @@ SELECT cust_id, [Year],[Month]
 FROM Cust_Log
 ORDER BY Cust_id, [YEAR]
 
-
-
 CREATE VIEW Monthly_Visit AS
 SELECT DISTINCT Cust_id, [Year], [Month],
 		COUNT(*) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log  --COUNT([Month]) ile COUNT(*) burada ayný sonucu veriyor.
 FROM Cust_Log
+
+
+--2.yöntem:
+
+CREATE VIEW Monthly_Visit AS
+SELECT  Cust_id, [Year],[Month], COUNT(*) Num_of_Log
+FROM    Cust_Log
+GROUP BY Cust_id,[Year],[Month]
+
+
+
+--Eðer sadece aya göre gruplandýrýrsak ayný cust_id içindeki ayný ay sayýlarýný yazýyor.
+--Eðer sadece yýla göre gruplandýrýrsak ayný cust_id içindeki ayný yýl sayýlarýný yazýyor.
+--Eðer sadece cus_id göre gruplandýrýrsak ayný aylara göre kümülatif bir toplam veriyor.
+--Bundan dolayý 
 
 
 
@@ -232,6 +346,19 @@ FROM (
 		FROM Monthly_Visit
 ) A
 
+
+
+--2.Yöntem:
+
+CREATE VIEW Next_Month_Visit AS
+SELECT *, 
+		LEAD(Current_Month,1) OVER(PARTITION BY Cust_id ORDER BY Current_Month) AS Next_Výsýt_Month
+FROM(
+SELECT DISTINCT Cust_id, [Year], [Month],
+		COUNT([Month]) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log,
+		DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
+FROM Cust_Log
+) A
 
 
 --/////////////////////////////////
@@ -290,7 +417,7 @@ SELECT * ,
 FROM(SELECT *
 	FROM Time_Gaps
 	WHERE Time_Gap=1) A
-    ORDER BY Cust_id
+--ORDER BY Cust_id
 
 
 --//////////////////////
@@ -336,7 +463,6 @@ FROM Retention_Month_Val
 WHERE B.Current_Month=C.Current_Month
 
 
-
 SELECT *
 FROM(
 SELECT [Year],[Month], CAST(ROUND((1.0*Retention_Month/Count_Cust_Previous),2) AS DECIMAL(16,2)) Retention_Rate
@@ -346,6 +472,79 @@ WHERE Retention_Rate IS NOT NULL
 
 
 
+
+
+/*
+CREATE VIEW X AS
+SELECT [Year],[Month], C.Current_Month,Count_Cust,Count_Cust_Previous,
+		LEAD(Retention_Month,1) OVER(ORDER BY [Year],[Month] ASC) AS Retention_Month_Next
+FROM
+(
+SELECT *,
+		LAG(Current_Month,1) OVER(ORDER BY [Year],[Month] ASC) AS Current_Month_Previous,
+		LAG(Count_Cust,1) OVER(ORDER BY [Year],[Month] ASC) AS Count_Cust_Previous
+FROM
+(SELECT  [Year],[Month], Count(Cust_id) Count_Cust,
+		DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
+FROM   Time_Gaps A
+GROUP BY [Year],[Month]
+) A) B,
+(SELECT DISTINCT Current_Month,Retention_Month
+FROM Retention_Month_Val
+) C
+WHERE B.Current_Month=C.Current_Month
+
+
+SELECT *
+FROM X
+
+SELECT (1.0*Count_Cust_Previous/Retention_Month_Next)/100
+FROM X
+
+
+
+
+
+SELECT B.[Year],B.[Month], B.Current_Month,B.Count_Month_Previous,B.Count_Month_Next, C.Next_Month_Visit
+,(1.0*Count_Month_Next/Count_Month_Previous)/100
+FROM (
+SELECT *,
+		LAG(Count_Cust,1) OVER(ORDER BY [Year],[Month]) Count_Month_Previous,
+		LEAD(Count_Cust,1) OVER(ORDER BY [Year],[Month]) Count_Month_Next
+FROM (		
+SELECT  [Year],[Month],Count(Cust_id) Count_Cust,
+		DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
+FROM   Time_Gaps
+GROUP BY [Year],[Month]
+) A
+) B , Next_Month_Visit C
+WHERE B.Current_Month=C.Current_Month
+ORDER BY B.Current_Month
+
+
+
+
+/*
+CREATE VIEW Cust_Types AS
+SELECT *,
+		CASE
+             WHEN time_gap=1 THEN 'retained'
+             WHEN time_gap>1 THEN 'lagger'
+             WHEN time_gap IS NULL THEN 'lost'
+       END AS cust_type
+FROM Time_Gaps
+
+
+SELECT *
+FROM Cust_Types
+
+
+SELECT Current_Month,
+	   COUNT(cust_id)
+FROM Cust_Types
+WHERE cust_type='retained'
+GROUP BY Current_Month
+ORDER BY Current_Month
 
 
 ---///////////////////////////////////
