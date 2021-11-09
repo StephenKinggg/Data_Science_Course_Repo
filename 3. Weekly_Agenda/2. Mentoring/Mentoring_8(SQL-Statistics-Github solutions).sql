@@ -2,7 +2,7 @@
 
 -- Question_1:
 
-Answer the following questions according to bikestore database :runner::skin-tone-3::runner::skin-tone-3::runner::skin-tone-3:@C9340-Yasir :runner::skin-tone-3::runner::skin-tone-3::runner::skin-tone-3::runner::skin-tone-3:
+Answer the following questions according to bikestore database
 - What is the sales quantity of product according to the brands and sort them highest-lowest
 - Select the top 5 most expensive products
 - What are the categories that each brand has
@@ -16,7 +16,7 @@ Answer the following questions according to bikestore database :runner::skin-ton
 
 -- Question_2:
 
-1. Find the customers who placed at least two orders per year. @C8134-Balkan Dogu
+1. Find the customers who placed at least two orders per year. 
 2. Find the total amount of each order which are placed in 2018. Then categorize them according to limits stated below.(You can use case when statements here)
 If the total amount of order   
   less then 500 then “very low”
