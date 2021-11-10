@@ -7,6 +7,7 @@
 --1. Join all the tables and create a new table called combined_table. (market_fact, cust_dimen, orders_dimen, prod_dimen, shipping_dimen)
 
 DROP TABLE IF EXISTS combined_table
+
 CREATE TABLE combined_table AS
 
 SELECT * INTO combined_table
