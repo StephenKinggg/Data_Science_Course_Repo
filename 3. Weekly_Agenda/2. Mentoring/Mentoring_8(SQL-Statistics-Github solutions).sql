@@ -23,7 +23,7 @@ ORDER BY
     list_price;
 
 
-- Select the top 5 most expensive products
+--Select the top 5 most expensive products
 
 select top 5 [product_name], [list_price]
 from [production].[products]
@@ -40,7 +40,7 @@ on p.category_id = c.category_id
 group by b.brand_name, c.category_name
 
 
-- Select the avg prices according to brands and categories
+-- Select the avg prices according to brands and categories
 
 select b.[brand_name], c.[category_name], avg(p.[list_price]) as [Avg Price]
 from [production].[brands] b
@@ -52,7 +52,7 @@ group by b.brand_name, c.category_name
 
 
 
-- Select the annual amount of product produced according to brands
+-- Select the annual amount of product produced according to brands
 
 select p.[model_year],b.[brand_name], count(p.[product_name])
 from [production].[brands] b
@@ -70,7 +70,7 @@ order by b.brand_name, p.model_year
 
 
 
-- Select the least 3 products in stock according to stores.
+-- Select the least 3 products in stock according to stores.
 
 select  d.store_id, c.product_id, c.product_name, sum(c.toplam) top_stok
 from
@@ -142,7 +142,7 @@ group by s.[store_name]
 order by sum(i.[quantity]) desc;
 
 
-- Select the store which has the most sales amount in 2016
+-- Select the store which has the most sales amount in 2016
 
 select * from [sales].[order_items]
 
@@ -157,7 +157,7 @@ group by s.[store_name]
 order by sum(i.[list_price]) desc;
 
 
-- Select the personnel which has the most sales amount in 2016
+-- Select the personnel which has the most sales amount in 2016
 
 select top 1 s.[first_name], s.[last_name], sum(i.[list_price]) as sales_amount_2016
 from [sales].[staffs] s
@@ -170,7 +170,7 @@ group by s.[first_name], s.[last_name]
 order by sum(i.[list_price]) desc;
 
 
-- Select the least 3 sold products in 2016 and 2017 according to city.
+-- Select the least 3 sold products in 2016 and 2017 according to city.
 
 ;with temp2_cte
 as(
@@ -219,7 +219,7 @@ e.city, toplam_satis
 
 -- Question_2:
 
-1. Find the customers who placed at least two orders per year. 
+--1. Find the customers who placed at least two orders per year. 
 
 SELECT
     customer_id,
@@ -236,7 +236,7 @@ ORDER BY
     customer_id;
 
 
-2. Find the total amount of each order which are placed in 2018. Then categorize them according to limits stated below.(You can use case when statements here)
+--2. Find the total amount of each order which are placed in 2018. Then categorize them according to limits stated below.(You can use case when statements here)
 If the total amount of order   
   less then 500 then “very low”
   between 500 - 1000 then “low”
@@ -271,7 +271,7 @@ GROUP BY
     o.order_id;
 
 
-3. By using Exists Statement find all customers who have placed more than two orders.
+--3. By using Exists Statement find all customers who have placed more than two orders.
 
 SELECT
     customer_id,
@@ -297,7 +297,7 @@ ORDER BY
     last_name;
 
 
-4. Show all the products and their list price, that were sold with more than two units in a sales order.
+--4. Show all the products and their list price, that were sold with more than two units in a sales order.
 
 SELECT
     product_name,
@@ -317,7 +317,7 @@ ORDER BY
     product_name;
 
 
-5. Show the total count of orders per product for all times. (Every product will be shown in one line and the total order count will be shown besides it)
+--5. Show the total count of orders per product for all times. (Every product will be shown in one line and the total order count will be shown besides it)
 
 SELECT
     product_name,
@@ -330,7 +330,7 @@ product_name
 ORDER BY
     aa;
 
-6. Find the products whose list prices are more than the average list price of products of all brands
+--6. Find the products whose list prices are more than the average list price of products of all brands
 
 SELECT
     product_name,
