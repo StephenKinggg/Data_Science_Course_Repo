@@ -47,6 +47,7 @@ FROM cust_dimen A, T1
 WHERE T1.Cust_id=A.Cust_id
 
 
+
 --/////////////////////////////////
 
 
