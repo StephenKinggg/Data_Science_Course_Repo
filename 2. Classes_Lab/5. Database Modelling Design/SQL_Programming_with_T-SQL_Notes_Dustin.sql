@@ -10,7 +10,7 @@ USE movies
 GO -- This 'GO' should be put here since 'create procedure' should be the first statement in one batch
 
 CREATE PROCEDURE (OR PROC) spfilmlist
-AS
+AS    --alttaki eðer bir single statement ise Begin-End yazýlmasýna gerek yok.
 BEGIN
 	SELECT *
 	FROM tblfilm
@@ -53,7 +53,7 @@ DROP PROC spfilmlist
 use movies
 go
 
-create proc spfilmcriteria(@minlength as int)
+create proc spfilmcriteria(@minlength as int)   --parameters @ sembolü ile gösterilir.
 as
 begin
 	select filmname, filmruntimeminutes
@@ -484,7 +484,8 @@ deallocate filmcursor
 
 select
 	FilmName,
-	,datename(DW,FilmReleaseDate) + ' ' +
+	FilmReleaseDate,
+	datename(DW,FilmReleaseDate) + ' ' +
 	datename(D,FilmReleaseDate) + ' ' +
 	datename(M,FilmReleaseDate) + ' ' +
 	datename(YY,FilmReleaseDate)
