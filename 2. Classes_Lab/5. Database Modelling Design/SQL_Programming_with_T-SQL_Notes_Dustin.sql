@@ -316,7 +316,7 @@ if @numfilms > 5
 	begin
 		print 'Warning'
 		print 'There are too many romantic films in the database.'
-		end
+	end
 else
 	begin
 		print 'Information'

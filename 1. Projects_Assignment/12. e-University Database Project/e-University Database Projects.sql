@@ -143,56 +143,6 @@ END;
 
 --GO
 
---2 - uspCourseEnrollment stored procedure can be run as follows.
-
-DECLARE @StudentID int, @CourseCode int   --, @EnrolledDate datetime
-SELECT @StudentID = 1,
-@CourseCode = 8
---@EnrolledDate = '20201030'
-
-EXEC uspCourseEnrollment @StudentID, @CourseCode    --, @EnrolledDate
-
-
-SELECT *
-FROM Enrollment
-
-/*
---CONSTRAINTS
-
-CREATE FUNCTION check_volume()
-RETURNS INT
-AS
-BEGIN
-DECLARE @ret int
-IF EXISTS(SELECT sc.StudentID, sum(Credit)
-FROM Course c JOIN Enrollment sc ON c.CourseCode=sc.CourseCode
-GROUP BY sc.StudentID
-HAVING SUM(Credit) > 180)
-SELECT @ret = 1 ELSE SELECT @ret = 0;
-RETURN @ret;
-END;
-
-
-ALTER TABLE Course
-ADD CONSTRAINT square_volume CHECK(dbo.check_volume() = 0);
-
-
-
-CREATE FUNCTION check_volume2()
-RETURNS INT
-AS
-BEGIN
-DECLARE @ret int
-IF EXISTS(SELECT avg(c.Quota) - count(c.CourseCode)
-FROM Course c JOIN Enrollment sc ON c.CourseCode=sc.CourseCode
-GROUP BY c.CourseCode
-HAVING avg(c.Quota) -count(c.CourseCode) < 0)
-SELECT @ret = 1 ELSE SELECT @ret = 0;
-RETURN @ret;
-END;
-
-*/
-
 
 
 
@@ -252,13 +202,10 @@ SELECT *
 FROM Enrollment
 
 
-SELECT *
-FROM Enrollment
 
 --//////////////////////////////////
 
 --2. Test that you have correctly defined the constraint for the student counsel's region. 
-
 
 
 
@@ -271,17 +218,7 @@ FROM Enrollment
 
 UPDATE Course SET Credit=20 WHERE Title ='History'
 
-/*
-ALTER TABLE Course
-DROP Constraint StaffNu
-GO
 
-ALTER TABLE Course
-ADD CONSTRAINT [StaffNu]
-FOREIGN KEY (StaffNu) REFERENCES ReferencedTable(Staff)
-ON DELETE CASCADE ON UPDATE CASCADE
-GO 
-*/
 
 --/////////////////////////////
 
@@ -297,11 +234,6 @@ FROM Course
 --5. Debbie Orange wants to enroll in Chemistry instead of German. (You should get an error.)
 
 
-???UPDATE Course SET Credit=30 WHERE Title ='Fine Arts'
-
-
-
-
 
 --//////////////////////////
 
@@ -314,10 +246,6 @@ UPDATE Student SET StaffNo=9 WHERE StudentFirstName='Alec' AND StudentLastName= 
 --/////////////////////////
 
 --7. Swap counselors of Ursula Douglas and Bronwin Blueberry.
-
-DELETE StaffNo WHERE StudentFirstName='Ursula' AND StudentLastName('Douglas'
-
-DELETE StaffNo WHERE StudentFirstName='Bronwin' AND StudentLastName('Bronwin') 
 
 
 
