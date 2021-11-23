@@ -669,6 +669,8 @@ exec spselectfromtemp
 
 ---------- To Declare a Table Variable:
 
+USE Movies
+
 declare @temppeople table -- Buradaki table declare ettigimiz degiskenin turu
 (
 	personname varchar(max),
@@ -677,7 +679,7 @@ declare @temppeople table -- Buradaki table declare ettigimiz degiskenin turu
 
 ----
 
-insert into @temppeople
+insert into @temppeople  
 select actorname, actordob
 from tblactor
 where actordob < '1950-01-01'
