@@ -21,12 +21,12 @@ CREATE TABLE Staff (
   PRIMARY KEY (StaffNo)
 );
 
-
+--DROP TABLE Student
 CREATE TABLE Student (
   StudentID int NOT NULL IDENTITY(1,1),
   StudentFirstName varchar(255) NOT NULL,
   StudentLastName varchar(255) NOT NULL,
-  RegisteredDate datetime NOT NULL,
+  RegisteredDate date NOT NULL,
   StudentRegion varchar(255) NOT NULL,
   StaffNo int NOT NULL,
   CONSTRAINT fk1_staff_no FOREIGN KEY (StaffNo) REFERENCES Staff (StaffNo),
@@ -93,6 +93,19 @@ VALUES (1, 1),
        (4, 2);
 
 
+INSERT INTO Student
+VALUES  ('Alec', 'Hunter', '12.05.2020','Wales',1),
+        ('Bronwin', 'Blueberry', '12.05.2020','Scotland',2),
+        ('Charlie', 'Apricot', '12.05.2020','England',3),
+        ('Ursula', 'Douglas', '12.05.2020','Scotland', 4),
+        ('Zorro', 'Apple', '12.05.2020','England',5),
+        ('Debbie', 'Orange', '12.05.2020','England',6);
+
+
+
+
+
+
 
 --Make sure you add the necessary constraints.
 --You can define some check constraints while creating the table, but some you must define later with the help of a scalar-valued function you'll write.
@@ -120,17 +133,15 @@ CREATE PROCEDURE [dbo].[uspCourseEnrollment] (
 AS
 BEGIN
 	DECLARE @EnrolledCredit INT, @TotalCredit INT, @CourseCredit INT
-	SELECT @EnrolledCredit = SUM(Credit) FROM Course WHERE CourseCode IN (
-	SELECT CourseCode FROM Enrollment WHERE StudentID = @StudentID
-	)
+	SELECT @EnrolledCredit = SUM(Credit) FROM Course WHERE CourseCode IN (SELECT CourseCode FROM Enrollment WHERE StudentID = @StudentID)
 	SELECT @CourseCredit = Credit FROM Course WHERE CourseCode = @CourseCode
 	SELECT @TotalCredit = @EnrolledCredit + @CourseCredit
 	IF @TotalCredit > 180
-	BEGIN
+		BEGIN
 		PRINT 'You have exceeded the total credit you can receive!'
 		RETURN 1
-	END
-IF EXISTS(SELECT 1 FROM Enrollment WHERE StudentID = @StudentID AND CourseCode = @CourseCode)
+		END
+	IF EXISTS(SELECT 1 FROM Enrollment WHERE StudentID = @StudentID AND CourseCode = @CourseCode)
 	BEGIN
 		PRINT 'You have already registered for this course!'
 		RETURN 1
@@ -140,60 +151,6 @@ INSERT INTO Enrollment (StudentID, CourseCode)   --EnrolledDate
 VALUES (@StudentID, @CourseCode)                --@EnrolledDate
 RETURN 0
 END;
-
---GO
-
---2 - uspCourseEnrollment stored procedure can be run as follows.
-
-DECLARE @StudentID int, @CourseCode int   --, @EnrolledDate datetime
-SELECT @StudentID = 1,
-@CourseCode = 8
---@EnrolledDate = '20201030'
-
-EXEC uspCourseEnrollment @StudentID, @CourseCode    --, @EnrolledDate
-
-
-SELECT *
-FROM Enrollment
-
-/*
---CONSTRAINTS
-
-CREATE FUNCTION check_volume()
-RETURNS INT
-AS
-BEGIN
-DECLARE @ret int
-IF EXISTS(SELECT sc.StudentID, sum(Credit)
-FROM Course c JOIN Enrollment sc ON c.CourseCode=sc.CourseCode
-GROUP BY sc.StudentID
-HAVING SUM(Credit) > 180)
-SELECT @ret = 1 ELSE SELECT @ret = 0;
-RETURN @ret;
-END;
-
-
-ALTER TABLE Course
-ADD CONSTRAINT square_volume CHECK(dbo.check_volume() = 0);
-
-
-
-CREATE FUNCTION check_volume2()
-RETURNS INT
-AS
-BEGIN
-DECLARE @ret int
-IF EXISTS(SELECT avg(c.Quota) - count(c.CourseCode)
-FROM Course c JOIN Enrollment sc ON c.CourseCode=sc.CourseCode
-GROUP BY c.CourseCode
-HAVING avg(c.Quota) -count(c.CourseCode) < 0)
-SELECT @ret = 1 ELSE SELECT @ret = 0;
-RETURN @ret;
-END;
-
-*/
-
-
 
 
 --------///////////////////
@@ -205,32 +162,36 @@ SELECT *
 FROM Course
 
 
-ALTER FUNCTION check_volume6()
-RETURNS INT
+
+CREATE PROCEDURE [dbo].[StudentCounsel] (
+@StudentID int,
+@StaffID int
+)
 AS
 BEGIN
-DECLARE @ret int
-IF EXISTS(SELECT Count(s.StudentID)
-FROM Staff r JOIN Student s ON s.StaffNo=r.StaffNo
-JOIN Course c ON C.StaffNo=s.StaffNo
-WHERE c.StaffNo = NULL AND s.StudentRegion=r.StaffRegion
-GROUP BY s.StudentID
-HAVING Count(s.StudentID) != 1)
-SELECT @ret =1 ELSE SELECT @ret = 0;
-RETURN @ret;
+
+
+DECLARE @StaffRegion VARCHAR(255), @StudentRegion VARCHAR(255)
+	SELECT @StaffRegion = StaffRegion FROM Staff WHERE StaffNo IN (SELECT StaffNo FROM Student WHERE StudentID = @StudentID)
+	SELECT @StudentRegion = StudentRegion FROM Student WHERE StaffNo = @StaffID
+
+IF @studentregion = @staffregion
+
+	BEGIN 
+		PRINT 'Your region and your counselor region is the same. A counselor assigned to you.'
+		RETURN 1
+	END 
+IF EXISTS(SELECT 1 FROM Student WHERE StudentID = @StudentID AND StaffNo = @StaffID)
+	BEGIN
+		PRINT 'Your region and your counselor region must be the same. You select another counselor please.'
+		RETURN 1
+	END
+
+
+INSERT INTO Student (StudentID, StaffNo)  
+VALUES (@StudentID, @StaffID)              
+RETURN 0
 END;
-
-ALTER TABLE Staff
-ADD CONSTRAINT square_volume6 CHECK(dbo.check_volume6() = 0);
-
-
-/*
-ALTER TABLE Staff
-DROP CONSTRAINT square_volume6 --CHECK(dbo.check_volume6() = 0);
-*/
-
---ALTER TABLE Staff DROP CONSTRAINT square_volume6
---///////////////////////////////
 
 
 
@@ -251,16 +212,19 @@ EXEC uspCourseEnrollment @StudentID, @CourseCode
 SELECT *
 FROM Enrollment
 
-
-SELECT *
-FROM Enrollment
-
 --//////////////////////////////////
 
 --2. Test that you have correctly defined the constraint for the student counsel's region. 
 
 
+SET IDENTITY_INSERT Student ON
 
+DECLARE @StudentID int, @StaffID int   
+SELECT @StudentID = 5,
+@StaffID = 7
+--@EnrolledDat e = '20201030'
+
+EXEC StudentCounsel @StudentID, @StaffID
 
 
 
@@ -271,17 +235,6 @@ FROM Enrollment
 
 UPDATE Course SET Credit=20 WHERE Title ='History'
 
-/*
-ALTER TABLE Course
-DROP Constraint StaffNu
-GO
-
-ALTER TABLE Course
-ADD CONSTRAINT [StaffNu]
-FOREIGN KEY (StaffNu) REFERENCES ReferencedTable(Staff)
-ON DELETE CASCADE ON UPDATE CASCADE
-GO 
-*/
 
 --/////////////////////////////
 
@@ -297,11 +250,12 @@ FROM Course
 --5. Debbie Orange wants to enroll in Chemistry instead of German. (You should get an error.)
 
 
-???UPDATE Course SET Credit=30 WHERE Title ='Fine Arts'
+INSERT INTO Enrollment VALUES((SELECT StudentID FROM Student WHERE StudentFirstName='Debbie' AND StudentLastName= 'Orange'), (SELECT CourseCode FROM Course WHERE Title='German'))
+
+UPDATE Enrollment SET CourseCode=3 WHERE StudentID IN (SELECT StudentID FROM Student WHERE StudentFirstName='Debbie' AND StudentLastName= 'Orange')
 
 
-
-
+select * from Enrollment
 
 --//////////////////////////
 
@@ -315,13 +269,28 @@ UPDATE Student SET StaffNo=9 WHERE StudentFirstName='Alec' AND StudentLastName= 
 
 --7. Swap counselors of Ursula Douglas and Bronwin Blueberry.
 
-DELETE StaffNo WHERE StudentFirstName='Ursula' AND StudentLastName('Douglas'
 
-DELETE StaffNo WHERE StudentFirstName='Bronwin' AND StudentLastName('Bronwin') 
+CREATE TABLE #tempstudent
+(
+	StudentID INT,
+	StudentFirstName varchar(255),
+	StudentLastName varchar(255),
+	StaffNo INT
+)
+insert into #tempstudent
+select StudentID, StudentFirstName, StudentLastName, StaffNo
+from Student
+where StudentFirstName='' AND StudentLastName='Blueberry'
+
+select * from #tempstudent
 
 
+UPDATE Student SET StaffNo= (SELECT StaffNo FROM Student WHERE StudentFirstName='Ursula') WHERE StudentID IN (SELECT StudentID FROM Student WHERE StudentFirstName='Bronwin')
+
+UPDATE Student SET StaffNo= (SELECT StaffNo FROM #tempstudent WHERE StudentFirstName='Bronwin') WHERE StudentID IN (SELECT StudentID FROM student WHERE StudentFirstName='Ursula')
 
 
+SELECT * FROM Student
 
 
 --///////////////////
