@@ -21,7 +21,7 @@ CREATE TABLE Staff (
   PRIMARY KEY (StaffNo)
 );
 
---DROP TABLE Student
+--DROP TABLE dbo.Student
 CREATE TABLE Student (
   StudentID int NOT NULL IDENTITY(1,1),
   StudentFirstName varchar(255) NOT NULL,
@@ -29,6 +29,7 @@ CREATE TABLE Student (
   RegisteredDate date NOT NULL,
   StudentRegion varchar(255) NOT NULL,
   StaffNo int NOT NULL,
+  Counselor INT NULL, --NOT : 2.SORUYU ÇÖZEBÝLMEK ÝÇÝN SONRADAN ÝLAVE EDÝLDÝÐÝNDEN DOLAYI ERD TABLOSUNDA BULUNMAMAKTADIR.
   CONSTRAINT fk1_staff_no FOREIGN KEY (StaffNo) REFERENCES Staff (StaffNo),
   PRIMARY KEY (StudentID)
 );
@@ -94,12 +95,12 @@ VALUES (1, 1),
 
 
 INSERT INTO Student
-VALUES  ('Alec', 'Hunter', '12.05.2020','Wales',1),
-        ('Bronwin', 'Blueberry', '12.05.2020','Scotland',2),
-        ('Charlie', 'Apricot', '12.05.2020','England',3),
-        ('Ursula', 'Douglas', '12.05.2020','Scotland', 4),
-        ('Zorro', 'Apple', '12.05.2020','England',5),
-        ('Debbie', 'Orange', '12.05.2020','England',6);
+VALUES  ('Alec', 'Hunter', '12.05.2020','Wales',1,1),
+        ('Bronwin', 'Blueberry', '12.05.2020','Scotland',2,2),
+        ('Charlie', 'Apricot', '12.05.2020','England',3,3),
+        ('Ursula', 'Douglas', '12.05.2020','Scotland', 4,4),
+        ('Zorro', 'Apple', '12.05.2020','England',5,5),
+        ('Debbie', 'Orange', '12.05.2020','England',6,6);
 
 
 
@@ -124,6 +125,7 @@ VALUES  ('Alec', 'Hunter', '12.05.2020','Wales',1),
 
 --1. Students are constrained in the number of courses they can be enrolled in at any one time. 
 --	 They may not take courses simultaneously if their combined points total exceeds 180 points.
+
 
 CREATE PROCEDURE [dbo].[uspCourseEnrollment] (
 @StudentID int,
@@ -162,7 +164,7 @@ SELECT *
 FROM Course
 
 
-
+--DROP PROCEDURE [dbo].[StudentCounsel]
 CREATE PROCEDURE [dbo].[StudentCounsel] (
 @StudentID int,
 @StaffID int
@@ -170,26 +172,26 @@ CREATE PROCEDURE [dbo].[StudentCounsel] (
 AS
 BEGIN
 
-
 DECLARE @StaffRegion VARCHAR(255), @StudentRegion VARCHAR(255)
-	SELECT @StaffRegion = StaffRegion FROM Staff WHERE StaffNo IN (SELECT StaffNo FROM Student WHERE StudentID = @StudentID)
-	SELECT @StudentRegion = StudentRegion FROM Student WHERE StaffNo = @StaffID
+	SELECT @StaffRegion = StaffRegion FROM Staff WHERE StaffNo = @StaffID
+	SELECT @StudentRegion = StudentRegion FROM Student WHERE StudentID = @StudentID
 
 IF @studentregion = @staffregion
 
 	BEGIN 
 		PRINT 'Your region and your counselor region is the same. A counselor assigned to you.'
+		
+		UPDATE Student
+		SET Counselor=@StaffID
+		WHERE StudentID=@StudentID
 		RETURN 1
 	END 
-IF EXISTS(SELECT 1 FROM Student WHERE StudentID = @StudentID AND StaffNo = @StaffID)
+IF NOT EXISTS (SELECT 1 FROM Student WHERE StudentID = @StudentID AND StaffNo = @StaffID)
+	
 	BEGIN
 		PRINT 'Your region and your counselor region must be the same. You select another counselor please.'
 		RETURN 1
-	END
-
-
-INSERT INTO Student (StudentID, StaffNo)  
-VALUES (@StudentID, @StaffID)              
+	END         
 RETURN 0
 END;
 
@@ -203,8 +205,8 @@ END;
 
 DECLARE @StudentID int, @CourseCode int   --, @EnrolledDate datetime
 SELECT @StudentID = 1,
-@CourseCode = 3
---@EnrolledDat e = '20201030'
+	   @CourseCode = 3
+     --@EnrolledDat e = '20201030'
 
 EXEC uspCourseEnrollment @StudentID, @CourseCode
 
@@ -221,8 +223,8 @@ SET IDENTITY_INSERT Student ON
 
 DECLARE @StudentID int, @StaffID int   
 SELECT @StudentID = 5,
-@StaffID = 7
---@EnrolledDat e = '20201030'
+       @StaffID = 2
+     --@EnrolledDate = '20201030'
 
 EXEC StudentCounsel @StudentID, @StaffID
 
