@@ -396,3 +396,37 @@ ALTER TABLE [dbo].[Success]
 ADD CONSTRAINT FKCourseSuccess  
 FOREIGN KEY (CourseID) REFERENCES [dbo].[Course](CourseID)
 
+/* 
+STRING FUNCTIONS: Concanate, Substring, Left, Right etc...
+NUMERIC FUNCTIONS: Abs, Sum, Avg, Min,Max, Count
+DATE FUNCTIONS : GETDATE(), DATEPART, DATENAME, MONTH, YEAR
+CONVERT FUNCTIONS: Cast, Convert
+*/
+
+USE SampleSales
+
+--Column Connection--
+
+SELECT (first_name + ' ' + last_name) AS 'Name'
+FROM [sale].[customer]
+
+--SUBSTRING('Ahmet',2,4) --burada ikinci karakterinden baþla 4 ileri sayalým. Sonuçta 'hmet' döndürür.
+
+SELECT SUBSTRING(first_name, 1, 3) AS '1,2,3 Char'
+FROM [sale].[customer]
+
+--LEFT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
+
+SELECT LEFT(first_name, 3) AS '1,2,3 Char'
+FROM [sale].[customer]
+
+--RIGHT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
+SELECT RIGHT(first_name, 3) AS 'Last 3 Char'
+FROM [sale].[customer]
+
+--LOWER AND UPPER Küçük ve Büyük harf döndürür.
+SELECT UPPER(first_name) AS 'UP'
+FROM [sale].[customer]
+
+--LTRIM AND RTRIM :Soldan veya Saðdan olan boþluklarý siler
+
