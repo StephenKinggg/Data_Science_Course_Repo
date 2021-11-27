@@ -396,6 +396,111 @@ ALTER TABLE [dbo].[Success]
 ADD CONSTRAINT FKCourseSuccess  
 FOREIGN KEY (CourseID) REFERENCES [dbo].[Course](CourseID)
 
+/*
+STRING FUNCTIONS: Concanate, Substring, Left, Right etc...
+NUMERIC FUNCTIONS: Abs, Sum, Avg, Min,Max, Count
+DATE FUNCTIONS : GETDATE(), DATEPART, DATENAME, MONTH, YEAR
+CONVERT FUNCTIONS: Cast, Convert
+*/
+USE SampleSales
+
+--STRINF FUNCTIONS--
+--Column Connection--
+
+SELECT (first_name + ' ' + last_name) AS 'Name'
+FROM [sale].[customer]
+
+--SUBSTRING('Ahmet',2,4) --burada ikinci karakterinden baþla 4 ileri sayalým. Sonuçta 'hmet' döndürür.
+
+SELECT SUBSTRING(first_name, 1, 3) AS '1,2,3 Char'
+FROM [sale].[customer]
+
+--LEFT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
+
+SELECT LEFT(first_name, 3) AS '1,2,3 Char'
+FROM [sale].[customer]
+
+--RIGHT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
+
+SELECT RIGHT(first_name, 3) AS 'Last 3 Char'
+FROM [sale].[customer]
+
+--LOWER AND UPPER Küçük ve Büyük harf döndürür.
+
+SELECT UPPER(first_name) AS 'UP'
+FROM [sale].[customer]
+
+--LTRIM AND RTRIM :Soldan veya Saðdan olan boþluklarý siler
+--LEN string ifadenin char sayýsýný verir.
+
+SELECT first_name, LEN(first_name) AS 'Lchar'
+FROM [sale].[customer]
+
+--REPLACE value yerine istenileni döndürür.
+
+SELECT first_name, REPLACE(first_name,'Emily','Lyndsey') AS 'NewName'
+FROM [sale].[customer]
+
+--REVERSE value tersten döndürür.
+
+SELECT first_name, REVERSE(first_name) AS 'RevName'
+FROM [sale].[customer]
+
+--NUMERIC FUNCTIONS--
+
+SELECT list_price, ABS(-1*list_price) AS 'AbsPrice' --Mutlak deðer verir.
+FROM [sale].[order_item]
+
+--CEILING: Value yukarý yuvarlar.
+
+SELECT list_price, CEILING(list_price) AS 'UpPrice'
+FROM [sale].[order_item]
+
+SELECT CEILING(12.01) --Direk olarak bir üst sayýya yuvarlýyor.
+
+SELECT CEILING(12.99)
+
+- -FLOOR: Value aþaðý yuvarlar.
+
+SELECT list_price, FLOOR(list_price) AS 'DPrice'
+FROM [sale].[order_item]
+
+SELECT FLOOR(12.01) --Direk olarak bir üst sayýya yuvarlýyor.
+
+SELECT FLOOR(12.99)
+
+--ROUND: Value nin virgülden sonraki deðerini istenilen basamak sayýsý kadar gösterir.
+
+SELECT list_price, ROUND(list_price,1) AS 'RPrice' --Son rakamý yukarý yuvarlayarak istenilen kadar rakam getirir.
+FROM [sale].[order_item]
+
+SELECT ROUND(122.194,2)  --Son karaktere ve yuvarlanan deðerlere dikkat.
+
+SELECT ROUND(122.196,2)
+
+--SQRT : Value nin karakökünü alýr.
+
+SELECT SQRT(16)
+
+--POWER : Value nin üssünü alýr istenilen deðer kadar.
+
+SELECT POWER(2,4)
+
+--SUM: Value larýn toplamlarýný alýr.
+--AVG: Value larýn ortalamasýný alýr.
+--MAX: Value larýn max olanýný getirir.
+--MIN: Value larýn min olanýný getirir.
+--% : Value nun bir sayýya bölümünden kalaný getirir.
+
+SELECT 15 % 2 --15 2 ye bölünce kalan 1 dir. Onu getirir.
+
+--COUNT: Row sayýsýný getirir.
+
+SELECT COUNT(*) FROM [sale].[orders] --TABLE daki satýr sayýsýný saydýrdýk.
+
+SELECT COUNT(order_status) FROM [sale].[orders]
+
+SELECT COUNT(DISTINCT order_status) FROM [sale].[orders] --TABLE daki order_status unique olarak saydýrdý.
 
 
 --DATE FUNCTIONS--
@@ -450,7 +555,7 @@ SELECT CONVERT(NVARCHAR(8), GETDATE(),4) --Burada veri tipi(aradaki iþaretler da
 
 --JOIN--
 
---INNER JOIN--
+--INNER JOIN--Ýki tablonun kesiþimini alýr.
 
 SELECT * FROM [product].[brand]
 
@@ -469,8 +574,8 @@ FROM [product].[brand] B
 INNER JOIN  [product].[product] P ON (B.brand_id=P.brand_id AND P.model_year=2018)
 GROUP BY P.Brand_id
 
---LEFT JOIN Soldaki tablonun hepsini saðdakinin ise eþleþenlerini alýr.
---RIGHT JOIN Saðdaki tablonun hepsini soldakinin ise eþleþenlerini alýr.
+--LEFT JOIN Soldaki tablonun hepsini saðdakinin ise eþleþenlerini alýr. Boþ yerlere NULL yazar.
+--RIGHT JOIN Saðdaki tablonun hepsini soldakinin ise eþleþenlerini alýr. Boþ yerlere NULL yazar.
 
 SELECT * FROM [product].[brand]
 
@@ -484,3 +589,111 @@ LEFT JOIN [product].[product] P ON B.brand_id=P.brand_id
 SELECT *
 FROM [product].[brand] B
 RIGHT JOIN [product].[product] P ON B.brand_id=P.brand_id 
+
+SELECT O.order_id, customer_id, SUM(quantity)--, list_price, S.store_id, first_name,last_name
+FROM sale.orders O
+LEFT JOIN sale.order_item I ON O.order_id=I.order_id
+LEFT JOIN sale.store S ON O.store_id=S.store_id
+LEFT JOIN sale.staff ST ON O.store_id=ST.store_id
+GROUP BY O.order_id, customer_id
+ORDER BY O.order_id
+
+
+--FULL OUTER JOIN-- iki tabloyu tüm kayýtlar üzerinden birleþtiriyor ve kesiþimi bir kere yazýyor.
+
+--CROSS JOIN -- Çapraz olarak yani iki tablonun eleman sayýlarý kadar bir matris oluþturur.
+
+SELECT COUNT(*) 
+FROM product.brand
+
+SELECT COUNT(*)
+FROM product.product
+
+SELECT product_name, brand_name   --9*321=2889 satýr sonuç döndürür.
+FROM product.brand B
+CROSS JOIN product.product P 
+
+--UNION: Ýki table bütününü getirir.
+--INTERSECT:Ýki table kesiþimini getirir.
+--EXCEPT: Ýki tablonun birbirinden farkýný getirir. A table B table dan farkýdýr.
+
+SELECT DISTINCT customer_id   --625 row
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2018
+INTERSECT                      --13 row
+SELECT DISTINCT customer_id    --684 row
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2019
+
+
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2018
+UNION
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2019
+
+
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2018
+--ORDER BY customer_id
+EXCEPT
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2019
+--ORDER BY customer_id
+
+
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2019
+EXCEPT
+SELECT DISTINCT customer_id
+FROM sale.orders 
+WHERE DATEPART(YEAR, order_date)=2018
+
+--SUBQUERY--
+
+SELECT * 
+FROM sale.orders
+WHERE order_status IN ('3', '4')
+
+
+
+SELECT *   --Ross isimli personelin yaptýðý satýþlarý getirdi.
+FROM sale.orders
+WHERE staff_id = (SELECT staff_id FROM sale.staff WHERE first_name='Ross')
+
+SELECT *
+FROM product.product
+
+SELECT *
+FROM sale.order_item
+
+--STORED PROCEDURE--
+
+SELECT *
+FROM sale.orders
+
+CREATE PROCEDURE sp_query
+AS
+BEGIN
+	SELECT * FROM sale.orders
+END
+
+EXEC sp_query
+
+--DROP PROC sp_query_paramethers
+CREATE PROC sp_query_paramethers( 
+	@order_id INT
+)
+AS
+BEGIN
+	SELECT * FROM sale.orders
+	WHERE order_id=@order_id
+END
+
+
+EXEC dbo.sp_query_paramethers 6
