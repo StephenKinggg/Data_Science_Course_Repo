@@ -396,37 +396,91 @@ ALTER TABLE [dbo].[Success]
 ADD CONSTRAINT FKCourseSuccess  
 FOREIGN KEY (CourseID) REFERENCES [dbo].[Course](CourseID)
 
-/* 
-STRING FUNCTIONS: Concanate, Substring, Left, Right etc...
-NUMERIC FUNCTIONS: Abs, Sum, Avg, Min,Max, Count
-DATE FUNCTIONS : GETDATE(), DATEPART, DATENAME, MONTH, YEAR
-CONVERT FUNCTIONS: Cast, Convert
-*/
 
-USE SampleSales
 
---Column Connection--
+--DATE FUNCTIONS--
 
-SELECT (first_name + ' ' + last_name) AS 'Name'
-FROM [sale].[customer]
+SELECT *
+FROM [sale].[orders]
 
---SUBSTRING('Ahmet',2,4) --burada ikinci karakterinden baþla 4 ileri sayalým. Sonuçta 'hmet' döndürür.
+SELECT Order_Date, DATEPART(YEAR, Order_Date),
+				   DATEPART(MONTH, Order_Date),
+				   DATEPART(DAY, Order_Date),
+				   DATEPART(WEEK, Order_Date)
+FROM [sale].[orders]
 
-SELECT SUBSTRING(first_name, 1, 3) AS '1,2,3 Char'
-FROM [sale].[customer]
+SELECT DATEPART(YEAR, GETDATE())  --Integer olarak döner.
+SELECT DATEPART(MONTH, GETDATE())
+SELECT DATEPART(DAY, GETDATE())
+SELECT DATEPART(WEEK, GETDATE())
+SELECT DATEPART(HOUR, GETDATE())
+SELECT DATEPART(MINUTE, GETDATE())
+SELECT DATEPART(SECOND, GETDATE())
+SELECT DATEPART(QUARTER, GETDATE())
 
---LEFT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
 
-SELECT LEFT(first_name, 3) AS '1,2,3 Char'
-FROM [sale].[customer]
+SELECT DATENAME(YEAR, GETDATE())  --String olarak dönüyor
+SELECT DATENAME(MONTH, GETDATE())
+SELECT DATENAME(DAY, GETDATE())
+SELECT DATENAME(WEEK, GETDATE())
+SELECT DATENAME(WEEKDAY, GETDATE())
+SELECT DATENAME(DAYOFYEAR, GETDATE())
 
---RIGHT('Ahmet',3) sonuçta soldan ilk 3 charý yani 'Ahm' döndürür.
-SELECT RIGHT(first_name, 3) AS 'Last 3 Char'
-FROM [sale].[customer]
+SELECT DATEDIFF(YEAR, '2018-03-15', GETDATE())  --Ýkincisinden birincisini çýkarýr. Buna dikkat!!!
+SELECT DATEDIFF(MONTH, '2018-03-15', GETDATE())
+SELECT DATEDIFF(DAY, '2018-03-15', GETDATE())
 
---LOWER AND UPPER Küçük ve Büyük harf döndürür.
-SELECT UPPER(first_name) AS 'UP'
-FROM [sale].[customer]
+SELECT DATEDIFF(YEAR, '2018-08-07', GETDATE())  --Ýkincisinden birincisini çýkarýr. Buna dikkat!!!
+SELECT DATEDIFF(MONTH, '2018-08-07', GETDATE())
+SELECT DATEDIFF(DAY, '2018-08-07', GETDATE())
 
---LTRIM AND RTRIM :Soldan veya Saðdan olan boþluklarý siler
+SELECT *
+FROM [sale].[orders]
+WHERE DATEDIFF(DAY,order_date,shipped_date)=4
 
+
+--CONVERT FUNCTIONS --
+
+SELECT CAST(30.14*10000.283 AS NUMERIC(8,2))  --Toplamda 8 basamaklý ancak ondalýk kýsým 2 basamaklý olsun.
+											--Toplam basamak sayýsý daha az olarak girersek hata verir.
+
+SELECT CAST('Sakarya' AS CHAR(5)) --5 yazdýðýmýzdan ilk 5 karakteri alýr.
+
+SELECT CONVERT(NVARCHAR(8), GETDATE(),4) --Burada veri tipi(aradaki iþaretler dahil char sayýsý), value, date style(y,m ve d sýrasý ile aradaki iþaretlere dikkat) olarak verdik.
+
+--JOIN--
+
+--INNER JOIN--
+
+SELECT * FROM [product].[brand]
+
+SELECT * FROM [product].[product]
+
+--Aþaðýdaki iki query ayný sonucu verir.
+
+SELECT P.Brand_id, SUM(P.list_price) 
+FROM [product].[brand] B, [product].[product] P
+WHERE B.brand_id=P.brand_id AND P.model_year=2018
+GROUP BY P.Brand_id
+
+
+SELECT P.Brand_id, SUM(P.list_price) 
+FROM [product].[brand] B
+INNER JOIN  [product].[product] P ON (B.brand_id=P.brand_id AND P.model_year=2018)
+GROUP BY P.Brand_id
+
+--LEFT JOIN Soldaki tablonun hepsini saðdakinin ise eþleþenlerini alýr.
+--RIGHT JOIN Saðdaki tablonun hepsini soldakinin ise eþleþenlerini alýr.
+
+SELECT * FROM [product].[brand]
+
+SELECT * FROM [product].[product]
+
+SELECT *
+FROM [product].[brand] B
+LEFT JOIN [product].[product] P ON B.brand_id=P.brand_id 
+
+
+SELECT *
+FROM [product].[brand] B
+RIGHT JOIN [product].[product] P ON B.brand_id=P.brand_id 
