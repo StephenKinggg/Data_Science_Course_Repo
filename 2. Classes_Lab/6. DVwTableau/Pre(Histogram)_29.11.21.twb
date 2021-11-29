@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20213.21.1018.0949                               -->
+<workbook original-version='18.1' source-build='2021.3.3 (20213.21.1018.0949)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='Yaş (Histogram+Veri+Seti)' inline='true' name='federated.1n5388a0yzdcyn1bnpqab008bssx' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='Histogram+Veri+Seti' name='excel-direct.14pwo441bol7481epurg80w2600f'>
+            <connection class='excel-direct' cleaning='no' compat='no' dataRefreshTime='' filename='C:/Users/HP/DATA_SCIENCE_COURSE_NOTES/2. Classes_Lab/6. DVwTableau/Tableau_Data/Histogram+Veri+Seti.xlsx' interpretationMode='0' password='' server='' validate='no' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='excel-direct.14pwo441bol7481epurg80w2600f' name='Yaş' table='[Yaş$]' type='table'>
+          <columns gridOrigin='A1:A25:no:A1:A25:0' header='yes' outcome='2'>
+            <column datatype='real' name='Yaş' ordinal='0' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='excel-direct.14pwo441bol7481epurg80w2600f' name='Yaş' table='[Yaş$]' type='table'>
+          <columns gridOrigin='A1:A25:no:A1:A25:0' header='yes' outcome='2'>
+            <column datatype='real' name='Yaş' ordinal='0' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[Yaş]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>0</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:A25:no:A1:A25:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Yaş</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Yaş]</local-name>
+            <parent-name>[Yaş]</parent-name>
+            <remote-alias>Yaş</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Yaş_4E230ED8485D4897AB5330F0692A36A1]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column aggregation='None' datatype='integer' name='[Yaş (Yaş) (bin)]' role='dimension' type='quantitative'>
+        <calculation class='bin' decimals='0' formula='[Yaş]' peg='0' size='5' />
+      </column>
+      <column caption='Yaş (Yaş)' datatype='real' name='[Yaş]' role='measure' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='Yaş' datatype='table' name='[__tableau_internal_object_id__].[Yaş_4E230ED8485D4897AB5330F0692A36A1]' role='measure' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Turkey&quot;' />
+      </semantic-values>
+      <date-options start-of-week='monday' />
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='Yaş' id='Yaş_4E230ED8485D4897AB5330F0692A36A1'>
+            <properties context=''>
+              <relation connection='excel-direct.14pwo441bol7481epurg80w2600f' name='Yaş' table='[Yaş$]' type='table'>
+                <columns gridOrigin='A1:A25:no:A1:A25:0' header='yes' outcome='2'>
+                  <column datatype='real' name='Yaş' ordinal='0' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Histogram'>
+      <layout-options>
+        <caption>
+          <formatted-text>
+            <run fontsize='11'>Yaş gruplarını göstermede sıklıkla kullanılır.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='11'>Sadece 1 tane dimension vardır.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='11'>Alt eksene sağ tıklayınca çıkan ekrandan edit axis yapınca tick marks kısmında aralıkları kendimiz ayarlayabiliyoruz.</run>
+          </formatted-text>
+        </caption>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Yaş (Histogram+Veri+Seti)' name='federated.1n5388a0yzdcyn1bnpqab008bssx' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1n5388a0yzdcyn1bnpqab008bssx'>
+            <column aggregation='None' datatype='integer' name='[Yaş (Yaş) (bin)]' role='dimension' type='quantitative'>
+              <calculation class='bin' decimals='0' formula='[Yaş]' peg='0' size='5' />
+            </column>
+            <column caption='Yaş (Yaş)' datatype='real' name='[Yaş]' role='measure' type='quantitative' />
+            <column-instance column='[Yaş]' derivation='Count' name='[cnt:Yaş:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Yaş (Yaş) (bin)]' derivation='None' name='[none:Yaş (Yaş) (bin):qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.1n5388a0yzdcyn1bnpqab008bssx].[none:Yaş (Yaş) (bin):qk]' field-type='quantitative' major-origin='0' major-spacing='5' scope='cols' type='space' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <mark-sizing custom-mark-size-in-axis-units='1.0' mark-alignment='mark-alignment-left' mark-sizing-setting='marks-scaling-on' use-custom-mark-size='false' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.1n5388a0yzdcyn1bnpqab008bssx].[cnt:Yaş:qk]</rows>
+        <cols>[federated.1n5388a0yzdcyn1bnpqab008bssx].[none:Yaş (Yaş) (bin):qk]</cols>
+        <show-full-range>
+          <column>[federated.1n5388a0yzdcyn1bnpqab008bssx].[Yaş (Yaş) (bin)]</column>
+        </show-full-range>
+      </table>
+      <simple-id uuid='{EEE03868-FC27-4D40-AF68-B5007FD88739}' />
+    </worksheet>
+    <worksheet name='Sheet 2'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{10055C9A-EDE0-4C18-BEB0-B06D9BFD04B2}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' name='Histogram'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='bottom'>
+          <strip size='96'>
+            <card type='caption' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <selection-collection>
+          <node-selection select-tuples='false'>
+            <oriented-node-reference orientation='horizontal'>
+              <node-reference>
+                <axis>[federated.1n5388a0yzdcyn1bnpqab008bssx].[none:Yaş (Yaş) (bin):qk]</axis>
+              </node-reference>
+              <page-reference />
+            </oriented-node-reference>
+          </node-selection>
+        </selection-collection>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1n5388a0yzdcyn1bnpqab008bssx].[none:Yaş (Yaş) (bin):qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{BF0E0A33-1856-4869-81FB-95A01F3DBFC6}' />
+    </window>
+    <window class='worksheet' maximized='true' name='Sheet 2'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{7F206414-450A-4B1B-9174-96059A86AB28}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='Histogram' width='192'>
+      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
+      AiBc7f8BtY5sx5wZkd4AAAAASUVORK5CYII=
+    </thumbnail>
+    <thumbnail height='192' name='Sheet 2' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACFUlEQVR4nO3TMQEAIAzAMMC/5yFjRxMFfXpnZg5Eve0A2GQA0gxAmgFIMwBpBiDNAKQZ
+      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
+      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQD
+      kGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBp
+      BiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA
+      0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDN
+      AKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxA
+      mgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZ
+      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
+      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKR9Y+0F
+      fBUOM1sAAAAASUVORK5CYII=
+    </thumbnail>
+  </thumbnails>
+</workbook>
