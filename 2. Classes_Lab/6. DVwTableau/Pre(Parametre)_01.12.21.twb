@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20213.21.1112.1434                               -->
+<workbook original-version='18.1' source-build='2021.3.4 (20213.21.1112.1434)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='Çarpım İşlemi' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='8'>
+        <calculation class='tableau' formula='8' />
+        <desc>
+          <formatted-text>
+            <run>Bu parametre 2 ile x in çarpımı formülünde x in değerini değiştirir.</run>
+          </formatted-text>
+        </desc>
+        <range granularity='1' max='20' min='1' />
+      </column>
+    </datasource>
+    <datasource caption='Siparişler (Global+Superstore+Orders+2016)' inline='true' name='federated.13sk3mk0krak5w1e8mukr0xy5tgs' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='Global+Superstore+Orders+2016' name='excel-direct.1awha6n0ack4an198m3ip06qlb1d'>
+            <connection class='excel-direct' cleaning='no' compat='no' dataRefreshTime='' filename='C:/Users/HP/DATA_SCIENCE_COURSE_NOTES/2. Classes_Lab/6. DVwTableau/Tableau_Data/Global+Superstore+Orders+2016.xlsx' interpretationMode='0' password='' server='' validate='no' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='excel-direct.1awha6n0ack4an198m3ip06qlb1d' name='Siparişler' table='[Siparişler$]' type='table'>
+          <columns gridOrigin='A1:O1170:no:A1:O1170:0' header='yes' outcome='2'>
+            <column datatype='string' name='Sipariş ID' ordinal='0' />
+            <column datatype='date' name='Sipariş Tarihi' ordinal='1' />
+            <column datatype='date' name='Sevk Tarihi' ordinal='2' />
+            <column datatype='string' name='Müşteri ID' ordinal='3' />
+            <column datatype='string' name='Müşteri İsmi' ordinal='4' />
+            <column datatype='string' name='Segment' ordinal='5' />
+            <column datatype='string' name='Bölge' ordinal='6' />
+            <column datatype='string' name='İl' ordinal='7' />
+            <column datatype='string' name='İlçe' ordinal='8' />
+            <column datatype='string' name='Ürün ID' ordinal='9' />
+            <column datatype='string' name='Kategori' ordinal='10' />
+            <column datatype='string' name='Alt Kategori' ordinal='11' />
+            <column datatype='string' name='Ürün Adı' ordinal='12' />
+            <column datatype='real' name='Satış' ordinal='13' />
+            <column datatype='real' name='Kâr' ordinal='14' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='excel-direct.1awha6n0ack4an198m3ip06qlb1d' name='Siparişler' table='[Siparişler$]' type='table'>
+          <columns gridOrigin='A1:O1170:no:A1:O1170:0' header='yes' outcome='2'>
+            <column datatype='string' name='Sipariş ID' ordinal='0' />
+            <column datatype='date' name='Sipariş Tarihi' ordinal='1' />
+            <column datatype='date' name='Sevk Tarihi' ordinal='2' />
+            <column datatype='string' name='Müşteri ID' ordinal='3' />
+            <column datatype='string' name='Müşteri İsmi' ordinal='4' />
+            <column datatype='string' name='Segment' ordinal='5' />
+            <column datatype='string' name='Bölge' ordinal='6' />
+            <column datatype='string' name='İl' ordinal='7' />
+            <column datatype='string' name='İlçe' ordinal='8' />
+            <column datatype='string' name='Ürün ID' ordinal='9' />
+            <column datatype='string' name='Kategori' ordinal='10' />
+            <column datatype='string' name='Alt Kategori' ordinal='11' />
+            <column datatype='string' name='Ürün Adı' ordinal='12' />
+            <column datatype='real' name='Satış' ordinal='13' />
+            <column datatype='real' name='Kâr' ordinal='14' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>0</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:O1170:no:A1:O1170:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Sipariş ID</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Sipariş ID]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Sipariş ID</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Sipariş Tarihi</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[Sipariş Tarihi]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Sipariş Tarihi</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Sevk Tarihi</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[Sevk Tarihi]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Sevk Tarihi</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Müşteri ID</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Müşteri ID]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Müşteri ID</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Müşteri İsmi</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Müşteri İsmi]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Müşteri İsmi</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Segment</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Segment]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Segment</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Bölge</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Bölge]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Bölge</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>İl</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[İl]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>İl</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>İlçe</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[İlçe]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>İlçe</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ürün ID</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Ürün ID]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Ürün ID</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kategori</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Kategori]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Kategori</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Alt Kategori</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Alt Kategori]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Alt Kategori</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Ürün Adı</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Ürün Adı]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Ürün Adı</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Satış</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Satış]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Satış</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Kâr</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Kâr]</local-name>
+            <parent-name>[Siparişler]</parent-name>
+            <remote-alias>Kâr</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Carpım' datatype='integer' name='[Calculation_853995124318101504]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='min(2)*[Parameters].[Parameter 1]' />
+      </column>
+      <_.fcp.ObjectModelTableType.true...column caption='Siparişler' datatype='table' name='[__tableau_internal_object_id__].[Siparişler_A6D9E25C86544D5991716E6940A7C7A7]' role='measure' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Turkey&quot;' />
+      </semantic-values>
+      <date-options start-of-week='monday' />
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='Çarpım İşlemi' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='8'>
+          <calculation class='tableau' formula='8' />
+          <desc>
+            <formatted-text>
+              <run>Bu parametre 2 ile x in çarpımı formülünde x in değerini değiştirir.</run>
+            </formatted-text>
+          </desc>
+          <range granularity='1' max='20' min='1' />
+        </column>
+      </datasource-dependencies>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='Siparişler' id='Siparişler_A6D9E25C86544D5991716E6940A7C7A7'>
+            <properties context=''>
+              <relation connection='excel-direct.1awha6n0ack4an198m3ip06qlb1d' name='Siparişler' table='[Siparişler$]' type='table'>
+                <columns gridOrigin='A1:O1170:no:A1:O1170:0' header='yes' outcome='2'>
+                  <column datatype='string' name='Sipariş ID' ordinal='0' />
+                  <column datatype='date' name='Sipariş Tarihi' ordinal='1' />
+                  <column datatype='date' name='Sevk Tarihi' ordinal='2' />
+                  <column datatype='string' name='Müşteri ID' ordinal='3' />
+                  <column datatype='string' name='Müşteri İsmi' ordinal='4' />
+                  <column datatype='string' name='Segment' ordinal='5' />
+                  <column datatype='string' name='Bölge' ordinal='6' />
+                  <column datatype='string' name='İl' ordinal='7' />
+                  <column datatype='string' name='İlçe' ordinal='8' />
+                  <column datatype='string' name='Ürün ID' ordinal='9' />
+                  <column datatype='string' name='Kategori' ordinal='10' />
+                  <column datatype='string' name='Alt Kategori' ordinal='11' />
+                  <column datatype='string' name='Ürün Adı' ordinal='12' />
+                  <column datatype='real' name='Satış' ordinal='13' />
+                  <column datatype='real' name='Kâr' ordinal='14' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run>Parametreler&#10;</run>
+          </formatted-text>
+        </title>
+        <caption>
+          <formatted-text>
+            <run fontsize='14'>Parametreler; Hesaplamalar, filtreler ve referans çizgilerindeki sabit değerlerin yerini alabilen dinamik değerlerdir.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='14'>Ya dimension daki create parameter veya bir alanın üzerine gelerk sağ tıklayarak çıkan ekrandan oluşturabiliriz.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='14'>Parametre ekranını doldurunca en altta parametremiz oluştu.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='14'>Daha sonra ise bir calc. tanımlıyoruz 2*Parameters_name şeklinde. Çarpım text attığımızda çıkan sonuç şudur. Her bir satır için hesaplanıyor ve veri setinde 1169 satır olduğundan bunlar için*2 yapıp bunları topladı ve 3338 sayısını buldu.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='14'>Bunu engellemek için calc.işleminde 2 yin min. func. içine alıyoruz.</run>
+            <run>Æ&#10;</run>
+            <run fontsize='14'>Parametreye sağ tıklayıp onuda show yapıp sağ tarafta gösterilmesini sağlıyoruz. Step size 1 seçtiğimizden dolayı 1 er  artırabiliyoruz parametreye gönderdiğimiz değerler.</run>
+          </formatted-text>
+        </caption>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Siparişler (Global+Superstore+Orders+2016)' name='federated.13sk3mk0krak5w1e8mukr0xy5tgs' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='Çarpım İşlemi' datatype='integer' name='[Parameter 1]' param-domain-type='range' role='measure' type='quantitative' value='8'>
+              <calculation class='tableau' formula='8' />
+              <desc>
+                <formatted-text>
+                  <run>Bu parametre 2 ile x in çarpımı formülünde x in değerini değiştirir.</run>
+                </formatted-text>
+              </desc>
+              <range granularity='1' max='20' min='1' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.13sk3mk0krak5w1e8mukr0xy5tgs'>
+            <column caption='Carpım' datatype='integer' name='[Calculation_853995124318101504]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='min(2)*[Parameters].[Parameter 1]' />
+            </column>
+            <column-instance column='[Calculation_853995124318101504]' derivation='User' name='[usr:Calculation_853995124318101504:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.13sk3mk0krak5w1e8mukr0xy5tgs].[usr:Calculation_853995124318101504:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run fontsize='48'>&lt;</run>
+                <run fontsize='48'>[federated.13sk3mk0krak5w1e8mukr0xy5tgs].[usr:Calculation_853995124318101504:qk]</run>
+                <run fontsize='48'>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-cull' value='true' />
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{FFA1D37B-0B95-488F-877C-08104D019435}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='bottom'>
+          <strip size='2147483647'>
+            <card type='caption' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='slider' param='[Parameters].[Parameter 1]' type='parameter' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{A2BA211B-D54A-46B2-A4E0-19865E1C25DF}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='93' name='Sheet 1' width='104'>
+      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
+      H45j082gk5f+AAAAAElFTkSuQmCC
+    </thumbnail>
+  </thumbnails>
+</workbook>
