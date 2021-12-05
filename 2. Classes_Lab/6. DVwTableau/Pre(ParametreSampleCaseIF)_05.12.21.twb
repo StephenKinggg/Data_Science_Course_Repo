@@ -1,0 +1,468 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20213.21.1112.1434                               -->
+<workbook original-version='18.1' source-build='2021.3.4 (20213.21.1112.1434)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource hasconnection='false' inline='true' name='Parameters' version='18.1'>
+      <aliases enabled='yes' />
+      <column caption='CategorySelectParameter' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;Düşük Kilolu&quot;'>
+        <calculation class='tableau' formula='&quot;Düşük Kilolu&quot;' />
+        <members>
+          <member value='&quot;Düşük Kilolu&quot;' />
+          <member value='&quot;Normal Kilolu&quot;' />
+          <member value='&quot;Obez&quot;' />
+          <member value='&quot;Obez Öncesi&quot;' />
+        </members>
+      </column>
+    </datasource>
+    <datasource caption='Düzenlenmiş Veri (TUIK+Obozite+Veri+Seti)' inline='true' name='federated.0prxx2q1vn2nq31glrd5k1my7yle' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='TUIK+Obozite+Veri+Seti' name='excel-direct.1oh9ywu1np82371gd0axs1yubxx5'>
+            <connection class='excel-direct' cleaning='no' compat='no' dataRefreshTime='' filename='C:/Users/HP/DATA_SCIENCE_COURSE_NOTES/2. Classes_Lab/6. DVwTableau/Tableau_Data/TUIK+Obozite+Veri+Seti.xls' interpretationMode='0' password='' server='' validate='no' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='excel-direct.1oh9ywu1np82371gd0axs1yubxx5' name='Düzenlenmiş Veri' table='[&apos;Düzenlenmiş Veri$&apos;]' type='table'>
+          <columns gridOrigin='A1:F11:no:A1:F11:0' header='yes' outcome='2'>
+            <column datatype='date' date-parse-format='yyyy' name='Yıl' ordinal='0' />
+            <column datatype='string' name='Cinsiyet' ordinal='1' />
+            <column datatype='real' name='Düşük kilolu' ordinal='2' />
+            <column datatype='real' name='Normal kilolu' ordinal='3' />
+            <column datatype='real' name='Obez öncesi' ordinal='4' />
+            <column datatype='real' name='Obez' ordinal='5' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='excel-direct.1oh9ywu1np82371gd0axs1yubxx5' name='Düzenlenmiş Veri' table='[&apos;Düzenlenmiş Veri$&apos;]' type='table'>
+          <columns gridOrigin='A1:F11:no:A1:F11:0' header='yes' outcome='2'>
+            <column datatype='date' date-parse-format='yyyy' name='Yıl' ordinal='0' />
+            <column datatype='string' name='Cinsiyet' ordinal='1' />
+            <column datatype='real' name='Düşük kilolu' ordinal='2' />
+            <column datatype='real' name='Normal kilolu' ordinal='3' />
+            <column datatype='real' name='Obez öncesi' ordinal='4' />
+            <column datatype='real' name='Obez' ordinal='5' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>2</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:F11:no:A1:F11:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Yıl</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[Yıl]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Yıl</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Cinsiyet</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[Cinsiyet]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Cinsiyet</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LTR_RTR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Düşük kilolu</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Düşük kilolu]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Düşük kilolu</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Normal kilolu</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Normal kilolu]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Normal kilolu</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Obez öncesi</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Obez öncesi]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Obez öncesi</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Obez</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[Obez]</local-name>
+            <parent-name>[Düzenlenmiş Veri]</parent-name>
+            <remote-alias>Obez</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='CategoryAreaCaseCalc.' datatype='real' name='[Calculation_1241867643664748544]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='CASE [Parameters].[Parameter 1]&#13;&#10;WHEN &apos;Düşük Kilolu&apos; THEN [Düşük kilolu]&#13;&#10;WHEN &apos;Normal Kilolu&apos; THEN [Normal kilolu]&#13;&#10;WHEN &apos;Obez&apos; THEN [Obez]&#13;&#10;WHEN &apos;Obez Öncesi&apos; THEN [Obez öncesi]&#13;&#10;END' />
+      </column>
+      <column caption='CategoryAreaIFCalc.' datatype='real' name='[CategoryAreaCaseCalc. (copy)_1241867643668746241]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='IF [Parameters].[Parameter 1]=&apos;Düşük Kilolu&apos; THEN [Düşük kilolu]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Normal Kilolu&apos; THEN [Normal kilolu]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Obez&apos; THEN [Obez]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Obez Öncesi&apos; THEN [Obez öncesi]&#13;&#10;END' />
+      </column>
+      <_.fcp.ObjectModelTableType.true...column caption='Düzenlenmiş Veri' datatype='table' name='[__tableau_internal_object_id__].[Düzenlenmiş Veri_D3E916FAB9884F47A06B1E12F12DAC0B]' role='measure' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' _.fcp.SchemaViewerObjectModel.true...common-percentage='0.712054' _.fcp.SchemaViewerObjectModel.true...user-set-layout-v2='true' dim-ordering='alphabetic' measure-ordering='alphabetic' parameter-percentage='0.287946' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;Turkey&quot;' />
+      </semantic-values>
+      <date-options start-of-week='monday' />
+      <datasource-dependencies datasource='Parameters'>
+        <column caption='CategorySelectParameter' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;Düşük Kilolu&quot;'>
+          <calculation class='tableau' formula='&quot;Düşük Kilolu&quot;' />
+        </column>
+      </datasource-dependencies>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='Düzenlenmiş Veri' id='Düzenlenmiş Veri_D3E916FAB9884F47A06B1E12F12DAC0B'>
+            <properties context=''>
+              <relation connection='excel-direct.1oh9ywu1np82371gd0axs1yubxx5' name='Düzenlenmiş Veri' table='[&apos;Düzenlenmiş Veri$&apos;]' type='table'>
+                <columns gridOrigin='A1:F11:no:A1:F11:0' header='yes' outcome='2'>
+                  <column datatype='date' date-parse-format='yyyy' name='Yıl' ordinal='0' />
+                  <column datatype='string' name='Cinsiyet' ordinal='1' />
+                  <column datatype='real' name='Düşük kilolu' ordinal='2' />
+                  <column datatype='real' name='Normal kilolu' ordinal='3' />
+                  <column datatype='real' name='Obez öncesi' ordinal='4' />
+                  <column datatype='real' name='Obez' ordinal='5' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='CASE/IF'>
+      <layout-options>
+        <caption>
+          <formatted-text>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>1. Veri setinde Düşük kilolu, Normal kilolu, Obez, Obez öncesi measure&apos;larından oluşan bir parametre oluşturunuz. </run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>2. Bu parametreye &apos;Kategori Seçici&apos; adını veriniz.</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>3. Parametrenin aktif hale gelmesi için &apos;Kategori Alanı - CASE&apos; adında bir calculated field oluşturun.</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>4. Bu yeni alanı oluştururken CASE ifadesinden yararlanın.</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>5. Bu parametreyi ve yani oluşturduğunuz alanı kullanarak erkek ve kadınlar şeklinde yıllara göre vücut kitle indeksini gösteren çizgi grafik yapınız. </run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>6. &apos;Kategori Alanı - IF&apos; isminde yeni bir calculated field oluşturun.</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>7. Parametreyi ve yani oluşturduğunuz &apos;Kategori Alanı - IF&apos;  alanını kullanarak erkek ve kadınlar şeklinde yıllara göre vücut kitle indeksini gösteren çizgi grafiği tekrar yapın.</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#1c1d1f' fontname='sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol' fontsize='14'>8. &apos;Kategori Alanı - CASE&apos; ve Kategori Alanı - IF&apos;  alanlarının ikisinin de aynı sonucu verdiğini gözlemleyin.</run>
+          </formatted-text>
+        </caption>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Düzenlenmiş Veri (TUIK+Obozite+Veri+Seti)' name='federated.0prxx2q1vn2nq31glrd5k1my7yle' />
+            <datasource name='Parameters' />
+          </datasources>
+          <datasource-dependencies datasource='Parameters'>
+            <column caption='CategorySelectParameter' datatype='string' name='[Parameter 1]' param-domain-type='list' role='measure' type='nominal' value='&quot;Düşük Kilolu&quot;'>
+              <calculation class='tableau' formula='&quot;Düşük Kilolu&quot;' />
+            </column>
+          </datasource-dependencies>
+          <datasource-dependencies datasource='federated.0prxx2q1vn2nq31glrd5k1my7yle'>
+            <column caption='CategoryAreaIFCalc.' datatype='real' name='[CategoryAreaCaseCalc. (copy)_1241867643668746241]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='IF [Parameters].[Parameter 1]=&apos;Düşük Kilolu&apos; THEN [Düşük kilolu]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Normal Kilolu&apos; THEN [Normal kilolu]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Obez&apos; THEN [Obez]&#13;&#10;ELSEIF [Parameters].[Parameter 1]=&apos;Obez Öncesi&apos; THEN [Obez öncesi]&#13;&#10;END' />
+            </column>
+            <column datatype='string' name='[Cinsiyet]' role='dimension' type='nominal' />
+            <column datatype='real' name='[Düşük kilolu]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Normal kilolu]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Obez öncesi]' role='measure' type='quantitative' />
+            <column datatype='real' name='[Obez]' role='measure' type='quantitative' />
+            <column datatype='date' name='[Yıl]' role='dimension' type='quantitative' />
+            <column-instance column='[Cinsiyet]' derivation='None' name='[none:Cinsiyet:nk]' pivot='key' type='nominal' />
+            <column-instance column='[CategoryAreaCaseCalc. (copy)_1241867643668746241]' derivation='Sum' name='[sum:CategoryAreaCaseCalc. (copy)_1241867643668746241:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Yıl]' derivation='Year-Trunc' name='[tyr:Yıl:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='false' />
+        </view>
+        <style />
+        <panes>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+            <encodings>
+              <color column='[federated.0prxx2q1vn2nq31glrd5k1my7yle].[none:Cinsiyet:nk]' />
+              <text column='[federated.0prxx2q1vn2nq31glrd5k1my7yle].[sum:CategoryAreaCaseCalc. (copy)_1241867643668746241:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.0prxx2q1vn2nq31glrd5k1my7yle].[sum:CategoryAreaCaseCalc. (copy)_1241867643668746241:qk]</rows>
+        <cols>([federated.0prxx2q1vn2nq31glrd5k1my7yle].[none:Cinsiyet:nk] * [federated.0prxx2q1vn2nq31glrd5k1my7yle].[tyr:Yıl:qk])</cols>
+      </table>
+      <simple-id uuid='{5BA21243-94E6-4069-A3C5-6953BCCD9B3F}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='CASE/IF'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='compact' param='[Parameters].[Parameter 1]' type='parameter' />
+            <card pane-specification-id='1' param='[federated.0prxx2q1vn2nq31glrd5k1my7yle].[none:Cinsiyet:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[Parameters].[Parameter 1]</field>
+            <field>[federated.0prxx2q1vn2nq31glrd5k1my7yle].[none:Cinsiyet:nk]</field>
+            <field>[federated.0prxx2q1vn2nq31glrd5k1my7yle].[tyr:Yıl:qk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{DA95BAEB-EE78-4335-BE54-32C45FD270C2}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='CASE/IF' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAAd4klEQVR4nO3dWXBbV57f8e/FvhAESALcV4laSFELtVm7Zcnu9t52t9u9zXQlk1SSSvKU
+      PKTykKqueUmqppLMQ2YymZ4e9zLtdnttW7K8aJcoWbsocRcp7jtAEiSx4y55oK0pWRJFEQA3
+      nE8VLJkADv4Uzg/3nHvuvZA0TdMQhDSlW+wCBGExiQAIaS0lAYjH4wSDwVQ0LQhJlZIAqKqK
+      LMupaFoQkkoMgYSlT43TeaeZvuFxkr3HRgRAWPKun/iY1pEQ4WCQruYGph8xuGjpm3joz/1d
+      16hrGnjofYZkFSkIqaFxs2+Mv/iLH6CTJI79+hxBeZgL133EpsZ4dk8VRy7e5eCzz9M7FePm
+      mc84tKeCujYZ351LjEd1bCi2cXPUSFn+zyjJsd7XutgCCEuchMcEnWMhQsEgqqaiobG2dh8b
+      SjKQXBXUlLvo6RtE09vYWJHFh8db2VJpJaTP5tDB/WyoWsuWp/ZTnG15oHWxBRCWvJfe+BGn
+      TnyJt3Qja7ZsxpVnx6Flopm3YDZDTNaxproUky2D/IgH/aCR1atq2FPjZXQiQNWerZjP1TEw
+      UfZACKRUrARHo1EikQhOpzPZTQvCo2kKbY2N5K6uIstmmtNTRACEFSEUCmGz2Z74eWIOIKwI
+      gUBgXs8TARDSmgjAYogMc/TIl5w5f5mpSPzrH47T2ur91gM1OlvbiC10fWlE7AVaFBpmmwOX
+      MxMpOspXNwbJLc9Cjhrp6OgkN8tKY2sHzvxVWFSV0b4OTJnF5Dof3I0nJEZsARZJTl4R5aVF
+      mIhhzipjVUEWHY3XkI2Z9LU1MRmVmZjwE/IP0NTtJ9thXuySVyQRgMWgMzE+2EF9Qwth1Ygn
+      x4kkGand8zRSyIuntByjBna7jeyitexc56F32L/YVa9IYjeosCKMjo6Sm5v7xM+7bw4QjUZR
+      FCXhYuLxONFolFAolHBbgjAX8Xh8Xv3tvgCoqpqUACiKkrS2BGEu5tvf7guA1Wp91OOeSDQa
+      Ra/X43A4ktKeIDxOOByeV38Tk2AhrYkACGkt4QBEpka5cP4cd/q+vYopCEtfwivBHe3dbHpq
+      Lza9lIx6BGFBJRyAUGiS+kvnkY0uDu7ajCzL926xmDiKRVgYiqLMq78lHIDiggJ6J8KADkmS
+      MBqNqKqKwWDAZJrbSQmCkCi9Xv/Q/qZODRK99H/R59WgL94OqgKqDKqMpimJB6BgVTWucBiD
+      WRyoJSw9cvtx5KaPkFuOIJkz//kOaeY/CQdA0umw2e2JNiMIKWFY9TTKwA30BZvQr3oaSWcA
+      SQ86PegM4lggYWWY7Vigb7q4JD24o0asAwgrQzzEzRs3GPBOAaDGI7Q23mJoPICkKXS2NjA4
+      FkDTZNobbzEyMXPtWnFCjLAiBLrrUaSse//f3XiJzkkz0bbTVFXm0DYUJHyrndoKF41TesJN
+      J3jzjVfFFkBYGSanJeobOogoM8Mds9VCZ9NN+jsbuDEis3/vQTZUOLjcp/K9Zw9SlGdHllUR
+      AGFlsK+u5UevPcO1azcAyK/cyr/7t/+a8sIyymxxhif8eL0ByqxROsamCUwG0el1IgDCymBm
+      ig+/vMKeXbX86ZNjRKZHeOc3v6VwxyF27dhBx8VjWMq2su+5AzR99j55a7di1ktiL5CwMtzb
+      CySH8AXA7ZrbRbLEJFhYWQw23K65P1wMgYS0JgIgpDURACGtiQAIaU0EQEhrIgBCWhMBENKa
+      CICQ1kQAhLQmAiCktYQD4O9t4ctTZ2joePg3cQvCUpbwsUATE1G27d2Dy2i8d+qZpmn3boKw
+      UObT3xIOgCMng7ZrV1DN2ezdVoWiKPdusiwn2rwgzMl8+1sSLowVQtVUJJ2EJEkYDAYURcFg
+      MGA0GhNtXhDmRK/Xz6u/JRyAksoaClep6PT6RJsShAWXlOsCGXRiZ5KwPImeK6Q1EQAhrYkA
+      CGlNBEBIayIAQloTARDSmgiAkNZEAIS0JgIgpDURACGtiQAIaU0EQEhrIgBCWhMBENKaCICQ
+      1kQAhLQmAiCktScIQJSuzsHUVSIIi2BOAZBlGU2TsFotD71/2jeIdzKS1MIEYSHMIQB+Pjt6
+      AeRJrt1of+BeNR6m5dY1+samU1CeIKTWHE6Kz8Ck9PHee70UbHz6gXsHezopXL2OCSQ0TUOW
+      5Xu3WCyWgpIF4UGKosyrv80agOBELx++9zkhVSEak3EGAt9+WUZGRvD7JxjVF7Gx3I3RaERV
+      VQwGAyaT6YkLEoT50Ov18+pvc/qe4InRQcamQthdHgrcD373rxKZZjJuJNsxM0cQ3xMsLLR7
+      3xP8hOYwBJriT2//E6opB8+Gnbz69MYHHqG3OMh++PxYEJa0OUyCjRSUr8GoDxCaDqW+IkFY
+      QLNuAWKBMdoHA3z3tdcIjHbRMS7G9MLKMusWIOgfZmDYj6aBxaKn407fQtWVdP0tl/l/f/e3
+      vPXuMeLqzM/k8Bj/8y//G/3TKp+9+yv+7u/fZmTKz7tv/Q1//b9/yXhcXN59pZt1C+DKX43u
+      +p94++0m4rEY+1/4/kLVlXTFVZupHZpiKG7++icq1+q+ombnZpRwD71jDjZvX48uNkLRuhd4
+      pXSIi62THN7oWtS6hdSaNQCRUIANu19kQ2AMV0U5VklaoLKST9N0ZHnyGOkbQVE1wn3X+eDk
+      FYyxYYIWJ5YMF9ZIF6dvOii0laIpKpK46O+KN+s7HBgboKWtj8aLVxgNBAhHl+/C1p3rFzh5
+      oY6JsIy3ox6fYyN/9T/+kp//7Efs3v4sxY5hLjUOsrFqE96uk/zqSDfb12cudtlCis26DjDt
+      6+KTT84RiUcxOTIoX7+D/VvXPLbRpb4O0NHSTMm6asziA37FSMk6gMmaSVl5Cd987rsctvnU
+      tuRUVlXf+/s3+ZeW8fBOmL9ZPwP1RguFJSWY1PDMIQ+B8ELVtSBkReW3X9zmHz69SSyuLHY5
+      wiKYdQtgMNlZtSaXM59+gtVVwHRgZRzyrGka0bjCF1fv8uG5FgByMq28tHstJoNObA3SyBwO
+      hbCwqrqawb67RMLLdxL8jUhM5lJTPx+cayEQirGzqghV0/i4ro0LDX385HANW9bkY9CLCUI6
+      mEMAzJQX5eIpXY0l0536ilJE0zQuNffz0blW+r1TPL+zkuefqiQ3yw7A0Ng0fzrfyl+9c5FN
+      q/P46bM1VBRkLXLVQqrN4WjQKd76P29Rsm4LU9N6vv/9fY9tdCntBYrLCrfvjvDu6WYGfFPs
+      31TGGweryHZYHxjqaJpGz8gkvz9+m9t3Rzm4pYzX9q8nPztDDIuWuPnuBZpDAGROf/IHbrZ4
+      2fnSD9lXU/LYRpdCAFRVo7nby4fnWmjp8bGnppjX9ldR7HE8tjPLisqtjmH+cLIRrz/Ii7vW
+      8uKuShw286zPExZPCgMQ4stjl9l3aC8WkxGd7vGfhIsZAEVR6Rya4I+nmmju9lK7toA3n6mm
+      xOOcU+3f+GaifLGxjz+eagLgjYPV7N9UisWU8LfLCkmW0gB8+Mu3GDM5WVfzFAe2Lc2FME3T
+      6B7y88G5Fq61DbKlMp/XD6xnTXEOugSHL9OhKMcudXDsUju5WXZ+eLCa7esKnyhQQmqlJACa
+      pqGpCtMTo1y6cAHNvZ7n9z54Qsy3LWQANE1jeDzAe6ebudwyQGVRFm8c3EBVmTupe3I0TWNk
+      IsgHZ1uoa+ilpiKXnxyuoaLAJeYHS0BKAhCeHOTDP7xPz2QYk6GAf/+f/hzbHN7sVAdA02Ay
+      GOH0jS7a+8fxTobYt7GEVYVZ1FTkprxDdg/7aewc5fztXrIcFqrLPRysLSdzWc4RZOrPneDK
+      nWEOvfw6lflOJkc6+eTTU7grt7NrrZOjx46TtWobB6qz+ejj46zd/Ty7a0oXu/D7pGYIpGkE
+      p8bp6uzgVn0jBRv3cWj7uvse0t/RQEe/F2deJbVVM/8oqQxANCbz+ZW7fHa5HUXVeH3/eg5s
+      LiPDuvAn64Qicc7Ud/P+mWZsFiNvPrOBPTUly2wNIY53ZBpTdJAbYxaeqa3k2uljONftoudq
+      HVV79pDtzODciZOYVY31zxzm0slTvPbqS4td+H1Sc06wJGF3WvH7wux+9iWKCzwPPKSgbA16
+      k52hqejMkOnrm6qqqKr6xAU9Siga52JjPx+cbUFRVV54qpLnd67GajYCJPW15spi0vPdnavZ
+      W1PMxxfa+Psj1zlysY2ff2cz60pzlkkQ9BAe5FJPmAN7qlBVldyCXI5//Acsnkqespm5fO4M
+      a2v30nnrKlkWM3qDtCj/3rP5ps89qTldFWLa18f77/yRoDmXl177ARUe+737lGiA9ru9RCUz
+      m9avQlXVe1uAzMzEDyeOyQpfNfbz8YU2pkIxnt9ZyXe2V5BpX3rDjcGxAB9fuEPd7V62VOby
+      w4PVlOcv8RNqlEn+5n/9isLKCtbU7sUuhQkMtNA8ECIajVJoUeiKWynKL2KNLcDFuz5MjgJ+
+      8sqD14haTD6fD7f7yRdq57QQ9sFvjrB61z4qi8z09qlUVxXeu7ej8Sr9vgDGzHz2bq0CEh8C
+      aZpGXFap7xjmnZON+CZDHN62ipd3ryE788EFrKVEVTXu9I/xhxON3B0c5+nNZbx+oIqcpVq3
+      pjDm9RFTVOxWhWsN4xzcU8X42DgmuxOTFmViOoTOaMadlYl/bBx7Vg4Wo36xK79PCneDhvn8
+      kzPsfe4wVpMeg/7xv3giAZBllVudI7x/uone0SmeqS3nlb1ryXXZl2YHegRVVbncMsB7p5sZ
+      mwrz2v51PLttFRlWM8vo11g2UhqAY2+/h08zsqp6B/tqKx/b6HwCoGkaLT0+3j3dREuPj/2b
+      Snl17zpKcjOXVcf/tmAkzrn6bv54ugm7xcSPD9ewe0Mxep205H6vb7qCBvSNTHL0qzs8U1tB
+      VZl7ydX6bSkMgMrFLz6ibWCSzQdeYmtl3mMbfZIAqKpGW5+PD8+20NA1ys71RfzwmWpKchf/
+      OKJkmg7F+ORCK59d7qAwx8HPntvIhorcBZ8oq5pGNCYTisYJR2WmglF8kyG8/iC+yfDXf4YY
+      8k0TiSvYLUb2bSylqsxNZXE2OU4bVpNhyQUihQHw887vL/Lm65t594tOfvz6/sc2OpcAaJpG
+      z/AkH55v4UrLAJtW5/GDA1UzK7creIW1b3SSj861crGpj21rC3jzmQ2UJXmirCgq/kCE8ekw
+      41NhfJPhe518bDLEdDhGMBwjEImjaRrZDivZmVayHVbcThselw1JkrjcMkB5vgufP0T7wBhT
+      wSi5WXYqCrLYUO5hTXE2ZfmuJbG3K4UB0Lhx9hgN3ePsOPQS1SXZj210tgCMjAd467N64rJC
+      c4+PtcXZ/OTwRtaUZKNPk6swqKpGx8A4vz/eQHv/GIe2VvC9fetwO22P/GTVNA1ZUYnJCrG4
+      Qjgq45sMfd2xZ/70+YOM+kNMTIeRJAm9TsKg12GzGHE7beRm2XFn2vBk2b7u6HacdjN6nQ6d
+      bubxMHN6qKZpqJqGTpLQmDmq1usP0dztpbnbS1vfGNOhKAa9jrXFOVSXe6gu95CfnYHdalzw
+      9zKFAYjwwa9/R0Snw+eP8uz3/5wNxY5ZnzFbAI5evMMvj97AYjLwX366l02r85bEJ8hikBWV
+      a62DvHOqEX8gwqGtFdgsRmor84nJCv7pCN7JED5/iFF/EH8gwlQwymQwSigax2E1kWk348yw
+      kO2w4Hba8bhmOrcrw0Km3Uym3ZySIYssqwyNT9M5OEFLj4/2/nH6vVPYLEbK812sK8lhfZmb
+      sjwnrgxLyodMKQzAJO/87iwvvbiBTz6/gDNrCy+/uGnWZ8wWAN9kiLdPNLC+1M13dqx+4oJX
+      Gk3TCEdlzt7q4ZdHr6MoGjaLEZ00M0l2O/95WPJNB/e4bGQ7rFhMBkxGPUaDflEn1ZqmEZMV
+      poIxuoYmaOwapaXHx4B3CqNBT352xtdbCDdrS3KwmY0Y9Mk99TSFAYCuxstcae5j645tWDI8
+      lHgyZn38UjgfYDl669hNGrpG+fGhGtaW5JBpMy/r+dBUMMrdwXFae3wzgfBNMxWKUprrZF1p
+      DtVlHsrzXeRm2TEluK6Q0hNiPn37H7AWbwKDi0N7qmd/ODMBGGi/Qd31Dg698kOKsy0M3bnG
+      x6euYbQ6eP2NN7h54iOcVQfYvsbDF+//kbytz7Fl9eP3MK1kqqoRVxRMBv2S28uSKFXVmAxG
+      GBoL0Nbro6nbS2uvD0XR8LhsrC7KpqYil6oyNwU5T34GXgoDMMXv/vY3GDLc6LMqePOVXY9t
+      NBqN0nCjnfVVOZy+2s4rzx34+hghhTOfn8DtMRNzrmG86SKZGXaM65+i/+o5nnvldWzGlfXG
+      P4ymxunt6sLgyKUw14UExEOT3O0bpbi8grCvn1F/mOKK1UihMbwhqCjJT/i8hqXkm0l23+gU
+      TV8PmToGxpmYjmCzGKkuc1Nd7mF9qRu308ZkMIrDZnrkfCKFX5BhpfapHQz5JilZN/cxe3mp
+      jas329i2dRsws2chNNiKrqAKRemlLC8X+2QWl3skflaUQ7jbhRxXwLjyz7by9d2lo2uAsfGb
+      PPfqj8gyR/n8yBFs+RVk5xdz5tTn5JVuxF2Uz5mjn2OUVMIv/JSaXOtil540kiShlyTK812U
+      57t4cdcaonGF4bEAdwfHae728eXVTn792S2cGWYmpiOU5Tv57//mMOYk9pHHtCTTVn+Oz453
+      sGNHIfW3O1hf/uARoQ9z9vR1qvfsxGLUEQwGsdssXGsdYsf+KkZb+mhsbWaq109tnpOzt1rx
+      D0+yzbS0ji9JFXfpOjYbdNzuyMRuAgKj9IwHsYS6qdywnonBIUKGfKo3j+IufZpDW0N81jpG
+      TW7xYpeeMpIkYTEZKC9wUV7g4tDWCuKyymQwwoWGPt4+0TCzRJ1kjwmADldOAeuroKCkjG0l
+      ZXNuOMft4E5DPYFVa+jv7uf1lw6ytmYrNpOeio1PMX7xHEW7D7O2KJPLZ05Tse8gVsPK2cTP
+      xt9/hxavxsGnd8xcms9ko7B0Hd/ZUcyX12/x2r/6z+hG67nU6kfxRxntjZKRs3I7/8NIkoTJ
+      qMfjsvO9fevYtDoPV4YlqZ/+MKc5QJQP/vHv6PMprNrzXV7dt+Gxjd63F0iVicQ1LF8fty9A
+      V/05jtU1YM4uYF9ZBqHV+3CP3+bklU4Ov/g8/fVnafOqvPLqywzUn6BhxMAPXnsOqyE91kvk
+      eJS4rGG2mO/Ne1RFRtEkNCWOrKhIOgMWs4F4XMZoNOL1elN4KMQ/fozeoke1reJHr+15bKNi
+      N+jcjXq95HrmNqxMD0E+fftjhv1eNr3wc3ZUZAEap3//13Rl72VLxhi323vpnjTzL79TzUeX
+      2viP/+LPGB+bXwBm3Z5ocgyvX+P511+mv/02Ss6q+f5WwiOIzv9tNl740Q+4fvYsOY6Z01yn
+      ehqIF2ym0GJk654XKMi7zpBUTNmaPLb7owm92qzb1ImhdlrujuDMymHDpvV0NHUl9GKC8HgK
+      V86eobB2PxU5dkDmk6Of0nL9AkdP1hGJRmjrGWd9xZN/2j/MrFsAR1Yu/SeP8MVUP8HRHrI3
+      PJeUFxWER4qPc/1qEzda77L72ZeZGBngz/7DfyU+PULjQAgpPo27ZB02AzR/9Tnnzt2gazTO
+      4b0183q5x8wBNGLhIGMTUxitGWS7HHNajBFzACEZ5JCXkaCdIs/jv5glRQthEiZrBgXW2Y/9
+      EYRUMNg8FKX4S4kS3q8WDfj4qq6OPu90MuoRhAWVcACmg3Fqd25jpLczGfUIwoJKeFktOyeH
+      jvY7lFSsnjlrSZbv3WKx5f+NMsLyoCjKvPpbwgHoaKrH4C7DZJhZvjYajaiqisFgwGRa+MsV
+      CulJr9fPq78lPARyuT2EJrz4JsQcQFh+Et4C5BZVkFuUjFIEYeGlx9FVgvAIIgBCWhMBENKa
+      CICQ1kQAhLQmAiCkNREAIa2JAAhpTQRASGsiAEJaEwEQ0poIgJDWRACEtCYCIKQ1EQAhrYkA
+      CGlNBEBIayIAQlpLOACx0BQtLW3E1GSUIwgLK+EAhEMRDMgiAMKylPBJ8U53LlMTYwDiukDC
+      olm06wIF/D5GvF5iGXmsLsgW1wUSFsWiXRdIkeO4cgvRKfFEmxKEBZeEIVABTncyShGEhSd2
+      gwppTQRASGsiAEJaEwEQ0poIgJDWRACEtCYCIKQ1EQAhrYkACGlNBEBIayIAQloTARDSmgiA
+      kNZEAIS0JgIgpLWEA+DraeH48eM0do0kox5BWFAJB6DfH+PZ5w4jTw4nox5BWFBiCCSktYQD
+      UJhp4MTxk+gz85JRjyAsKEnTNC3ZjUajUSKRCE6nM9lNC8JDjY6Okpub+8TPu++keL/fn5Rr
+      +ciyTDweJxqNJtyWIMzF9PT0vJ53XwBcLldSinncFkCWZQyGhC9IQTwex2g0JtSGqs5c0k6n
+      S2w0mKxaNE1Dr9cn1I4sy+j1eiRJSridRN+nhazlUVuA2Z6beC+ch2R0/mRJtOMn01KqBZbW
+      +5RILbM9d2n9iz+hlfIGJVuiW5BkWkq1PMzSedfmIdHNajKJWh5uKdXyMMtiCxCZ9nHpwnla
+      u4eJhca5eL6OgbFpIlNeLtbVMTwRYmK4m7q6rxgLpHbiHQv5ufpVHY3t/cQjk1y+UEf3sJ9Y
+      eJrmpkZCcYgGJ7nd1IKsJH0H2/00hf6OJuouXmEyHKe/o5FL1xuJKgojPXfoGhxHlaPcvnqR
+      C1duEUtlPZrKcE8b589fZCwYY6S7lYtX6gnHFXyDXbT3joCm0VZ/iTNnzuALKqmr5QksiwDE
+      FInN23cSGxumsfUuG7fXMtzdSXtHDzXbaum920JX3xg7dm7h7p22lNYSl1Wqap8C/wgt7XdZ
+      s7kWf38noUgMixEiMsTjMjqdhqKmOACqgjm7iM1rCxnqbmUgaGW120S/dxydTk84GgFJx5qa
+      rZTbg/RNprDTaSqGDA87t1TS39FKjx+qS7PoGRhGk4zEYyE0TSWit3Pw4EHc9qUxNFoWAXBk
+      OujvaMNTUYnRZCHDasNiAsVowWG1YTLpKc5zcPnSNcamgimtxZbhYLS7FVf5WkwGExlWG3ab
+      HpMjB5tp5k3NcOVgNS7AG6w3YtHC9PgilOdmYs/OwenIIBbX8HhykCTQ6Q14e1rp8GrkZKTw
+      7dbpsekV7vSNs7YsF5szi4wMB4qi4HHnMDMQkohPDnPqxHEG/UtjF/myCEBnUz0hnRU5EsJK
+      nKaWFgJxEw4iNLY0E1MtmGwOCj1OPLn5Ka1loKOJ8ZgBNRrAotNoaW1hLCghB3wMDA3TNzjM
+      9MQoQ0PD9A+OksrvDdFiAeqb7mIzGwjr7Uz3ttF0tw+HzUh/Tx/DgwP4fF4iOgd5WRLD3lDq
+      apFj1Dc0Y7WYCWlGQsPdNLffxWq1MdTfx/DQIGPTE2RmlVLkyWAqsDS+O0L/i1/84hfJblRR
+      FGRZxmKxJKU9k9mMpqrojSZKykpRYgplFaW4PR7UuEp5RRk6TSaGmTWrStClcN5lMJpA09Ab
+      jBSWliDJMiXl5eiVGBjtWExGbCY9Rosdo9GMw2EndeXoMJn0aBpYMrIp8jgwZuRQ4M4kGIzh
+      zLRjdbgwEseQkUt5QRapm5NKmE0GNA3MNifF+S4wOynJdxEKRsjMdGCxOsmwSmB1U17oSuoE
+      ORgMYrfbn7xqcSiEsBLM91CIZTEEEoRUEQEQ0poIgJDWRACEtCYCkFIaTdcuMOQP0377KsNT
+      T7bve6yrgSNfXiKmxThz6hyyGqPu4mU0AH8XF5rFaaiJEgFIKYkij42zdV9xs3mALHOMM8e/
+      oGNgnNGeFj77/CTeqTCd7W3UN7agqBpT3l6OHz+Fb3ycd3/7LhGjCSQTDnmEL784SdCQzVDP
+      XcJTXu4M+Bf7F1z2RABSzFW6GXPfV5TtOsz1o+9R39nD0aMnGBwcpL/9KkfO3+aLo59gd+ej
+      k6Kc+OIC66vK+PTERcoKV7Fj9waMwMbdB2i6fYddm8tpvHaeJ9yYCI+wrI8GXRYkHXk5Jbjd
+      DqI5OXgMFtZWlNN0+UvKyssY1Glkeoopzc9C0uJkWDUabjdhy3RjDE5gtpiRAJPVTmlBKRbz
+      0jiGZqUQC2ELIBoKorfY0RNnfGwCvSUDs04mHFUw2+xIiozVbkMC5GiYiakgzqxs1GgYo92O
+      HkBTCYWiWO0WoqEQRpORiCxhtyR2FtpKMd+FMBEAYUUQK8GCMA//H4mNMpthHKrhAAAAAElF
+      TkSuQmCC
+    </thumbnail>
+  </thumbnails>
+</workbook>
