@@ -1,0 +1,85 @@
+Total or New Positive Cases
+	parameter
+IF [Cumulative or New] = "New" THEN [People Positive New Cases Count] 
+ELSE [People Positive Cases Count] END
+
+---------------
+Cumulative or New Header
+parameter
+[Cumulative or New]
+
+
+----------------
+Notes on County Data for States with Odd Counties
+
+IF [Province State Name] = "New York" THEN 
+"All cases for the five boroughs of New York City (New York, Kings, Queens, Bronx and Richmond counties) are assigned to a single area called New York City."
+
+ELSEIF [Province State Name] = "Illinois" THEN 
+"All cases and deaths for Chicago are reported as part of Cook County."
+
+ELSEIF [Province State Name] = "Missouri" THEN 
+
+"Four counties (Cass, Clay, Jackson and Platte) overlap the municipality of Kansas City, Mo. The cases and deaths that we show for these four counties are only for the portions exclusive of Kansas City. Cases and deaths for Kansas City are reported as their own line."
+
+ELSE ""
+END
+
+
+-----
+
+""
+""
+
+
+-----
+
+State and County Combined
+
+[Province State Name] + " - " +[County Name]
+
+-----
+
+Selected Metric
+
+IF [Cumulative or New] = "Cumulative" and [Positive Cases or Deaths] = "Positive Cases" 
+THEN [People Positive Cases Count]
+
+ELSEIF [Cumulative or New] = "New" and [Positive Cases or Deaths] = "Positive Cases" 
+THEN [People Positive New Cases Count]
+
+ELSEIF [Cumulative or New] = "New" and [Positive Cases or Deaths] = "Deaths" 
+THEN [People Death New Count]
+
+ELSEIF [Cumulative or New] = "Cumulative" and [Positive Cases or Deaths] = "Deaths" 
+THEN [People Death Count]
+
+END
+
+----
+
+
+Selected Metric Header
+parameter			parameter
+[Cumulative or New] + " " + [Positive Cases or Deaths]
+
+----
+
+State for Filter
+
+[Province State Name]
+
+
+
+----
+
+
+Total or New Deaths
+
+	parameter
+IF [Cumulative or New] = "New" THEN [People Death New Count] 
+ELSE [People Death Count] END
+
+
+
+
