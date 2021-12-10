@@ -178,7 +178,7 @@ GROUP BY A.Cust_id
 --Use such date functions. Don't forget to call up columns you might need later.*/
 
 CREATE VIEW Cust_Log AS
-SELECT Cust_id, DATEPART(YEAR,Order_Date) [Year], DATEPART(MONTH,Order_Date) [Month]
+SELECT Cust_id, DATEPART(YEAR,Order_Date) [Year], DATEPART(MONTH,Order_Date) [Month] --YEAR(Order_Date), MONTH(Order_Date)
 FROM combined_table
 
 SELECT DISTINCT cust_id, [Year], [Month]
@@ -234,7 +234,8 @@ FROM (
 		FROM Monthly_Visit
 ) A
 
-
+--SELECT *, DENSE_RANK() OVER (PARTITION BY ORD_MONTH ORDER BY ORD_MONTH) FROM CNT_CUSTOMER_LOGS 
+--BURADA ROW_NUMBER KULLANILMAZ.
 
 --/////////////////////////////////
 
@@ -245,8 +246,8 @@ FROM (
 
 
 CREATE VIEW Time_Gaps AS
-SELECT *, (Next_Month_Visit-Current_Month) Time_Gap
-FROM Next_Month_Visit
+SELECT *, (Next_Month_Visit-Current_Month) Time_Gap    
+FROM Next_Month_Visit                                  
 
 SELECT * 
 FROM Time_Gaps
@@ -286,6 +287,10 @@ FROM Label_Gap
 --1. Find the number of customers retained month-wise. (You can use time gaps)
 --Use Time Gaps
 
+/**Burada önemli husus birbirini takip eden aylarda gelen müþterileri bulmak. 
+Yani 2.ayda gelen müþterilerden kaç tanesi 1.ayda gelenlerden oluþuyor. Amaç bunu bulmak. Bunu sýrasýyla 2-3, 3-4 gibi aylar için yapmamýz gerekir.
+Bu kapsamda aþaðýdaki iþlem ile ardýþýk iki ayýn kesiþim iþlemini yapýyoruz. */
+
 CREATE VIEW Retention_Month_Val AS
 SELECT * ,
 	COUNT(Cust_id) OVER(PARTITION BY [Year],Current_Month,Next_Month_Visit) Retention_Month
@@ -293,6 +298,7 @@ FROM(SELECT *
 	FROM Time_Gaps
 	WHERE Time_Gap=1) A
     ORDER BY Cust_id
+
 
 
 --//////////////////////
