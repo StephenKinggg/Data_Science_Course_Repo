@@ -1,0 +1,6 @@
+CASE [Unit]
+WHEN “m” THEN
+MAKELINE(MAKEPOINT([_Input Lat],[_Input Long]),
+MAKEPOINT(([_Input Lat] + [Parameters].[Radius]/111000), [_Input Long] ))
+ELSE MAKELINE(MAKEPOINT([_Input Lat],[_Input Long]),
+MAKEPOINT(([_Input Lat] + [Parameters].[Radius]/364173), [_Input Long] )) END
