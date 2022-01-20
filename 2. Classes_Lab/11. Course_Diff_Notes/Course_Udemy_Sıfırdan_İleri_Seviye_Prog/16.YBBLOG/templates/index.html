@@ -1,0 +1,12 @@
+{% extends "layout.html" %} {% block body %}
+<div class="jumbotron text-center">
+    <h3>Yazılım Dünyası Bloğuna Hoşgeldiniz.</h3>
+    <p>Bu blogta program geliştiriciler olarak blog yazılarınızı paylaşabilirsiniz ve bu konuda kendini geliştirmeye çalışan insanlara yardımcı olabilirsiniz.</p>
+</div>
+{% if islem==1 %}
+<p>1.islem</p>
+{% elif islem==2 %}
+<p>2.islem</p>
+{% else %}
+<p>Geçersiz bir işlem...</p>
+{% endif %} {% endblock %}

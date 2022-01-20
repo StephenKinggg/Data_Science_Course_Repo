@@ -206,6 +206,216 @@ JS
 
 daha sonra  google browsera bootstrap static navbar yazdık ancak ilk sayfayı beğenmedik sonrasındakini aldık. daha sonra siteye sağ tıklayıp sayfa kaynağına gittik ve buradaki nav class body altında bulunan etiketleri aldık.
 
+view-source:https://getbootstrap.com/docs/4.0/examples/navbar-fixed/
+
+sonra buradaki kodun kaynağınından navbar aldık.
+
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Fixed navbar</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+        </ul>
+        <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+ve navbar.html içine attık.
+
+layout bu şekilde oluştu.
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <title>YB Blog</title>
+</head>
+
+<body>
+
+    {% include "includes/navbar.html" %}
+    <br><br><br>   # yazıyı öne çekmek için kullandık.
+    <div class="container">   # boostrapta çok kullanılır container yapısı. yazılarımız daha iyi görünsün diye. 
+        
+	{% block body %} 
+
+	{% endblock %}
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
+
+index.html bu şekilde: 
+
+{% extends "layout.html" %}  # layout inheritance yaptı. Ancak block oluşturup içine yazdığımı kullandı.
+
+{% block body %}
+<h3>Ana Sayfa</h3>
+{% endblock %}
+
+
+navbar içindeki search bir form durumunda ve bunu kaldırmak istiyorum. sonra bunu farklı şekilde oluşturacağım.
+
+<form class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+fixed navbar ismini YB Blog olarak değiştirmek istiyorum.
+
+<a class="navbar-brand" href="#">YB Blog</a>
+
+YB Blog üzerine tıklayınca başka bir sayfaya gidiyor ancak ben route kendine dönmesini istiyorum. Bundan dolayı href="/"> yaptık. Yani bu durumda buna tıklayınca tekrar kök dizine gelmiş olacağım.
+
+
+Buradaki div bizim elementlerin çoğunu barındırıyor.
+
+<div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">  # sola yaslıyor. ml-auto yaparsam sağa yaslar.
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+        </ul>
+    </div>
+
+yukarıdaki link ve disabled elementlerini silmek istiyorum.
+
+home daki <span class="sr-only">(current)</span></a> etiketi sildik ve home yerine hakkımızda yazdık ve basıldığında /about diye bir url ye gitmesini istiyorum. 
+son hali bu oldu.
+
+<a class="nav-link" href="/about">Hakkımızda</a> 
+
+ilave olarak yeni bir element ekledik.
+
+<li class="nav-item active">
+                <a class="nav-link" href="/articles">Makaleler</a>
+
+
+daha sonra navbar.html ye ilave yaptık.
+
+<ul class="navbar-nav mlauto">   # ml sağa yasladı.
+            <li class="nav-item active">
+                <a class="nav-link" href="/register">Kayıt Olun</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/login">Giriş</a>
+            </li>
+
+Bu bölümde ise about.html oluşturduk. Bunun için blog_mine.py içine bir tane 
+
+@app.route("/about")
+def about():
+    return render_template("about.html") tanımladık.
+
+daha sonra about içine bunları yaptık.
+
+{% extends "layout.html" %} 
+
+{% block body %}
+<h3>Hakkımda</h3> # diye bir başlık ekledik.
+<hr> # etiketi ile düz bir çizgi çektik. 
+{% endblock %}
+
+daha sonra about içinde Hakkımda altına iki hr arasına metin ekledim.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Hakkımda</h3>
+<hr> Herkese merhaba.Ben Stephen King. Odtü Bilgisayar Mühendisliği bölümü mezunuyum.Yazılım Bilimi kanalını programlama ve yazılım öğrenmek isteyen gençlere ve yazılımcılara faydalı olmak ,aynı zamanda Türkiyede yazılımın ve eğitimin yükselmesi amacıyla
+10 Nisan 2015 tarihinde kurdum.Şimdiye kadar elimden geldiğince video yüklemeye çalıştım.Bu kanaldaki amacım Yazılım Bilimini genel bir online akademiye dönüştürüp Türkiye’nin dört bir yanına ücretsiz bir şekilde eğitim verebilmek.Ülkemizin gençleri olarak
+hep beraber yazılımı ve bilimi herkese aşılamaya çalışalım.Var mısınız? Programlama ve Yazılım Öğrenmeye yeni mi başlıyorsunuz ? İşte yol haritanız. 1.Web geliştirmek ve bu alanda uzmanlaşmak istiyorsanız Temel olarak HTML,CSS,Javascript öğrenmeye çalışın.Daha
+sonra server-side(sunucu tarafı) diller ile kendinizi geliştirin.(Php,Python Django ,Asp,Ruby On Rails vs.) 2.Mobil uygulama mı geliştirmek istiyorsunuz ? Eğer çok yeniyseniz, ilk başta Python gibi algoritma ve programlama mantığını anlayacağınız bir
+dille başlayın. Daha sonra hangi ortamda mobil geliştirme yapacağınıza karar verin.IOS geliştirmek istiyorsanız Swift,Android Programlamak istiyorsanız Java öğrenin.Daha sonra Android ve Java geliştirmeye başlarsınız. 3.Masaüstü uygulamaları(Arayüz Uygulamaları)
+mı geliştirmek istiyorsunuz.Bunun için önünüzde bir çok seçenek var.Python,C#,Java gibi dillerle çok iyi arayüzler çıkarabilirsiniz. 4.Machine Learning ve Yapay zeka ilginizi çekiyorsa yazımı kolay olan ve çok verimli bir dil olan Python size yararlı
+olacaktır.
+<hr> {% endblock %}
+
+
+{% extends "layout.html" %} {% block body %}
+<h3>Ana Sayfa</h3>
+{% endblock %}   içindeki h3 kaldırarak bunun yerine bootstrapten güzel bir div yazmak istiyorum.
+
+daha sonra index.html içinde aşağıdaki işlemleri yaptık.
+
+{% extends "layout.html" %} {% block body %}
+<div class="jumbotron text-center">
+    <h3>Yazılım Dünyası Bloğuna Hoşgeldiniz.</h3>
+    <p>Bu blogta program geliştiriciler olarak blog yazılarınızı paylaşabilirsiniz ve bu konuda kendini geliştirmeye çalışan insanlara yardımcı olabilirsiniz.</p>
+</div>
+{% endblock %}
+
+
+@app.route("/")  
+def index():   
+    return render_template("index.html", answer="evet")  içine bir python kodu gönderdik ve evet atadık.
+
+daha sonra görüldüğü gibi bir if yapısı oluşturduk. Cevabıma göre bunu dönecek.
+
+{% extends "layout.html" %} {% block body %}
+<div class="jumbotron text-center">
+    <h3>Yazılım Dünyası Bloğuna Hoşgeldiniz.</h3>
+    <p>Bu blogta program geliştiriciler olarak blog yazılarınızı paylaşabilirsiniz ve bu konuda kendini geliştirmeye çalışan insanlara yardımcı olabilirsiniz.</p>
+</div>
+{% if answer=="evet" %}
+<p>Cevabımız evetmiş...</p>
+{% else %}
+<p>Cevabımız evet değilmiş...</p>
+{% endif %}
+
+{% endblock %}
+
+daha sonra aşağıdaki gibi değiştirdik.
+
+@app.route("/")  
+def index():   
+    return render_template("index.html", islem=1)
+
+index.html içini de aşağıdaki gibi değiştirdik.
+
+{% if islem==1 %}
+<p>1.islem</p>
+{% elif islem==2 %}
+<p>2.islem</p>
+{% else %}
+<p>Geçersiz bir işlem...</p>
+{% endif %}
+
+
+
+
+
+
 <script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
 
 <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
