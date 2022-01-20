@@ -39,5 +39,178 @@ if __name__ =="__main__" : # bir web sunucusunu çalıştırıyoruz.bir tane loc
 
 # .html django olarak açma sıkıntısını sağ alttan django html açıp sonra buradan html seçip kaldırıyoruz.
 # template içine bir tane index.html oluşturduk. Bunun içinde oynamalar yaparak localhosttaki değişiklikleri görebiliriz.
+# TERMİNAL de CTRL+C ile localhost kapatırsak çalıştırmak için python blog_mine.py yazacağız terminale.
+
+
+# şimdi ise bu template bir python yapısı nasıl gönderilir onu incelemek için rakam= 10 tamamladık ve render içine , number=rakam olarak tanımladık.
+#<h5>Rakam</h5>
+ <p>{{ number }}</p>  bu şekilde bir tanımlama yaptık ve içine göndereceğimiz değişkeni yazdık. Ayrıca bir python verisi gönderirken bu şekilde iki süslü parantez içinde tanımlıyoruz.
+
+from flask import Flask, render_template
+
+app = Flask(__name__)  
+
+@app.route("/")  
+def index(): 
+    rakam = 10
+    rakam2 = 20
+    return render_template("index.html", number=rakam, number2=rakam2)  #default olarak templates klasörüne gitti.
+
+if __name__ =="__main__" : 
+    app.run(debug=True)
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anasayfa</title>
+</head>
+
+<body>
+    <h3>Anasayfa</h3>
+    <p>Burası anasayfadır.</p>
+
+    <h5>Rakamlar</h5>
+    <p>{{ number }}</p>
+    <p>{{ number2 }}</p>
+
+</body>
+
+</html>
+
+
+# Bu sefer dict bir yapı gönderdik.
+
+from flask import Flask, render_template
+
+app = Flask(__name__)  
+
+@app.route("/")  
+def index(): 
+    article = dict()
+    article["title"] = "Deneme"
+    article["body"]  = "Deneme123"
+    article["author"] = "Stephen"
+    
+    return render_template("index.html", article = article)  #default olarak templates klasörüne gitti.
+
+if __name__ =="__main__" : 
+    app.run(debug=True)
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anasayfa</title>
+</head>
+
+<body>
+    <h3>Anasayfa</h3>
+    <p>Burası anasayfadır.</p>
+
+    <h5>Articles</h5>
+    <p>{{ article["title"] }}</p>    # article.title
+    <p>{{ article["body"] }}</p>     # article.body
+    <p>{{ article["author"] }}</p>   # article.author
+
+</body>
+
+</html>
+
+# class inheritance olduğu gibi templates inheritance manığıda aynıdır.
+
+önce templates klasörü içine yeni bir layout.html oluşturduk. bunu index içine inheritance olarak göndermek için önce index içini temizledik. 
+
+index.html içine {% extends "layout.html" %} # anahtar kelimeler kullanmak istiyorsak bu şekilde kullanıyoruz yazdık.
+
+sonra blog_mine.py içine 
+@app.route("/")  
+def index():   
+    return render_template("index.html")  yazdık.
+
+# Block yapıları:
+
+Layout içine tanımladık.
+
+<body>
+
+    <h3>Layout</h3>
+
+    {% block World %}
+    <p>Burası bir layouttur...</p>
+    {% endblock %}
+
+</body>
+
+mesela bu block içindeki metni değiştirmek istiyorsak index içine;
+
+{% block World %}
+<p>Burası aslında indextir. Layouttan gelen inheritance bu şekilde kullandık.</p>
+{% endblock %}   yazıyoruz.
+
+
+şimdide layout içinde title Layout olarak yazmıştık. Bunu block olarak yazıyoruz ve benden türüyen templates bunu değiştirebilsinler.
+
+ <title>
+        {% block title %}
+        Layout
+        {% endblock %}
+ </title>
+
+index.html de bunu overwrite yapmak istediğimizi belirtmediğimizden dolayı localhost ta bu ifadeyi değiştirmeyecek.
+
+Bunun için 
+
+{% block title %} Ana sayfa {% endblock %}  arasına Ana sayfa yazıp çalıştırınca artık layout inheritance title yerine buraya yazdığım title kullanılacak.
+
+
+
+
+CSS
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+JS
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+# Bootstrap Kullanımı.
+
+önce index.html oluşturduk. Sonra bunun içinde kullanmak için bir navbar.html oluşturduk.templates altında kullanacağım html dosyaları için bir tane includes klasörü oluşturdum.
+
+boostrap 4 cdn neden boostrap css link alıp kopyaladık ve layout içinde meta altına kopyaladık. Aşağıdaki code ları aldık. sonra body içine de alttaki diğer 3 kodu kopyalayıp yapıştırdık.
+
+CSS
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+
+JS
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+daha sonra  google browsera bootstrap static navbar yazdık ancak ilk sayfayı beğenmedik sonrasındakini aldık. daha sonra siteye sağ tıklayıp sayfa kaynağına gittik ve buradaki nav class body altında bulunan etiketleri aldık.
+
+<script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
+
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+
+
+
 
 
