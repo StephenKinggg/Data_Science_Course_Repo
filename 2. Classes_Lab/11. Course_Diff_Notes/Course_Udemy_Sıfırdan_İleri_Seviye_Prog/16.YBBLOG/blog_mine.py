@@ -36,4 +36,6 @@ if __name__ =="__main__" : # bir web sunucusunu çalıştırıyoruz.bir tane loc
 # bunu render ederek göndermek zorundayız. Bu durumda içine pyhton kodu yazabiliyorum.
 # render_template func indirdik.
 
+# .html django olarak açma sıkıntısını sağ alttan django html açıp sonra buradan html seçip kaldırıyoruz.
+
 
