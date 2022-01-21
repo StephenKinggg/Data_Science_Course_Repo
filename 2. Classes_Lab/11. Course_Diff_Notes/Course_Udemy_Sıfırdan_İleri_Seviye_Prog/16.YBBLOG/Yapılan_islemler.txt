@@ -412,15 +412,316 @@ index.html içini de aşağıdaki gibi değiştirdik.
 {% endif %}
 
 
+for döngüsünün kullanımı:
+
+blog_mine.py içine alttaki kodu yazdık.
+
+def index():   
+    numbers = [1,2,3,4,5]   # bunun yerine tuple da yazabilir ve içinde gezinebiliriz.
+    
+    return render_template("index.html", numbers=numbers)
 
 
+sonrasında index.html içine aşağıdaki for döngü kodunu yazdık.
+
+<ul>
+    {% for number in numbers %}
+        <li>{{number}}</li>
+    {% endfor %}
+</ul>
 
 
-<script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
-
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+for döngüsü için bu sefer blog_mine.py içine bir dict tanımladık ve bunun her bir elemanında dolaşacağız.
 
 
+@app.route("/")  
+def index():   
+    articles = [{"id":1, "title":"Deneme1","content":"Deneme1 içerik"},
+               {"id":2, "title":"Deneme2","content":"Deneme2 içerik"},
+               {"id":3, "title":"Deneme3","content":"Deneme3 içerik"}
+               ]
+    
+    return render_template("index.html", articles=articles)
 
 
+daha sonra index.html içinde for döngüsünü döndürüp dolaşıyoruz. 
 
+<ul>
+    {% for article in articles %}
+    <li>Article Id:{{article.id}} - Article Title:{{article.title}} - Article Content:{{article.content}} </li>
+    {% endfor %}
+</ul>
+
+
+Dinamik URL yapısı: blog_mine.py içine aşağıdaki func tanımladık.
+
+@app.route("/article/<string:id>")  # local host http://localhost:5000/article/1 yazınca burada artık Article Id :1 dönecek.
+def detail(id):
+    return "Article Id:"+id
+
+
+# Flask MySQL konfigurasyonu için aşağıdaki modülleri indiriyoruz.(third party modüller)
+1. cmd den pip install flask-mysqldb  
+2. pip install Flask-WTF   # form classları oluşturmak için kullanacağız.
+3. pip install passlib  kullanıcılar ilave edince bunun şifrelenmesi için kullanıyoruz.
+
+blog_mine.py içine bunları dahil ettik. 
+
+from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
+from flask_mysqldb import MySQL 
+from wtforms import Form, StringField, TextAreaField, PasswordField, validators
+from passlib.hash import sha256_crypt 
+
+xampp mutlaka açık olmalı. burada yeni veritabanı oluşturu seçtik. daha sonra veritabanına isim verdik. ve karşılaştırma türkçe destekli olsun diye utf-general-ci seçtik.
+sonrasında içine verileri saklayacağımız tabloları oluşturuyoruz. daha sonra kaç feature dan oluşacaksak onu seçtik. Açılan ekranda feature ları dolduruyoruz.
+ilk feature id seçtim ve bunu primary yaptım ve auto olarak herkişi eklendiğinde artmasını istediğimden dolayı thick işaretledim.
+
+daha sonra blog_mine.py içine     https://flask-mysqldb.readthedocs.io/en/latest/  linkinden olması gerekenleri yazıyorum.
+
+app = Flask(__name__)  
+
+app.config["MYSQL_HOST"] = "localhost"  # eğer kiralık olsaydı o sunucunun adresini vermemiz gerekirdi. şimdi bizimki localhostta çalışıyor.
+app.config["MYSQL_USER"] = "root"      # kendi bs bağlandığımızdan dolayı varsayılan olarak kullanıcı root ve parolası boş olarak geliyor.
+app.config["MYSQL_PASSWORD"] = ""
+app.config["MYSQL_DB"]="ybblog"        # db olarak da oluşturduğumuz db ismini girdik.
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"   # dict formatında daha anlaşılır bir şekilde almak için.
+
+mysql = MySQL(app)    # mysql kullanmak için bir tane obje oluşturuyorum. buradaki app ile mysql bağlamak için app içine parametre olarak verdik.
+
+
+WTForms ile kullanıcı kayıt formu oluşturma:
+bu formu kullanarak bir tane register formu oluşturarak diğer başka formları buradan türetebiliriz. Daha az kod ile daha çok iş yapmış olacağız.
+
+https://wtforms.readthedocs.io/en/3.0.x/forms/#defining-forms  buradan bakıyoruz.
+
+
+# Kullanıcı Kayıt Formu :
+
+class RegisterForm(Form):
+    name = StringField("İsim Soyisim", validators=[validators.Length(min=4, max=25)])
+    username = StringField("Kullanıcı Adı", validators=[validators.Length(min=5, max=35)])
+    email = StringField("Email Adres", validators=[validators.Email(message = "Lütfen Geçerli Bir Email Adresi Giriniz.")])
+    password = PasswordField("Parolo: ", validators= [
+        validators.DataRequired(message = "Lütfen bir parola belirleyiniz."),
+        validators.EqualTo(fieldname = "confirm", message ="Parola uyuşmuyor...")
+        ])
+    confirm = PasswordField("Parola Doğrula")    ile bir kullanıcı formu oluşturduk.
+
+
+# register sayfası oluşturmak için:
+önce register.html oluşturduk.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Kayıt Olun</h3>
+<hr><hr>   # boşluk iki çizgi bıraktık.
+{% endblock %}
+
+iki türlü request var(get ve post). Bunlardan hangisini kullanacaksak bunu belirtmemiz gerekir.
+
+# Kayıt olma
+@app.route("/register", method=["GET","POST"]):  # burada hangi request i kullanmak istediğimiz yazıyoruz. ikiside olabilir.
+def register():
+    form = RegisterForm(request.form)    içine birşey vermezsek boş olarak algılayacak. bize gelen form isteğini registerform ile aldık ve form üzerinde kaydettik.
+    
+    if request.method =="POST":    # gelen request in ne olduğunu kontrol ediyoruz.
+        pass
+    else:
+        return render_template("register.html") 
+
+localhost ta her refresh yapınca getrequest taleplerinin hangi saat diliminde geldiğini terminalde görebiliyoruz.
+
+request in get olma durumunu localhost ta göstermek için;
+
+return render_template("register.html", form=form)  içinde form=form yaptık.
+
+formhelpers.html isimli bir template oluşturduk ve içine bir tane macro oluşturduk.
+
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+
+https://getbootstrap.com/docs/4.0/components/buttons/  den button özelliklerini aldık.
+
+<button type="submit" class="btn btn-primary">Kayıt Ol</button>  olarak register.html içine kaydettik.
+
+sayfamız daha güzel gözüksün diye
+
+{{ render_field(form.name, class = "form-control") }} {{ render_field(form.username, class = "form-control") }} {{ render_field(form.email, class = "form-control") }} {{ render_field(form.password, class = "form-control") }} {{ render_field(form.confirm, class = "form-control")
+
+şeklinde bir düzeltme yaptık. ve kayıt formundaki alanlar daha büyük hale geldi.
+
+
+request isteğimiz post olsaydı pass ile geçiyorduk. 
+
+return redirect(url_for("index"))  şeklinde bir düzeltme ile post request olduğundan index in root url sine geri dönüyoruz. 
+Yani kayıt formunu doldurduğumuzda tekrar ana sayfaya dönüyoruz.
+
+# Şu ana kadar veri tabanına herhangi bir kayıt yapmadık. Şimdi bunu nasıl yaparız ona bakalım.
+
+şu ana kadar validator ile kontrollerimizi yapmıştık. Şimdi request=post ve formumuz geçerli ise ilave bir kontrol daha ekliyoruz.
+
+if request.method =="POST" and form.validate():   formda sorun yoksa tekrar index döneceğiz. bundan önce db kayıt işlemini tamamlamız gerekir.
+
+phpmyadmin içinde oluşturduğum tableda users bakınca boş olduğunu görüyorum.
+
+    if request.method =="POST" and form.validate():
+        name = form.name.expandata 
+        username = form.username.data 
+        email = form.email.data 
+        password = sha256_crpyt.encrypt(form.password.data) sha ile şifreyi şifrelemiş olduk.
+
+mysql objesi üzerinde bir tane cursor oluşturuyoruz. Bu db üzerinde işlem yapmamızı sağlayan bir yapı. Biz bu yapı ile sql sorgularımızı çalıştırıyoruz.
+
+cursor = mysql.connection.cursor()
+sorgu = "Insert into users(name, username, email, password) VALUES(%s,%s,%s,%s)"  # burada sorgu isimli bir sql query oluşturduk. 
+cursor.execute(sorgu,(name, username, email, password)) # cursora bir demet gönderdik. eğer tek elemanlı bir demet göndermek isteseydik bu durumda (name,) şeklinde göndermemiz gerekirdi.
+mysql.connection.commit()  # veri tabanında eğer silme veya güncelleme gibi bir işlem yapmak istiyorsak bunu mutlaka yazmak zorundayız. Sadece veri çekmek istiyorsak bunu yapmamıza gerek yok.
+cursor.close() # sonraki kaynakların kullanılmaması için bunu alışkanlık haline getirmek gerekir.
+
+cursor kullanınca veri tabanımızda bir tane query çalışmış oluyor.
+
+bu işlemlerden sonra localhost ta bir kayıt oluşturup bunu xampp deki users ten bu kaydı görebiliyoruz.
+
+
+# message flashing yani kayıt işlemi sonrası kullanıcıya bir geribildirim vermemiz gerekir. Bunu kullanınca bir sonraki sitede göstermemiz gerekir.
+bir tane message.html oluşturup içine bunu yazdık. Bunu her yerden ulaşabildiğim bir template içine koymam gerekir. Buda layout template.
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <li class="{{ category }}">{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+layout içinde container içine dahil ettim. 
+
+<div class="container">
+        {% include "includes/messages.html" %}
+
+
+daha sonra blog_mine.py içine 
+
+mysql.connection.commit()
+        cursor.close()
+        
+        flash("Kayıt işlemi başarı ile sonuçlanmıştır.Tebrikler...","success")  #bunun ile içine iki parametre verdik. 
+post request olunca bir flash yapıp, sonrasında redirect yaptık ve redirect ile index sayfasına bir get request yaptık. Bir sonraki requestte bu flash message ekranda yayınlanıyor.
+
+RuntimeError: The session is unavailable because no secret key was set.  Set the secret_key on the application to something unique and secret.  hatası veriyor. Kendi app bir script vermemiz gerekiyorki flash mesajlarını kullanalım.
+
+app = Flask(__name__)  
+app.secret_key = "ybblog"  rastgele bir içeriği olan bir key tanımlıyoruz. Buradaki mesaj, messages.html içindeki <li class="{{ category }}">{{ message }}</li>
+bakıyor category varsa bunu mesajlardan alıp getiriyor.
+Bunu biraz daha gösterişli getireceğiz.messages.html içindeki
+<li class="{{ category }}">{{ message }}</li> sildik. 
+
+Bunun yerine ;
+<div class="alert alert-{{ category }}" role="alert">   bootstrap 4 alert mesaj örneklerinden aldık. Burada iki süslü parantez içinde yazdığımız category ne olursa ona göre role alert olacak.
+        {{message}}  # buraya da message gelsin istedik.
+    </div>
+
+localhost kayıt yaptığımızda flash messagının geldiğini göreceğiz. sayfayı refresh yapınca bunun gelmediğini göreceğiz. çünkü flash mesajları bir kullanımlıktır.
+
+# login ekranı ekleme:
+
+blog_mine.py içine ekleme yaptık.
+
+@app.route("/login", methods =["GET","POST"])  # login ve post yaparken içine methods tanımladık.
+def login():
+    form = LoginForm(request.form)
+    
+    return render_template("login.html", form=form)
+
+
+navbar içine aşağıdaki kodu ekledik.
+
+<li class="nav-item active">
+                <a class="nav-link" href="/login">Giriş Yap</a>
+            </li>
+
+login.html template oluşturduk.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Giriş Yap</h3>
+<hr> {% from "includes/formhelpers.html" import render_field %}
+
+<form method="post">
+
+    {{ render_field(form.username) }} {{ render_field(form.password) }}
+
+    <button type="submit" class="btn btn-primary">Giriş Yap</button>
+</form>
+{% endblock %}
+
+İnsanlar kayıt olduktan sonra girip yap kısmına gitmek isterler. Ancak şu an bizim yaptığımızda anasayfaya gidiyorlar. bunda da biraz değişiklik yapalım.
+
+cursor.close()
+        flash("Kayıt işlemi başarı ile sonuçlanmıştır.","success")
+        return redirect(url_for("index"))   #buradaki index, login olarak değiştirdik.
+
+# Login İşlemi:
+@app.route("/login", methods =["GET","POST"])
+def login():
+    form = LoginForm(request.form)    #login form oluşturduk.
+    if request.method == "POST":      # request post ise formun içindeki bilgileri aldık.
+        username = form.username.data
+        password_entered = form.password.data
+
+        cursor = mysql.connection.cursor()   # cursor oluşturduk.
+        sorgu = "Select * From users where username = %s"
+
+        result = cursor.execute(sorgu,(username,))
+        
+        if result > 0 :
+            data = 
+        else:
+            flash("Böyle bir kullanıcı bulunmuyor...","danger")
+            return redirect(url_for("login"))
+        
+    return render_template("login.html", form=form)
+
+# şimde ise kullanıcının girdiği login bilgilerinin varolan bilgiler ile uyuşup uyuşmadığını kontrol etmek için blog_mine.py içinde eklemeler yapıyoruz.
+
+# Login İşlemi:
+@app.route("/login", methods =["GET","POST"])
+def login():
+    form = LoginForm(request.form)
+    if request.method == "POST":
+        username = form.username.data
+        password_entered = form.password.data
+
+        cursor = mysql.connection.cursor()
+
+        sorgu = "Select * From users where username = %s"
+
+        result = cursor.execute(sorgu,(username,))
+        
+        if result > 0 :
+            data = cursor.fetchone()  # kullanıcıya ait tüm veriyi çektik.
+            real_password = data["password"] #sözlükte gezindiğim gibi geziniyorum.
+            if sha256_crypt.verify(password_entered, real_password):  # girilen şifre ile gerçek şifreyi karşılaştırdık.
+                flash("Başarı ile giriş yaptınız.","success")
+                return redirect(url_for("index"))
+            else:
+                flash("Parolanızı Yanlış Girdiniz.","danger")
+                return redirect(url_for("login"))
+                
+        
+        else:
+            flash("Böyle bir kullanıcı bulunmuyor...","danger")
+            return redirect(url_for("login"))
+        
+    return render_template("login.html", form=form)
