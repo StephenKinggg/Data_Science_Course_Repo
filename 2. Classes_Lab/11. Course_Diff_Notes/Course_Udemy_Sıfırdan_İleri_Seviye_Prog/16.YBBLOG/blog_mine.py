@@ -5,6 +5,18 @@ from wtforms import Form,StringField,TextAreaField,PasswordField,validators
 from passlib.hash import sha256_crypt
 from functools import wraps
 
+# kullanıcı giriş decorator
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Bu sayfayı görüntülemek için lütfen giriş yapın.","danger")
+            return redirect(url_for("login"))
+        
+    return decorated_function
+
 
 # Kullanıcı Kayıt Formu :
 class RegisterForm(Form):
@@ -50,6 +62,13 @@ def about():
 def detail(id):
     return "Article Id:"+id
 
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template("dashboard.html")
+
+
 # Kayıt olma
 @app.route("/register", methods=["GET","POST"])
 def register():
@@ -93,6 +112,12 @@ def login():
             real_password = data["password"] #sözlükte gezindiğim gibi geziniyorum.
             if sha256_crypt.verify(password_entered, real_password):
                 flash("Başarı ile giriş yaptınız.","success")
+                
+                session["logged_in"] = True
+                session["username"] = username
+                
+                
+                
                 return redirect(url_for("index"))
             else:
                 flash("Parolanızı Yanlış Girdiniz.","danger")
@@ -104,5 +129,22 @@ def login():
         
     return render_template("login.html", form=form)
 
+# logout işlemi:
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
+
+# makale ekleme:
+@app.route("/addarticle", methods = ["GET","POST"])
+def addarticle():
+    form = ArticleForm(request.form)  # bir obje oluşturduk.
+    return render_template("addarticle.html", form=form)
+
+# makale form:
+class ArticleForm(Form):
+    title = StringField("Makale Başlığı", validators=[validators.Length(min=5, max=100)])
+    content = TextAreaField("Makale İçeriği", validators=[validators.Length(min=10)])
+    
 if __name__ =="__main__" : 
     app.run(debug=True)
