@@ -725,3 +725,398 @@ def login():
             return redirect(url_for("login"))
         
     return render_template("login.html", form=form)
+
+
+# Session kontrolü: başarı ile giriş yaptıktan sonra hemen session ile kontrol yapmak istiyorum.
+
+flash("Başarı ile giriş yaptınız.","success")
+                
+                session["logged_in"] = True
+                session["username"] = username
+
+navbar.html içine;
+
+<li class="nav-item active">
+                <a class="nav-link" href="/logout">Çıkış Yap</a>
+            </li>         ekledik.
+
+navbarın son hali aşağıdaki gibi oldu.
+
+<ul class="navbar-nav mlauto">
+
+            {% if session["logged_in"] %}                  # burada eğer giriş yapılmış çıkış yap gözükecek, aksi takdirde bu kısmı geçip aşağıdake else yapısı gözükecek.
+            <li class="nav-item active">
+                <a class="nav-link" href="/logout">Çıkış Yap</a>
+            </li>
+            {% else %}
+            <li class="nav-item active">
+                <a class="nav-link" href="/login">Giriş Yap</a>
+            </li>
+
+            {% endif %}
+
+            <li class="nav-item active">
+                <a class="nav-link" href="/register">Kayıt Olun</a>
+            </li>
+        </ul>
+
+blog_mine.py içine;
+
+# logout işlemi:
+@app.route("/logout")
+def logout():
+    session.clear()     # açılan session temizler. ve index yönlendirir.
+    return redirect(url_for("index"))
+
+
+# makaleler için kontrol paneli oluşturma:
+
+dashboard.html oluşturduk.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Kontrol Paneli</h3>
+<hr> {% endblock %}
+
+bu dashboard içindeki şu düzeltmeyi yaptık.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Kontrol Paneli</h3>
+<small>Hoşgeldin, {{session["username"]}}</small>
+<hr> {% endblock %}   açılınca giren kişinin ismi gözükecek.
+
+daha sonra blog_mine.py içinde aşağıdakini oluşturduk.
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
+
+dashboard içine aşağıdaki eklemeyi yaptık.
+
+<hr>  altına
+
+<a href="/addarticle" class="btn btn-danger">Makale Ekle</a>  bu daha sonra yapacağımız makale eklemeleri için kullanılacak.
+
+# decorator ile kullanıcı girişi kontrolü:
+
+ancak giriş yapmasad dahi localhost:5000/dashboard yazınca kontrol panelinin gelmesini istemiyoruz. Bunları pythondaki decoratorler ile yapabiliyoruz.
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")  buradaki @ ile başlayanda bir flask decorator. bu altındaki func çalıştırıyor.
+Biz şimde pythondaki decoratorleri kullanarak bu func çalışıp çalışmadığını kontrol edeceğiz.
+
+https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/  linkine girdik.
+
+from functools import wraps  indirdik.
+
+# kullanıcı giriş decorator
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function     ilave ettik. Buradaki mantık şu; bu session gibi çalışıyor. içine bir func gönderilmiş. mesela dashboard da kullanılacaksa burada f yerine geçer.
+
+
+return redirect(url_for('login', next=request.url))  bu flask den gelen olduğundan sildik ve kendimiz yazıyoruz. 
+
+Yazacağımız decoratorlerin hepsinde aynı yapıyı kullanacağız. mesela session başlatılmamışsa login değerinde bir key yoksa redirect yapabilirim yani dashboard çağırmamış oluyorum. Başlatılmışsa normal bir şekilde çağırabiliyorum.
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Bu sayfayı görüntülemek için lütfen giriş yapın.","danger")
+            return redirected(url_for("login"))
+    return decorated_function   bu hale getirdik.
+
+
+@app.route("/dashboard")
+@login_required   # oluşturduğumuz decorator bu şekilde kullandık. Mesela altındaki dashboard func. kullanıyoruz.
+def dashboard():
+    return render_template("dashboard.html")    session başlatılmışsa bu dashboard başlatılır, başlamamışsa flash yazıp login yönlendirir.
+yani dashboard basınca login_required çalışıyor. kontrolü yapıyor ve herhangi bir session işlemi yapmadığından dolayı biz tekrar login ekranına dönüyoruz.
+session işlemi başlatılmış ise if bloğuna girer bize sonuç döner.
+
+Decorator birkez yazıyoruz ve kullanıcı giriş kontrolü yapmak istediğim her func öncesine bunu yazabiliriz. 
+Şöylede düşünebiliriz bu decoratorü yazmam bunun yerine her seferinde session kontrolü yaparım. Ancak bu çok zaman alıcı bir yöntemdir. 
+Func.dan önce decoratorümüzü yazıyoruz.
+
+# makale tabloları oluşturma:
+
+article isimli ve içinde 5 tane değişken olan bir table oluşturduk.
+
+sonrasında;
+
+addarticle.html template oluşturduk.
+{% extends "layout.html" %} {% block body %}
+<h3>Makale Oluştur</h3>
+<hr> {% endblock %}
+
+ve blog_mine.py içinde
+
+# makale ekleme:
+@app.route("/addarticle", methods = ["GET","POST"])
+def addarticle():
+    return render_template("addarticle.html")   oluşturduk.
+
+
+# makale form:
+class ArticleForm(Form)
+    title = StringField("Makale Başlığı", validators=[validators.length(min=5, max=100)])
+    content = TextAreaField("Makale İçeriği", validators=[validators.length(min=10)])    oluşturduk.
+
+# makale ekleme:
+@app.route("/addarticle", methods = ["GET","POST"])
+def addarticle():
+    form = ArticleForm(request.form)  # bir obje oluşturduk. ve template içine gönderdik.
+    return render_template("addarticle.html", form=form)
+
+addarticle.html içine aşağıdaki kodu ilave ettik.
+
+<hr> {% from "includes/formhelpers.html" import render_field %}
+
+<form method="post">
+    {{ render_field(form.title, class="form-control") }} {{ render_field(form.content, class="form-control") }}  # daha güzel gözüksün diye form kontrolü yaptık.
+
+    <button type="submit" class="btn btn-danger">Makale Ekle</button>
+</form>
+
+# makaleyi veritabanina kaydetme:
+
+# makale ekleme:
+@app.route("/addarticle", methods = ["GET","POST"])
+def addarticle():
+    form = ArticleForm(request.form)  # bir obje oluşturduk.
+    if request.method =="POST" and form.validate():
+        title = form.title.data
+        content = form.content.data
+        
+        cursor = mysql.connection.cursor()
+        sorgu = "Insert into articles(title, author, content) VALUES(%s,%s,%s")   # id ve date auto olarak oluştuğundan almadık. 
+        
+        cursor.execute(sorgu,(title, session["username"], content)) #db değişikliğe sebep olacağından commit yapmamız gerekir.
+        mysql.connection.commit()
+        cursor.close()
+        
+        flash("Makale Başarıyla Eklendi."," success")
+        return redirect(url_for("dashboard"))
+    
+    return render_template("addarticle.html",form = form)
+     
+bu işlem sonucu dashboard kısmına geliyoruz ve makale başarı ile eklendi flash çıkıyor.xampp baktığımızda eklendiğini görebiliyoruz.
+
+# CK editor kullanımı:
+
+https://cdn.ckeditor.com/  kullanımına aktık.
+
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>   scriptini layout içine yerleştirdik. scriptleri buraya yerleştiriyoruz.
+
+<script>
+	CKEDITOR.replace( 'editor1' );
+</script>     bu scripti de layout ekledik. ve kendi textarea miz olan content içeriğe yazdık. görsel olarak daha güzel bir görüntü oluşturdu.
+
+örnek maksatlı bir makalede daha ekledik ve içine türk bayrağı koyduk. Source baktık.
+
+# Makale Sayfasında Makaleleri görüntüleme:
+
+Makaleleri articles da göstermek istiyorum. articles.html oluşturduk.
+
+{% extends "layout.html" %} {% block body %}
+<h3>Makaleler</h3>
+<hr> {% endblock %}
+
+blog_mine.py içine bir tane 
+
+# Makale Sayfası:
+
+@app.route("/articles")
+def articles():
+    cursor = mysql.connection.cursor()
+    
+    sorgu = "Select * From articles" 
+    
+    result = cursor.execute(sorgu)
+    
+    if result > 0:
+        return render_template("articles")
+    
+    else :
+        return render_template("articles.html")     oluşturduk.
+
+tüm makale bilgilerini almak için fetchall() kullandık. Tek makale alsaydık fetchone() kullanırdık.
+
+articles gelip gelmediğini kontrol etmek için articles.html içinde bir if durumu oluşturduk.
+
+https://getbootstrap.com/docs/4.0/components/list-group/  buradan if durumu olursa yani articles varsa bunlar içinde gezinmek için 
+
+<ul class="list-group">
+  <li class="list-group-item">Cras justo odio</li>
+  <li class="list-group-item">Dapibus ac facilisis in</li>
+  <li class="list-group-item">Morbi leo risus</li>
+  <li class="list-group-item">Porta ac consectetur ac</li>
+  <li class="list-group-item">Vestibulum at eros</li>
+</ul>
+
+articles.html içindeki son hali:
+
+{% extends "layout.html" %} {% block body %}
+<h3>Makaleler</h3>
+<hr> {% if articles %}
+
+<ul class="list-group">
+    {% for article in articles %}
+    <li class="list-group-item">{{article.title}}</li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<div class=" alert alert-danger ">Bu blokta henüz makale bulunmuyor.</div> # articles gelmemişse. {% endif %} {% endblock %}
+
+
+# Makalelerin kontrol panelinde gösterilmesi:
+
+bunları dashboardda göstermek istiyorum. 
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    cursor = mysql.connection.cursor()
+    sorgu = "Select * From articles where username = % s"
+    result = cursor.execute(sorgu, (session["username"],)) # db deki sorguyu yaptık tek elemanlı demet olduğundan böyle yazdık.
+    if result >0 :
+        articles = cursor.fetchall()
+        return render_template("dashboard.html", articles = articles)
+    else:
+        return render_template("dashboard.html")   olarak güncelledik.
+
+https://getbootstrap.com/docs/4.0/content/tables/  linkinden tablo yapılarına baktık ve hover olanı aldık.
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
+
+
+tablo içinde her bir satır sonuna sil ve güncelle butonu ekliyoruz. articles.html içinde böyle bir işlem yaptık.
+
+
+<a href="/addarticle" class="btn btn-danger">Makale Ekle</a> {% if articles %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Başlık</th>
+            <th scope="col">Author</th>
+            <th scope="col">Date</th>
+            <th scope="col"></th>   # güncelle ve sil butonları için iki tane sütun ekledik.
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <th scope="row">{{article.id}}</th>
+            <td>{{article.title}}</td>
+            <td>{{article.author}}</td>
+            <td>{{article.created_date}}</td>
+            <td><a href="" class="btn btn-danger">Güncelle</a></td>  # kırmızı kutu içine aldık.
+            <td><a href="" class="btn btn-danger">Sil</a></td>
+        </tr>
+
+şimdi ise güncelle tuşuna basınca edit/10 na, sil olunca da edit/100 gitmek istiyorum. böyle dinamik bir url yapısı oluşturuyorum.
+
+
+{% for article in articles %}
+        <tr>
+            <th scope="row">{{article.id}}</th>
+            <td>{{article.title}}</td>
+            <td>{{article.author}}</td>
+            <td>{{article.created_date}}</td>
+            <td><a href="/edit/{{article.id}}" class="btn btn-danger">Güncelle</a></td>   #dinamik bir url yapısı. makale id ne ise ona basınca edit/makale_id gider hem güncelle hem de sil için.
+            <td><a href="/delete/{{article.id}}" class="btn btn-danger">Sil</a></td>
+        </tr>
+
+        {% endfor %}
+
+
+makale başlığına link özelliği veriyoruz.
+
+<td><a href="/article/{{article.id}}">{{article.title}}</a></td>
+
+
+# makale detay sayfası oluşturma:
+
+blog_mine.py içine aşağıdaki kodu yazdık. 
+
+# Makale detay sayfası:
+
+@app.route("/article/<string:id>")
+def article(id):
+    cursor = mysql.connection.cursor()
+    sorgu = "Select * From articles where id = %s"
+    result = cursor.execute(sorgu, (id,))
+    
+    if result > 0 :
+        article = cursor.fetchone()
+        return render_template("article.html", article=article)
+    else :
+        return render_template("article.html")
+
+
+daha sonra bir tane article.html templates tanımladık.
+
+{% extends "layout.html" %} {% block body %} {% if article %}
+
+<h4>{{article.title}}</h4>
+<hr> Yazar:{{article.author}}
+<hr> Tarih :{{article.created_date}}
+<hr> {{article.content}} {% else %}
+
+<div class=a lert alert-warning ">
+    Böyle bir makale bulunmuyor...
+
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+ancak burada fotoların url uzantıları çok farklı çıktığından dolayı bunu düzeltmek için, <hr> {{article.content|safe}}  olarak içine jinja template işlemi uyguladık.
+
+daha sonra articles.html içinde işlemi ile üzerine gelince link ekledik.
+
+<ul class="list-group">
+    {% for article in articles %}
+    <li class="list-group-item"><a href="article/{{article.id}}">{{article.title}}</a></li>
+    {% endfor %}
+</ul>

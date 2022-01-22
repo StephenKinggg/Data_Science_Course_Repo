@@ -4,12 +4,9 @@
 
 <ul class="list-group">
     {% for article in articles %}
-    <li class="list-group-item{{article.title}}</li>
+    <li class="list-group-item"><a href="article/{{article.id}}">{{article.title}}</a></li>
     {% endfor %}
-  </ul>
+</ul>
 
 {% else %}
-<div class = " alert alert-danger ">Bu blokta henüz makale bulunmuyor.</div> # articles gelmemişse.
-{% endif %}
-
-{% endblock %}
+<div class=" alert alert-danger ">Bu blokta henüz makale bulunmuyor.</div> # articles gelmemişse. {% endif %} {% endblock %}

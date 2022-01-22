@@ -53,6 +53,38 @@ def index():
     
     return render_template("index.html", articles=articles)  # önce layout.html yaptım sonra bundan inheritance yapmak için inde.html yazdık.
 
+# Makale Sayfası:
+
+@app.route("/articles")
+def articles():
+    cursor = mysql.connection.cursor()
+
+    sorgu = "Select * From articles"
+
+    result = cursor.execute(sorgu)
+    
+    if result > 0:
+        articles = cursor.fetchall()  # tüm makaleleri bir liste içide dict olarak dönecek.
+        return render_template("articles.html",articles = articles)
+    else:
+        return render_template("articles.html")
+
+# Makale detay sayfası:
+
+@app.route("/article/<string:id>")
+def article(id):
+    cursor = mysql.connection.cursor()
+    sorgu = "Select * From articles where id = %s"
+    result = cursor.execute(sorgu, (id,))
+    
+    if result > 0 :
+        article = cursor.fetchone()
+        return render_template("article.html", article=article)
+    else :
+        return render_template("article.html")
+
+
+
 
 @app.route("/about")
 def about():
@@ -66,7 +98,14 @@ def detail(id):
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    cursor = mysql.connection.cursor()
+    sorgu = "Select * From articles where author = % s"
+    result = cursor.execute(sorgu, (session["username"],)) # db deki sorguyu yaptık tek elemanlı demet olduğundan böyle yazdık.
+    if result >0 :
+        articles = cursor.fetchall()
+        return render_template("dashboard.html", articles = articles)
+    else:
+        return render_template("dashboard.html")
 
 
 # Kayıt olma
@@ -139,7 +178,22 @@ def logout():
 @app.route("/addarticle", methods = ["GET","POST"])
 def addarticle():
     form = ArticleForm(request.form)  # bir obje oluşturduk.
-    return render_template("addarticle.html", form=form)
+    if request.method =="POST" and form.validate():
+        title = form.title.data
+        content = form.content.data
+        
+        cursor = mysql.connection.cursor()
+        sorgu = "Insert into articles(title, author, content) VALUES(%s,%s,%s)"
+        
+        cursor.execute(sorgu,(title,session["username"],content)) #db değişikliğe sebep olacağından commit yapmamız gerekir.
+        mysql.connection.commit()
+        cursor.close()
+
+        flash("Makale Başarıyla Eklendi","success")
+
+        return redirect(url_for("dashboard"))
+    
+    return render_template("addarticle.html",form = form)
 
 # makale form:
 class ArticleForm(Form):
