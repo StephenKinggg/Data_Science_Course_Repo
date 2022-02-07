@@ -1,0 +1,20 @@
+CV fonksiyonu verdiğimiz train setimizi  cv sayısına göre eşit parçalara böler. 
+cv'yi 5 verdiğimizi varsayarsak her CV için train setini 5 eşit parçaya bölecek ve 5 kere farklı skorlar alacak. 
+Ancak, CV default olarak 5 eşit parçaya böldüğü dataları kendi içinde karıştırmaz ve herbiri sabittir. 
+Lakin, RF her ağaçta datadan rastgele verinin 2/3'ü seçer. CV'daki gibi sabit parçalara bölünmüş datayı almaz.  
+CV için eğer datayi karıştırmak isterseniz K-Fold fonksiyonunu kullanarak her iterasyonda verilerin karılmasını sağlayabilirsiniz. 
+Her iterasyon için K-Fold ile karma işlemi yaparsanız  o zaman mantığı RF'a benzer.
+
+
+
+
+C'nin 1 almasıyla 5 alması halinde aldığınız skor çok değişmemekte. Bu durumlarda c aralığınızı biraz daha geniş tutarak 
+(örneğin = 5, 10, 15, 20, 25 gibi) scorlarınızı kontrol edebilirsiniz. Ayrıca, c değerlerine bakarken logspace kullanmanız daha 
+geniş bir aralığa bakmanızı sağlayacaktır. np.logspace(-1, 5, 10) gibi.
+
+
+SVM'de C değerinin küçük olması uygulanan regularizaszyonu artırırken, Büyük C değeri uygulanan regularizasyonu azaltıyor. 
+C'nin sürekli büyük çıkması Modelin küçük bir regulizasyona ihtiyacı olduğunu gösterir. Büyük gama değerleri C'nin etkisini tamamen kaldırır. 
+Datamizda overfiting sorunu varsa gridsearch zaten öncelikle C'yi kucultecektir. Ancak, overfiting sorunu yoksa train ve test seti arasındaki 
+en dengeli skoru verecek şekilde. C ve gamma değerlerini döndürür. rain ve test skorları arasında uçurum yok ve gridsearchcv skoru test skoruna 
+yakınsa zaten sıkıntı yok demektir. Bizim için C'nin ve gamma'nin aldığı değerler önemli degil, önemli olan train test ve cv skorlqrimizin tutarlı olmasi. 
