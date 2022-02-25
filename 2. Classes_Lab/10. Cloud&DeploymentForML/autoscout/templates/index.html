@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLARUSWAY MLD Course</title>
+</head>
+<style type="text/css">
+    .mainContainer {
+        background-color: rgb(25, 0, 255);
+        width: 70%;
+        margin-left: 15%;
+        height: 250hiv;
+        border: 2px solid rgb(139, 12, 0);
+    }
+    
+    .mainContainer form {
+        background-color: rgb(223, 134, 134);
+        align-content: center;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-bottom: 5%;
+    }
+    
+    .mainContainer form input[type='submit'] {
+        background-color: rgb(214, 226, 43);
+        margin-left: 40%;
+    }
+    
+    .mainContainer h3 {
+        text-align: center;
+    }
+    
+    .mainContainer form label {
+        width: 200px;
+        display: inline-block;
+    }
+    
+    .mainContainer img {
+        margin-left: 30%;
+        margin-right: 30%;
+        width: 40%;
+        border: 2px solid white;
+        border-radius: 10px;
+    }
+</style>
+
+<body>
+    <div class="mainContainer">
+        <h3>Welcome to prediction page</h3>
+        <img src="https://miro.medium.com/max/647/1*ZOcUPrSXLYucFxppoI-dYg.png">
+        <form action="#" method="post">
+            <label for="make_model">Model</label>
+            <select name="make_model">
+                <option value="Audi A1">Audi A1</option>
+                <option value="Audi A3">Audi A3</option>
+                <option value="Opel Astra">Opel Astra</option>
+                <option value="Opel Corsa">Opel Corsa</option>
+                <option value="Opel Insignia">Opel Insignia</option>
+                <option value="Renault Clio">Renault Clio</option>
+                <option value="Renault Duster">Renault Duster</option>
+                <option value="Renault Espace">Renault Espace</option>           
+            </select>
+            <hr>
+
+
+            <label for="hp_kW"> HP</label>
+            <input type="number" name="hp_kW" value="0" min="40" max="270">
+            <hr>
+
+            <label for="km">Km</label>
+            <input type="number" name="km" value="0" min="0">
+            <hr>
+
+            <label for="age">Age</label>
+            <input type="number" name="age" value="0" min="0">
+            <hr>
+
+            <label for="Gearing_Type">Gearing Type</label>
+            <select name="Gearing_Type">
+                <option value="Automatic">Automatic</option>
+                <option value="Semi-automatic">Semi-automatic</option>
+                <option value="Manual">Manual</option>
+            </select>
+            <hr>
+
+            <label for="Gears">Gears</label>
+            <input type="number" name="Gears" value="0" min="0">
+            <hr>
+
+            <hr>
+            <input type="submit" name="submit" value="P R E D I C T" style="font-size: x-large; ">
+
+        </form>
+        {% block content %} {% endblock %}
+    </div>
+</body>
+
+</html>

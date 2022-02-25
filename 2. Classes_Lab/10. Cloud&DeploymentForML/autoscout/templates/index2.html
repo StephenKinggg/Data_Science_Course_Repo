@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLD course_ flask webserver</title>
+</head>
+
+<body>
+    <h2>Welcome to my prediction page</h2>
+    <form action="#" method="POST">
+        <label for="make_model">Model</label>
+        <select name="make_model">
+            <option value="Audi A1">Audi A1</option>
+            <option value="Audi A3">Audi A3</option>
+            <option value="Opel Astra">Opel Astra</option>
+            <option value="Opel Corsa">Opel Corsa</option>
+            <option value="Opel Insignia">Opel Insignia</option>
+            <option value="Renault Clio">Renault Clio</option>
+            <option value="Renault Duster">Renault Duster</option>
+            <option value="Renault Espace">Renault Espace</option>           
+        </select>
+        <hr>
+
+
+        <label for="hp_kW"> HP</label>
+        <input type="number" name="hp_kW" value="66.0" min="40" max="270">
+        <hr>
+
+        <label for="km">Km</label>
+        <input type="number" name="km" value="56013.0" min="0">
+        <hr>
+
+        <label for="age">Age</label>
+        <input type="number" name="age" value="7.0" min="0">
+        <hr>
+
+        <label for="Gearing_Type">Gearing Type</label>
+        <select name="Gearing_Type">
+            <option value="Automatic">Automatic</option>
+            <option value="Semi-automatic">Semi-automatic</option>
+            <option value="Manual">Manual</option>
+        </select>
+        <hr>
+
+        <label for="Gears">Gears</label>
+        <input type="number" name="Gears" value="6.0" min="0">
+        <hr>
+
+        <hr>
+        <input type="submit" name="submit" value="P R E D I C T" style="font-size: x-large; ">
+
+    </form>
+
+    {% block content %} {% endblock%}
+
+</body>
+
+</html>
