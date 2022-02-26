@@ -1,0 +1,129 @@
+===========  FULL EXAMPLE for PROJECT DOCKER ========
+----------- using streamlit server on ubuntu --------
+
+login EC2
+Create instance >> ubuntu 18.04
+t2.micro    free tier
+Security Group >> All traffice      #we let all ports available
+set pem file 
+Launch instance
+copy instance public ip
+---
+
+open VS Code
+open SSH config file
+        Host Streamlit_server
+        HostName __ip__
+        IdentifyFile  __path_to_key_file/__.pem
+        User ubuntu             #with lowercase
+connect SSH using Streamlit_server from the list
+select Linux
+select Continue
+connected.
+open folder >> home
+open new Terminal  >>that will be linux
+>sudo apt-get update -y                 #-y to answer prompt as yes
+>sudo install python3-pip -y
+>python3 --version                      #check if python is installed
+on VS Code left pane
+new folder "/APP"
+in the folder, new file "app.py"
+copy local files to /APP
+        my ML model
+        column names
+        scaler
+        ...
+in Terminal
+>pip3 install --upgrade pip
+>pip3 install streamlit
+# I had a warning in yellow font: take care of this path
+# so I copied the path given to add into my PATH value
+>export PATH="/home/ubuntu/.local/bin:$PATH"
+>pip3 install xgboost           # I need it for my model
+>pip3 install sklearn
+>pip3 list
+>pip3 freeze > requirements.txt       #save them into a file
+>streamlit run app.py               #run streamlit server for my application "app.py"
+on VS Code left pane
+        new file "Dockerfile"       #exactly the same name
+                FROM ubuntu                             #install ubuntu in it
+                RUN apt-get update -y
+                RUN apt-get install python3 -y
+                RUN apt-get install python3-pip -y
+                RUN pip3 install --upgrade pip
+                WORKDIR APP                             #make a new dir
+                COPY . .                                #copy all files to this dir
+                RUN pip3 install -r requirements.txt    #install requirements
+                CMD streamlit run app.py                #run streamlit with my app file "app.py"
+        >>save file and close
+
+------- install docker on ubuntu ---------
+open a new terminal
+>sudo apt-get remove docker docker-engine docker.io >sudo apt-get install     ca-certificates     curl     gnupg     >curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive->sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+>echo   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+>sudo apt-get update
+>sudo apt-get install docker-ce docker-ce-cli containerd.io
+>sudo systemctl status docker
+>sudo systemctl start docker
+>sudo systemctl enable  docker
+>sudo systemctl status docker
+>sudo usermod -aG docker ubuntu			#change user authorization to sudo
+>newgrp docker		#activate user
+>docker ps		#list containers
+>docker build -t usedcarapp .       #build a container image with a tag "usedcarapp"
+>docker image ls        #list images to see new
+>docker run -dit -p 80:8501   #my app will work on port 8501, ubuntu will serve that on port 80.
+>docker ps  #to see if it is running.
+>aws --version      #check if installed
+>sudo apt install awscli
+>aws configure
+---
+
+open IAM >> admin from EC2
+summary of the user "admin"
+create access keyring             #max 2 keys allowed
+copy access key to terminal
+copy secret key to terminal
+---
+
+on VS Code terminal
+>aws configure
+>aws s3 ls
+---
+
+open ECR (Elastic Container Registry)
+repositories (left menu)
+create repository >> Private
+name: /usedcarproject
+linux
+>>create
+copy push commands to terminal
+login command copy
+
+in Terminal
+paste  ->> login succeeded.
+>docker image ls
+
+ECR copy build command
+in Terminal
+paste
+
+ECR copy tag command
+in Terminal
+paste
+
+# if you exceed 500MB, you should pay. It is not free over. I see that we need more than a GB.
+
+in terminal
+>docker stop ___ #give id first 3 digits
+>docker ls
+>docker rmi -f ___ #remove image with -force
+>docker run -dit -p 80:8501 __uri_here___   #pull an image to local
+
+now our server is running.
+you can run the application from ip and port 8501
+----------------------------
+
+>sudo docker run hello-world   # docker tutorial
+                # you can run on an existing docker
