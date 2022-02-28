@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLARUSWAY MLD Course</title>
+    <title>MLD Autoscout Project</title>
 </head>
 <style type="text/css">
     .mainContainer {
-		background-color: rgb(0, 255, 0);
-		width: 70%;
-		margin-left: 15%;
-		height: 250hiv;
-		border: 2px solid darkblue; 
-
-	}
+        background-color: rgb(0, 255, 0);
+        width: 70%;
+        margin-left: 15%;
+        height: 250hiv;
+        border: 2px solid darkblue;
+    }
+    
     .mainContainer form {
         background-color: brown;
         align-content: center;
@@ -24,30 +25,30 @@
         margin-right: 10%;
         margin-bottom: 5%;
     }
- 
+    
     .mainContainer form input[type='submit'] {
         background-color: rgb(214, 226, 43);
-        margin-left:40%;
+        margin-left: 40%;
     }
+    
     .mainContainer h3 {
         text-align: center;
-
     }
+    
     .mainContainer form label {
-        width:200px;
+        width: 200px;
         display: inline-block;
-      }
-      .mainContainer img{
+    }
+    
+    .mainContainer img {
         margin-left: 30%;
         margin-right: 30%;
         width: 40%;
-		border: 2px solid white;
-		border-radius: 10px;
-
-
-	}
-
+        border: 2px solid white;
+        border-radius: 10px;
+    }
 </style>
+
 <body>
     <div class="mainContainer">
         <h3>welcome to prediction page</h3>
@@ -70,7 +71,7 @@
                 <option value="Diesel">Diesel</option>
                 <option value="CNG">CNG</option>
             </select>
-            <hr> 
+            <hr>
             <label for="Seller_Type">Seller_Type</label>
 
             <select name="Seller_Type">
@@ -90,8 +91,8 @@
             <input type="submit" name="submit" value="P R E D I C T" style="font-size: x-large; ">
 
         </form>
-        {%  block content  %}
-            {% endblock  %}
+        {% block content %} {% endblock %}
     </div>
 </body>
+
 </html>
