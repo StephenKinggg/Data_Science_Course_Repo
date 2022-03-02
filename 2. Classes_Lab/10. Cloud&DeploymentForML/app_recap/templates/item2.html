@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+img {
+  border: 5px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  width: 500px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+h1 {text-align: center;}
+p {text-align: center;}
+div {text-align: center;}
+</style>
+</head>
+<body style="background-color: #FBF3DB;">
+
+<h1 style="color:blue"> Tweet Classification Tool</h1>
+
+<p style="color:blue; font-size:30px">Identifying Negative, Positive & Neutral Tweets</p>
+
+<img src="../static/us-airlines.jpeg" alt="NER Model" class="center" style="width:500px">
+
+<p></p>
+<p></p>
+
+<h2 style="color:#C703A3">Tweet       : {{ original_text }}</h2>
+<h2 style="color:#C703A3">Prediction  : {{ prediction }}</h2>
+<h2 style="color:#C703A3">Probability : {{ Prob }}</h2>
+
+<form action='/main' method='get'>
+  <input type="submit", name="action", value="Home", style="width:100px">
+  <label for="Home"</label><br>
+</form>
+
+<p></p>
+<p></p>
+
+</body>
+</html>
