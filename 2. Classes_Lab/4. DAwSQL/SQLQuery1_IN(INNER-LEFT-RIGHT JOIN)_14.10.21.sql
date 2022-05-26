@@ -5,12 +5,25 @@
 -- List products with category names
 -- Select product ID, product name, category ID and category names
 
+SELECT  TOP 10 *
+FROM product.product AS A
+
+SELECT  TOP 10 *
+FROM product.category AS B
+
+
 SELECT A.product_name, A.product_id, B.category_id, B.category_name
 FROM product.product AS A
 INNER JOIN product.category AS B ON A.category_id = B.category_id
 
 --List employees of stores with their store information
 --Select employee name, surname, store names
+
+SELECT  TOP 10 *
+FROM sale.staff AS A
+
+SELECT  TOP 10 *
+FROM sale.store AS B
 
 SELECT A.first_name, A.last_name, B.store_name
 FROM sale.staff AS A
@@ -22,14 +35,14 @@ INNER JOIN sale.store AS B ON A.store_id = B.store_id
 --Select product ID, product name, orderID
 --(Use Left Join)
 
-SELECT P.product_id, P.product_name, O.order_id
+SELECT DISTINCT P.product_id, P.product_name, O.order_id --Tekrarlayan veriyi engellemek için DISTINCT kullandýk.
 FROM product.product AS P
 LEFT JOIN sale.order_item AS O ON P.product_id = O.product_id
 
 SELECT P.product_id, P.product_name, O.order_id
 FROM product.product AS P
 LEFT JOIN sale.order_item AS O ON P.product_id = O.product_id
-WHERE O.order_id = NULL  --IS NULL da yazýlabilir.
+WHERE O.order_id IS NULL -- = NULL da yazýlabilir.
 
 --Report the stock status of the products that product id greater than 310 in the stores.
 --Expected columns: Product_id, Product_name, Store_id, quantity
@@ -58,10 +71,10 @@ ORDER BY store_id ASC
 SELECT *
 FROM SALE.staff
 
-SELECT COUNT (staff_id)
+SELECT COUNT (staff_id) -- stafflarýn sayýsýný getirmek için Count kullandýk.
 FROM SALE.staff
 
-SELECT COUNT(DISTINCT A.staff_id)
+SELECT COUNT(DISTINCT A.staff_id) --Buradan 4 çalýþanýn hiç sipariþ almadýðýný anlýyoruz. Dýstýnct olmasa satýr sayýsýný getirir.
 FROM sale.staff A
 INNER JOIN sale.orders B ON A.staff_id = B.staff_id
 
@@ -76,8 +89,22 @@ ORDER BY order_id ASC
 --Write a query that returns stock and order information together for all products . (TOP 20)
 --Expected columns: Product_id, store_id, quantity, order_id, list_price
 
+SELECT *
+FROM SALE.order_item A
+FULL OUTER JOIN product.stock B ON A.product_id=B.product_id
+ORDER BY A.product_id, A.order_id --Sýralamayý böyle yapýnca çýkan sonuca dikkat!!
+
+
+SELECT *
+FROM SALE.order_item A
+FULL OUTER JOIN product.stock B ON A.product_id=B.product_id
+ORDER BY B.product_id, A.order_id --Sýralamayý böyle yapýnca çýkan sonuca dikkat!!Yukarýdakinden farklý.
+
+
 SELECT TOP 20 B.product_id, B.store_id, B.quantity,A.product_id, A.order_id, A.list_price
 FROM SALE.order_item A
 FULL OUTER JOIN product.stock B ON A.product_id=B.product_id
 ORDER BY B.product_id, A.order_id
 
+--Çýkan sonucun ilk 2 satýrýna bakýnca stock tablosunun product_id si varken order_item tablosunun bilgileri boþ gözüküyor.
+-- Kesiþim yapmadýðýndan dolayý 2 tabloda da olan tüm product_id bilgilerini bize getiriyor.
