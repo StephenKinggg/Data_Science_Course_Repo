@@ -46,6 +46,8 @@ ORDER BY
 
 
 --PIVOT 
+
+
 -- ÝSE TEK SATIR YAZMAK ÝÇÝN.
 /* BUNLARIN ARASINA BÝRKAÇ SATIR YORUM YAZMAK ÝSTERSEK KULLANILIR. 
 SHÝFT TUÞUNA UZUN BASIP AÞAÐI YUKARI GEDÝBÝLÝRÝZ.*/
@@ -59,35 +61,36 @@ FROM sale.sales_summary
 SELECT Category, Model_Year, SUM(total_sales_price) Total_Prices
 FROM sale.sales_summary
 GROUP BY Category, Model_Year
-ORDER BY 1,2 --BÝRÝNCÝ VE ÝKÝNCÝ SÜTUNA GÖRE DEMEK SELECT TEKÝ. GROUP BY DA BU ÖZELLÝK YOK.
+ORDER BY 1,2 --SELECT TEKÝ BÝRÝNCÝ VE ÝKÝNCÝ SÜTUNA GÖRE. GROUP BY DA BU ÖZELLÝK YOK.
 
+--Kaynak tablom aþaðýdaki gibidir.
 
-SELECT Category, Model_Year, SUM(total_sales_price) Total_Prices
-FROM SALE.sales_summary -- BU KAYNAK TABLO. BUNA GÖRE toplam satýþ miktarýný hesaplamak istiyoruzb
-
+SELECT Category, Model_Year, total_sales_price
+FROM	SALE.sales_summary
 
 SELECT *
 FROM
 	(
-	SELECT Category, Model_Year, total_sales_price
-	FROM	SALE.sales_summary
+	SELECT Category, Model_Year, total_sales_price --Bunu burada yazmassak yukarýda SELECT sonrasý yazmamýz gerekir.
+	FROM	SALE.sales_summary  --Kaynak table
 	) A
 PIVOT
 	(
-	SUM(total_sales_price)
-	FOR Category
-	IN (
-	[Children Bicycles],
-    [Comfort Bicycles],
-    [Cruisers Bicycles],
-    [Cyclocross Bicycles],
-    [Electric Bikes],
-    [Mountain Bikes],
-    [Road Bikes]
+	SUM(total_sales_price) --aggregate func.
+	FOR Category           --category sütunu.
+	IN (                   --category altýndaki alt kategorileri [] içinde yazdým.
+		[Children Bicycles],  --Shift + tab ile geri, tab ile ileri.
+		[Comfort Bicycles],
+		[Cruisers Bicycles],
+		[Cyclocross Bicycles],
+		[Electric Bikes],
+		[Mountain Bikes],
+		[Road Bikes]
 		)
 	) AS P1
 
--- YILLARA GÖRE
+-- MODEL YILLARINA GÖRE
+
 SELECT *
 FROM
 	(
@@ -103,17 +106,23 @@ PIVOT
 		)
 	) AS P1
 
--- SUBQUERIES
 
+-- SUBQUERIES
+--Write a query that returns the total list price by each order ids.
 --order id lere göre toplam list price larý hesaplayalým.
 
 --Toplam list_price getirip her order_id nin yazýna yazdý.
 
+SELECT *
+FROM sale.order_item
+
+
 SELECT order_id,
-	(SELECT SUM(list_price) FROM sale.order_item B)
-FROM sale.order_item A
+	(SELECT SUM(list_price) FROM sale.order_item)
+FROM sale.order_item
 
 --Correlated Subquery
+--Aþaðýda outer query ile inner queryden seçtiðim order_id deðerlerini birbirine eþitledim.
 
 SELECT DISTINCT order_id,
 		(SELECT SUM(list_price) FROM sale.order_item B WHERE A.order_id = B.order_id) SUM_PRICE
@@ -125,11 +134,14 @@ SELECT order_id, SUM(list_price)
 FROM sale.order_item
 GROUP BY order_id
 
+--Bring all the staff from the store that Maria Cussona works.
 --Maria Cussona nýn calýþtýðý maðazadaki tüm personelleri listeleyin.
 
 SELECT *
 FROM sale.staff
 
+
+--Inner queryden dönen sonuç single row olduðundandolayý outer query da = kullandýk.
 SELECT *
 FROM sale.staff
 WHERE store_id = (
@@ -137,8 +149,10 @@ WHERE store_id = (
 					FROM sale.staff A
 					WHERE A.first_name='Maria' AND A.last_name='Cussona'
 				)
+
+--List the staff that Jane Destrey is the manager of.
 --Jane Destreyin manageri olduðu kiþileri bulalým.
---
+
 SELECT *
 FROM sale.staff
 
@@ -151,17 +165,39 @@ WHERE manager_id = (
 				)
 
 
-SELECT	first_name, last_name
-from	sale.staff
-where	manager_id in (select staff_id from sale.staff where first_name= 'Jane')
-
 /* Bazi arkadaslar goruyorum sorguda ‘Jane’ yerine ‘jane’ kullanmis. 
 Default olarak SQL Server case-insensitive oldugu icin problem olmuyor. 
 Ama database olustururken istersek ‘COLLATION’ ile case-sensitive bir 
 database olusturabiliriz. Bu da benden bir interview sorusu..*/
 
---Multiple row Subqueries
+--Write a query that returns customers in the city where the"Sacramento Bikes" store is located.
 
+
+SELECT *
+FROM sale.customer
+WHERE city = (
+				SELECT DISTINCT city
+				FROM sale.store A INNER JOIN sale.orders B ON A.store_id=B.store_id
+				WHERE store_name='Sacramento Bikes'
+			 )
+
+-- List customers whose order dates are before Arla Ellis.
+
+SELECT B.first_name, B.last_name, A.order_date
+FROM sale.orders A INNER JOIN sale.customer B ON A.customer_id=B.customer_id
+WHERE A.order_date < (
+						SELECT order_date
+						FROM sale.orders A INNER JOIN sale.customer B ON A.customer_id=B.customer_id
+						WHERE A.customer_id = (
+												SELECT customer_id
+												FROM sale.customer
+												WHERE first_name='Arla' and last_name='Ellis'
+						))
+
+
+--Multiple Row Subqueries
+
+--List order dates for customers residing in the Holbrok city.
 --Holbrok þehrinde oturan müþterilerin sipariþ tariherini listeleyin.
 
 
@@ -170,6 +206,8 @@ SELECT *
 FROM sale.customer
 WHERE city='Holbrook'
 
+
+
 SELECT *
 FROM sale.orders
 WHERE customer_id IN (SELECT customer_id
@@ -177,20 +215,23 @@ WHERE customer_id IN (SELECT customer_id
 					  WHERE city='Holbrook'
 					  )
 
-
-
+--List all customers who orders on the same dates as Abby Parks.
 -- Abby	Parks isimli müþterinin alýþveriþ yaptýðý tarihte/tarihlerde alýþveriþ yapan tüm müþterileri listeleyin.
 -- Müþteri adý, soyadý ve sipariþ tarihi bilgilerini listeleyin.
 
-SELECT *
-FROM sale.orders A
-WHERE order_date IN (SELECT order_date
-					FROM sale.orders A
-					WHERE customer_id =
-								(SELECT B.customer_id
-								 FROM sale.customer B
-								WHERE B.first_name='Abby' AND B.last_name='Parks'
-					  ))
+
+SELECT B.first_name, B.last_name, A.order_date
+FROM sale.orders A INNER JOIN sale.customer B ON A.customer_id=B.customer_id
+WHERE A.order_date IN (
+						SELECT order_date
+						FROM sale.orders A INNER JOIN sale.customer B ON A.customer_id=B.customer_id
+						WHERE A.customer_id = (
+												SELECT customer_id
+												FROM sale.customer
+												WHERE first_name='Abby' and last_name='Parks'
+						))
+
+
 --Abby nin sipariþ verdiði tarihler
 
 SELECT *
@@ -199,7 +240,7 @@ INNER JOIN sale.orders B ON A.customer_id=B.customer_id
 WHERE A.last_name='Parks' AND A.first_name='Abby'
 
 
-SELECT A.*
+SELECT C.first_name, C.last_name, A.order_id, A.order_date
 FROM sale.orders A
 INNER JOIN (SELECT A.first_name,A.last_name,B.customer_id,B.order_id,B.order_date
 			FROM sale.customer A
@@ -208,39 +249,16 @@ INNER JOIN (SELECT A.first_name,A.last_name,B.customer_id,B.order_id,B.order_dat
 ON A.order_date=B.order_date
 INNER JOIN sale.customer C ON A.customer_id=C.customer_id
 
---2.çözüm
-
-select c.first_name, c.last_name
-from sale.orders o 
-join sale.customer c on o.customer_id=c.customer_id
-where o.order_date in 
-					(select order_date 
-					from sale.orders 
-					where customer_id = (
-									select customer_id
-									from sale.customer 
-									where first_name='Abby' and last_name='Parks'))
-
---3.çözüm
-
-SELECT B.first_name, B.last_name, A.order_date
-FROM sale.orders A 
-INNER JOIN sale.customer B 
-on A.customer_id=B.customer_id
-WHERE A.order_date IN  (
-                       SELECT order_date  
-					   FROM sale.orders
-					   WHERE customer_id IN (
-											SELECT customer_id 
-											FROM sale.customer 
-											WHERE first_name = 'Abby' and last_name= 'Parks'))
-
+--List bikes that model year equal to 2020 and its prices more than all electric bikes.
 --Bütün elektrikli bisikletlerden pahalý olan bisikletleri listeleyin.
 --Ürün adý, model yýlý ve fiyat bilgilerini yüksek fiyattan düþük fiyata doðru listeleyelim.
----ALL ile inner query içindeki fiyatlardan daha büyük olanlarý al demek istiyoruz.
---ANY ile inner query içindeki fiyatlardan en düþük olandan fazla olanlarý alýr.
 
-SELECT product_name, list_price
+/*
+ALL ile inner query içindeki fiyatlardan daha büyük olanlarý al demek istiyoruz. 4999 dan büyük olanlarý getirir.
+ANY ile inner query içindeki fiyatlardan en düþük olandan fazla olanlarý alýr. 1599 dan büyük olanlarý getirir.
+*/
+
+SELECT product_name, model_year, list_price
 FROM product.product
 WHERE list_price > ALL (
 						SELECT	list_price
@@ -258,6 +276,7 @@ WHERE list_price > ANY (
 						WHERE	B.category_name = 'Electric Bikes')	
 AND model_year = 2020
 
+
 /* EXIST ve NOT EXIST içteki tablonun ne döndürdüðü ile 
 deðil döndürüp döndürmediði ile ilgileniyor.*/
 
@@ -268,11 +287,12 @@ FROM sale.orders A
 INNER JOIN sale.customer B 
 on A.customer_id=B.customer_id
 WHERE EXISTS  (
-                       SELECT 1  
-					   FROM sale.customer A
-					   JOIN sale.orders B
-					   ON A.customer_id=B.customer_id
-					   WHERE first_name = 'Abby' and last_name= 'Parks')
+               SELECT 1  
+			   FROM sale.customer A
+			   JOIN sale.orders B
+			   ON A.customer_id=B.customer_id
+			   WHERE first_name = 'Abby' and last_name= 'Parks'
+			   )
 
 --Abby Parks isimli bir müþteri olduðundan boþ döner.
 
@@ -285,7 +305,8 @@ WHERE NOT EXISTS  (
 					   FROM sale.customer A
 					   JOIN sale.orders B
 					   ON A.customer_id=B.customer_id
-					   WHERE first_name = 'Abby' and last_name= 'Parks')
+					   WHERE first_name = 'Abby' and last_name= 'Parks'
+				  )
 
 --AbbAy Parks isimli bir müþteri varsa bu boþ döner ancak yoksa dýþtaki query nin hepsi gelir. 
 
@@ -298,7 +319,8 @@ WHERE NOT EXISTS  (
 					   FROM sale.customer A
 					   JOIN sale.orders B
 					   ON A.customer_id=B.customer_id
-					   WHERE first_name = 'AbbAy' and last_name= 'Parks')
+					   WHERE first_name = 'AbbAy' and last_name= 'Parks'
+					)
 
 
 SELECT DISTINCT B.first_name, B.last_name, A.order_date
@@ -306,9 +328,9 @@ FROM sale.orders A
 INNER JOIN sale.customer B 
 on A.customer_id=B.customer_id
 WHERE EXISTS  (
-                       SELECT 1  
-					   FROM sale.customer C
-					   JOIN sale.orders D
-					   ON C.customer_id=D.customer_id
-					   WHERE first_name = 'AbbAy' and last_name= 'Parks'
-					   AND A.order_date=D.order_date)
+				   SELECT 1  
+ 				   FROM sale.customer A
+				   JOIN sale.orders B
+				   ON A.customer_id=B.customer_id
+				   WHERE first_name = 'AbbAy' and last_name= 'Parks'
+			   )

@@ -155,7 +155,7 @@ ORDER BY brand, category
 --brand, category, model_year sütunlarý için Rollup kullanarak total sales hesaplamasý yapýnýz.
 --üç sütun için 4 farklý gruplama varyasyonu incelemeye çalýþýnýz.
 
-SELECT brand, category,model_year, SUM(total_sales_price) total_sales
+SELECT brand, category, model_year, SUM(total_sales_price) total_sales
 FROM sale.sales_summary
 GROUP BY 
 	ROLLUP (brand, category, model_year) 
