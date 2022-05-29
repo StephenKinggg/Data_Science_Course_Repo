@@ -334,3 +334,17 @@ WHERE EXISTS  (
 				   ON A.customer_id=B.customer_id
 				   WHERE first_name = 'AbbAy' and last_name= 'Parks'
 			   )
+
+
+SELECT DISTINCT B.first_name, B.last_name, A.order_date
+FROM sale.orders A 
+INNER JOIN sale.customer B 
+on A.customer_id=B.customer_id
+WHERE EXISTS  (
+				   SELECT 1  
+ 				   FROM sale.customer C
+				   JOIN sale.orders D
+				   ON C.customer_id=D.customer_id
+				   WHERE first_name = 'Abby' and last_name= 'Parks'
+				   AND A.order_date=D.order_date
+			   )
