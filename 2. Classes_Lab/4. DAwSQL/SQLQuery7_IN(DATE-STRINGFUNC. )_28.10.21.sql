@@ -331,7 +331,6 @@ ORDER BY state, years, months
 
 
 
-
 -------String Functions
 
 --LEN
@@ -341,6 +340,7 @@ SELECT LEN(1231354658)
 
 SELECT LEN('WELCOME')
 
+
 --CHARINDEX
 
 SELECT CHARINDEX('C','CHARACTER') --ÝLK GÖRDÜÐÜ C YÝ GETÝRÝR.
@@ -349,19 +349,20 @@ SELECT CHARINDEX('C','CHARACTER',2) --2.KARAKTERDEN SONRAKÝ C NÝN YERÝNÝ GETÝRÝR
 
 SELECT CHARINDEX('CT','CHARACTER') --BÝRDEN FAZLA KARAKTER SORGULAYABÝLÝRÝZ ANCAK BÝR PATERN SORGULAYAMAYIZ.
 
-SELECT CHARINDEX('CT%','CHARACTER') --BURADA % ÝÞARETÝNÝ BÝR PATERN OLARAK DEÐÝLDE BÝR KARAKTER OLARAK ALGILIYOR.
+SELECT CHARINDEX('CT%','CHARACTER') --BURADA % ÝÞARETÝNÝ BÝR PATERN OLARAK DEÐÝLDE C% OLARAK BÝR KARAKTER ARAR. PATINDEX gibi kullanamýyoruz.
+
 
 --PATINDEX
 
-SELECT PATINDEX('R', 'CHARACTER')
+SELECT PATINDEX('R', 'CHARACTER')  --SADECE R OLARAK ARAYAMIYORUZ.
 
-SELECT PATINDEX('R%', 'CHARACTER')
+SELECT PATINDEX('R%', 'CHARACTER')  --R ÝLE BAÞLAYAN OLARAK ARIYOR.
 
 SELECT PATINDEX('%R%', 'CHARACTER')
 
 SELECT PATINDEX('%R', 'CHARACTER')
 
-SELECT PATINDEX('_R', 'CHARACTER')
+SELECT PATINDEX('_R', 'CHARACTER')  --R DEN ÖNCE BÝR KAREKTER VAR MI ARAR.
 
 SELECT PATINDEX('___R%', 'CHARACTER')
 
@@ -371,23 +372,30 @@ SELECT PATINDEX('_______E%', 'CHARACTER')
 
 SELECT PATINDEX('%E_', 'CHARACTER') --E den önce sayýsýný bilmediðimiz kadar sonra ise bir karakter var.
 
+
 --LEFT
 
 SELECT LEFT ('CHARACTER', 3)
 
 SELECT LEFT ('  CHARACTER', 3) -- BOÞLÜK OLUP OLMADIÐINI BU ÞEKÝLDE GÖREBÝLÝRÝZ.
 
-RIGHT
+
+--RIGHT
 
 SELECT RIGHT ('CHARACTER', 1)
 
 SELECT RIGHT ('  CHARACTER', 3)
 
+
 --SUBSTRING
 
-SELECT SUBSTRING('CHARACTER', 1,3)  --1 DEN ÝTÝBAREN 3 KARAKTER ALMAK ÝSTÝYORUM.
+SELECT SUBSTRING('CHARACTER', 1, 3)  --1 DEN ÝTÝBAREN 3 KARAKTER ALMAK ÝSTÝYORUM.
 
-SELECT SUBSTRING('CHARACTER', -1,3)  --ÝLK KARAKTER 1 DEN BAÞLAR ÖNCESÝ 0 VE -1 DÝYE DEVAM EDER.
+SELECT SUBSTRING('CHARACTER', -1, 3)  --ÝLK KARAKTER 1 DEN BAÞLAR ÖNCESÝ 0 VE -1 DÝYE DEVAM EDER. YANÝ -1,0,1 OLMAK ÜZERE 3 KAREKTER ALIR.
+
+SELECT SUBSTRING('CHARACTER', 0, 1) -- BOÞ GELDÝ ÇÜNKÜ SUBSTRING 1 DEN BAÞLAR.
+
+
 
 --LOWER
 
@@ -395,17 +403,20 @@ SELECT LOWER ('CHARACTER')
 
 --UPPER
 
-SELECT UPPER(LEFT('character',1)) + LOWER(SUBSTRING('character',2,LEN('character'))) --characterin ilk harfini büyük yaptýk.
+SELECT UPPER(LEFT('character', 1)) + LOWER(SUBSTRING('character', 2, LEN('character'))) -- + string ifadeleri yanyana birleþtirir.
+
 
 --STRING_SPLIT
 --- Bir tablo oluþturduðundan kurallý yazýlýr.
 
 SELECT value 
-FROM string_split('ALÝ, MEHMET, AYÞE', ',') --virgülle ayrýlmýþ olanlarý sütun halinde yazar.
+FROM string_split('ALÝ,MEHMET,AYÞE',',') --virgülle ayrýlmýþ olanlarý sütun halinde yazar.
 
---TRIM
----LTRIM soldaki boþluklarý yok eder.
----RTRIM saðdaki boþluklarý yok eder.
+
+
+--TRIM iki taraftaki boþluklarý yok eder ancak aradakilere dokunmaz.
+--LTRIM soldaki boþluklarý yok eder.
+--RTRIM saðdaki boþluklarý yok eder.
 
 SELECT TRIM('  CHA  RACTER  ') --ÝKÝ TARAFTAKÝ BOÞLUÐU ATAR ANCAK ARADAKÝLERE DOKUNMAZ.
 
