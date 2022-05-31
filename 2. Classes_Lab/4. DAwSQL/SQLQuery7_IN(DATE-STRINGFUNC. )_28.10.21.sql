@@ -1,56 +1,144 @@
----------- 28.10.2021 DAwSQL Session-6 (Date & String Functions)
+---------- 25.10.2021 DAwSQL Session-5 (Date & String Functions)
 
---DATEDIFF
+--Date Functions
+--Data Types
+
+CREATE TABLE t_date_time
+	(
+	A_time time,
+	A_date date,
+	A_smalldatetime smalldatetime,
+	A_datetime datetime,
+	A_datetime2 datetime2,
+	A_datetimeoffset datetimeoffset
+	)
+
 
 SELECT *
 FROM t_date_time
 
-SELECT GETDATE()
+
+--DATEDIFF
+
+SELECT GETDATE() --Þu anki local saati gösterir.
+
+SELECT GETDATE() as [now]
+
+/*
+INSERT t_date_time
+VALUES(Getdate(), Getdate(), Getdate(), Getdate(), Getdate(), Getdate())
+*/
+
+SELECT GETDATE() as [now]  --dtypes datetime
+
+SELECT CONVERT(Varchar, GETDATE(), 6)  --convert datetim to varchar.
+
+SELECT CONVERT(DATE, '25 Oct 21', 6) --Convert varchar to date, 6 burada tipi ifade ediyor.
+
+--Functions for return date or time parts
+
+SELECT A_date
+FROM t_date_time
+
+SELECT A_date,
+		DATENAME(DW, A_date) [DAY],
+		DAY (A_date) [DAY2],
+		MONTH (A_date) [month],
+		YEAR (A_date) [year],
+		DATEPART (WEEK, A_date) WEEKDAYS2,
+		A_time,
+		DATEPART (NANOSECOND, A_time),
+		DATEPART (MONTH, A_date)
+FROM t_date_time
+
+***************************************
+
+---------- 28.10.2021 DAwSQL Session-6 (Date & String Functions)
+
+/*Soldaki Tables altýnda yer alan dbo.t_date_time üzerine sað týklayýp 
+Script Table As-Create To-New Query Editon Window yapýnca bize tablonun script getiriyor.
+
+USE [SampleSales]
+GO
+
+/****** Object:  Table [dbo].[t_date_time]    Script Date: 31.05.2022 14:34:46 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[t_date_time](
+	[A_time] [time](7) NULL,
+	[A_date] [date] NULL,
+	[A_smalldatetime] [smalldatetime] NULL,
+	[A_datetime] [datetime] NULL,
+	[A_datetime2] [datetime2](7) NULL,
+	[A_datetimeoffset] [datetimeoffset](7) NULL
+) ON [PRIMARY]
+GO
+
+*/
+
+SELECT *
+FROM t_date_time
 
 SELECT A_time, A_date, GETDATE(),
 		DATEDIFF(MINUTE, A_time, GETDATE()) AS minute_diff,
-		DATEDIFF(WEEK, A_date, '2011-11-30') AS week_diff
+		DATEDIFF(WEEK, A_date, '2021-11-30') AS week_diff
 FROM t_date_time
 
 
-SELECT DATEDIFF(DAY,shipped_date, order_date) DATE_DIFF, order_date,shipped_date  -- büyük olaný önce yazmamýz gerekir.
+SELECT *
 FROM sale.orders
 
-SELECT DATEDIFF(MONTH,shipped_date, order_date) DATE_DIFF, order_date,shipped_date  -- büyük olaný önce yazmamýz gerekir.
+SELECT DATEDIFF(DAY, shipped_date, order_date) DATE_DIFF, order_date, shipped_date  
+FROM sale.orders
+
+SELECT DATEDIFF(MONTH, order_date, shipped_date) DATE_DIFF, order_date,shipped_date  -- startdate olarak tarihi küçük olaný önce yazmamýz gerekir. Aksi takdirde sonuç eksi çýkar.
+FROM sale.orders
+
+SELECT DATEDIFF(WEEK, order_date, shipped_date) DATE_DIFF, order_date, shipped_date
 FROM sale.orders
 
 
 -- ABS mutlak deðeri alýyor.
 
-SELECT ABS(DATEDIFF(DAY,order_date, shipped_date)) DATE_DIFF, order_date,shipped_date  -- küçük olaný yani yeni olaný önce yazmamýz gerekir.
+SELECT ABS(DATEDIFF(DAY, order_date, shipped_date)) DATE_DIFF, order_date, shipped_date  -- küçük olaný yani yeni olaný önce yazmamýz gerekir.
 FROM sale.orders  
+
 
 ----DATEADD
 
-SELECT ORDER_DATE,
-		DATEADD(YEAR, 5, order_date)  --order date 5 yýl ekledik. Bunlar tabloda bir deðiþiklik yapmýyor.
+SELECT order_date,
+		DATEADD(YEAR, 5, order_date) new_date  --order_date 5 yýl ekledik. Bunlar tabloda bir deðiþiklik yapmýyor.
 FROM sale.orders
 
-SELECT ORDER_DATE,
-		DATEADD(DAY, 10, order_date)  --order date 10 gün ekledik.
+SELECT order_date,
+		DATEADD(DAY, 10, order_date) cargo_date --order date 10 gün ekledik.
 FROM sale.orders
 
 
 SELECT GETDATE(), DATEADD(HOUR, 5, GETDATE())  --þu andaki saate 5 saat ekledik.
 
---EOMONTH  ayýn son gününü hesap etmek için kullanýlýyor.
 
-SELECT EOMONTH(GETDATE()), EOMONTH(GETDATE(),2) --içinde bulunduðumuz ayýn son gününü bulduk. Bunun üzerine 2 ay ilave ettik.
+--EOMONTH:  ayýn son gününü hesap etmek için kullanýlýyor.
 
--- ISDATE
+SELECT EOMONTH(GETDATE()), EOMONTH(GETDATE(), 2) --içinde bulunduðumuz ayýn son gününün üzerine 2 ay ilave ettik.
+
+
+
+-- ISDATE: Girdiðimiz deðer date ise 1, deðilse 0 döndürür.
 
 SELECT ISDATE('2021-10-01')  --SONUC 1 ÝSE BU BÝR DATE TÝR. YOKSA 0 VERÝR. VARCHAR OLABÝLÝR. Bu tarih ise iþlem yap deðil ise tipini convert ile farklý birtipe çevirebiliriz.
 
 SELECT ISDATE('SELECT')
 
-SELECT ISDATE('2021-10-01')  -- 0 döndürür çünkü böyle bir date tipi yani 13 ay yok,
+SELECT ISDATE('2021-13-01')  -- 0 döndürür çünkü böyle bir date tipi yani 13 ay yok,
 
-----Orders tablosuna sipariþlerin teslimat hýzýyla ilgili bir alan ekleyin.
+
+--Question:
+--Orders tablosuna sipariþlerin teslimat hýzýyla ilgili bir alan ekleyin.
 
 --Bu alanda eðer teslimat gerçekleþmemiþse 'Not Shipped',
 
@@ -61,6 +149,10 @@ SELECT ISDATE('2021-10-01')  -- 0 döndürür çünkü böyle bir date tipi yani 13 ay 
 --2 günden geç teslim edilenler ise 'Slow'
 
 --olarak her bir sipariþi etiketleyin.
+
+SELECT *
+FROM sale.orders
+
 
 WITH T1 AS 
 (
@@ -78,16 +170,20 @@ SELECT order_date, shipped_date,
 		END AS order_label
 FROM T1
 
+
+
+
 --2.yöntem:
 
 select  order_id,  DATEDIFF ( day, order_date, shipped_date) DATE_DIFF,
 		CASE
-		WHEN shipped_date is null THEN 'Not Shipped'
-		WHEN DATEDIFF ( day, order_date, shipped_date) = 0 THEN 'Fast'
-		WHEN DATEDIFF ( day, order_date, shipped_date) <3 THEN 'Normal'
-		WHEN DATEDIFF ( day, order_date, shipped_date) > 2 THEN 'Slow'
+			WHEN shipped_date is null THEN 'Not Shipped'
+			WHEN DATEDIFF ( day, order_date, shipped_date) = 0 THEN 'Fast'
+			WHEN DATEDIFF ( day, order_date, shipped_date) <=2 THEN 'Normal'
+			WHEN DATEDIFF ( day, order_date, shipped_date) > 2 THEN 'Slow'
 		END AS Labels
 from sale.orders
+
 
 --3.yöntem:
 
@@ -99,6 +195,7 @@ case when shipped_date is null then 'Not Shipped'
 from sale.orders
 
 
+--Write a query returns orders that are shipped more than two days after the ordered date.
 -- 2 günden geç teslim edilen sipariþ bilgilerini getiriniz. 
 
 
@@ -125,18 +222,27 @@ WHERE T1.shipped_fast > 2
 SELECT *,
 		DATEDIFF(DAY, order_date, shipped_date) shipped_fast
 FROM sale.orders
-WHERE DATEDIFF(day,order_date,shipped_date) >2
+WHERE DATEDIFF(day,order_date,shipped_date) >2 --Burada yukarýdaki alias kullanamadýk çünkü select from-where-groupby-having-select-orderby þeklindedir sýralama.
 
--- önceki sonuca göre günlere göre daðýlýmýný gösterelim.
 
-SELECT *, DATENAME(weekday, order_date)
+--Write a query that returns the number distributions of the orders in the previous query result, according to the days of the week.
+--Yukarýdaki sipariþlerin haftanýn günlerine göre daðýlýmýný gösterelim.
+
+SELECT order_date, DATENAME(weekday, order_date) [weekday]
 FROM sale.orders
+WHERE DATEDIFF(DAY, order_date, shipped_date)>2
 
-SELECT CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 END AS MONDAY
+
+SELECT order_date,
+	CASE 
+		WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 
+		END MONDAY
 FROM sale.orders
-WHERE DATEDIFF(DAY,order_date,shipped_date) >2  -- BUNUN ÝLE SÝPARÝÞÝN VERÝLDÝÐÝ GÜNÜN PTESÝ OLANLARI ÝÇÝN YAZDIK.
+WHERE DATEDIFF(DAY,order_date,shipped_date) >2 
 
-SELECT SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 END) MONDAY,   --Buna göre 
+
+
+SELECT	SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 END) MONDAY, 
 		SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Tuesday' THEN 1 END) TUESDAY,
 		SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Wednesday' THEN 1 END) WEDNESDAY,
 		SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Thursday' THEN 1 END) THURSDAY,
@@ -144,11 +250,16 @@ SELECT SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 END) MONDAY,
 		SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Saturday' THEN 1 END) SATURDAY,
 		SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Sunday' THEN 1 END) SUNDAY
 FROM sale.orders
-WHERE DATEDIFF(DAY,order_date,shipped_date) >2  -- BUNUN ÝLE SÝPARÝÞÝN VERÝLDÝÐÝ GÜNÜN PTESÝ OLANLARI ÝÇÝN YAZDIK.
+WHERE DATEDIFF(DAY,order_date,shipped_date) >2
+
+
+
+--Aþaðýdaki ayrýmlara dikkat!!!!
 
 SELECT SUM(CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 ELSE 0 END) AS MONDAY -- SUM 1 OLANLARI TOPLUYOR.
 FROM sale.orders
 WHERE DATEDIFF(DAY,order_date,shipped_date) >2  
+
 
 SELECT COUNT(CASE WHEN DATENAME(WEEKDAY, order_date) ='Monday' THEN 1 ELSE 0 END) AS MONDAY -- COUNT ÝÇÝ DOLAN OLAN TÜM SATIRLARI SAYAR.BURADA SATIRLARA 1 VE 0 YAZDIK.
 FROM sale.orders
@@ -186,6 +297,7 @@ SELECT	DAY, COUNT(T4.DAY)
 FROM	T4
 GROUP BY DAY
 
+
 -- 3.yöntem:
 
 WITH T1 AS
@@ -201,7 +313,24 @@ GROUP BY day_name
 
 
 
---Question: Aylara göre state lerin sipariþ sayýlarýný döndürelim.
+--Question: 
+--Write a query that returns the order numbers of the states by months.
+--Aylara göre state lerin sipariþ sayýlarýný döndürelim.
+
+WITH T1 AS
+(
+SELECT	*, DATENAME(YEAR, order_date) years, DATEPART(MONTH, order_date) months
+FROM	sale.orders
+)
+
+SELECT state, years, months, count(order_id) num_of_orders
+FROM T1, sale.customer A
+WHERE T1.customer_id=A.customer_id
+GROUP BY months, state, years
+ORDER BY state, years, months
+
+
+
 
 -------String Functions
 

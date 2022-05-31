@@ -190,7 +190,7 @@ FROM sale.customer
 WHERE city='Monroe'  
 
 
-
+--Write a query that returns customers who first name is 'Carter' or last name is 'Carter'(dont use 'OR')
 -- ADI CARTER VEYA SOYADI CARTER OLAN MÜÞTERÝLERÝ LÝSTELEYÝN ANCAK OR KULLANMAYIN.
 
 SELECT first_name,last_name   -- 1.tablo
@@ -203,6 +203,8 @@ SELECT first_name,last_name   --2.tablo
 FROM sale.customer
 WHERE last_name='Carter'
 
+
+
 SELECT first_name,last_name, customer_id   -- 1.tablo
 FROM sale.customer
 WHERE first_name='Carter' 
@@ -213,8 +215,12 @@ SELECT first_name,last_name,customer_id   --2.tablo
 FROM sale.customer
 WHERE last_name='Carter'
 
+--NOT: Yukarýda Select içindeki columlerin sýrasý çok önemli. Aksi takdirde dtypes hatasý alabiliriz.
+
+
 --INTERSECT
 
+--Write a query that returns brands that have products for both 2018 and 2019.
 -- hem 2018 hem 2019 yýlýnda ürünü olan markalarý listeleyiniz.
 
 
@@ -230,6 +236,8 @@ FROM product.product A, product.brand B
 WHERE A.brand_id=B.brand_id
 AND A.model_year='2019'
 
+
+
 SELECT B.brand_name
 FROM product.product A, product.brand B
 WHERE A.brand_id=B.brand_id
@@ -242,6 +250,7 @@ FROM product.product A, product.brand B
 WHERE A.brand_id=B.brand_id
 AND A.model_year='2019'
 
+--Write a query that returns customers who have orders for both 2018,2019 and 2020.
 --Question: 2018,2019 VE 2020 yýllarýnýn tümünde sipariþi olan müþterilerin bilgilerini getiren bir liste.
 
 --Bu þekilde çözünce 3 kere customer tablosuna gittiðimizden dolayý bu alltakine göre daha uzun sürüyor.
@@ -266,6 +275,9 @@ WHERE A.customer_id=B.customer_id
 AND B.order_date BETWEEN '2020-01-01' AND '2020-12-31'
 
 
+--2.yöntem(Subquery and set operator)
+-- Bu çözümde ise sadece customer tablosuna bir kez gidiyoruz. 
+
 SELECT customer_id
 FROM sale.orders
 WHERE order_date BETWEEN '2018-01-01' AND '2018-12-31'
@@ -278,9 +290,8 @@ SELECT customer_id
 FROM sale.orders
 WHERE order_date BETWEEN '2020-01-01' AND '2020-12-31'
 
--- Bu çözümde ise sadece customer tablosuna bir kez gidiyoruz. 
 
-SELECT first_name, last_name
+SELECT first_name, last_name, customer_id
 FROM sale.customer
 WHERE customer_id IN( SELECT customer_id
 					FROM sale.orders
@@ -293,3 +304,21 @@ WHERE customer_id IN( SELECT customer_id
 					SELECT customer_id
 					FROM sale.orders
 					WHERE order_date BETWEEN '2020-01-01' AND '2020-12-31')
+
+--3.yöntem(CTE and set operator):
+
+WITH T1 AS
+( SELECT customer_id
+					FROM sale.orders
+					WHERE order_date BETWEEN '2018-01-01' AND '2018-12-31'
+					INTERSECT
+					SELECT customer_id
+					FROM sale.orders
+					WHERE order_date BETWEEN '2019-01-01' AND '2019-12-31'
+					INTERSECT
+					SELECT customer_id
+					FROM sale.orders
+					WHERE order_date BETWEEN '2020-01-01' AND '2020-12-31')
+SELECT first_name, last_name
+FROM sale.customer A, T1
+WHERE A.customer_id=T1.customer_id
