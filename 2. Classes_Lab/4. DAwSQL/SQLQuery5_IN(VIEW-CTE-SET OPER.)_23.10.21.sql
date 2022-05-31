@@ -1,6 +1,15 @@
 --23.10.21
+-- Exists/Not Exists
+
+--Write a query that returns State where 'Trek Remedy 9.8-2019' product is not ordered.
 --Trek Remedy 9.8 -2019 ürünün sipariþ verilmediði state/stateleri getiriniz.
+
 -- önce bu ürünün tablosundan sipariþ bilgileri tablosuna oradan sipariþin müþteri numarasýndan bunun verenlerin ülke bilgilerine gideceðim.
+
+SELECT *
+FROM product.product
+WHERE product.product_name='Trek Remedy 9.8 - 2019'
+
 
 SELECT A.product_id, A.product_name, B.product_id, B.order_id, C.order_id, C.customer_id, D. *
 FROM product.product A, sale.order_item B, sale.orders C, sale.customer D
@@ -9,6 +18,7 @@ AND B.order_id=C.order_id
 AND C.customer_id=D.customer_id
 AND A.product_name='Trek Remedy 9.8 - 2019'
 
+--Aþaðýda inner query bir deðer döndürdüðünden dolayý NOT EXISTS sonucu boþ döner.
 SELECT *
 FROM sale.customer X
 WHERE NOT EXISTS ( SELECT A.product_id, A.product_name, B.product_id, B.order_id, C.order_id, C.customer_id, D. *
@@ -18,7 +28,8 @@ WHERE NOT EXISTS ( SELECT A.product_id, A.product_name, B.product_id, B.order_id
 					AND C.customer_id=D.customer_id
 					AND A.product_name='Trek Remedy 9.8 - 2019'
 					)
-				
+					
+--NOT EXISTS in boþ dönmesini engellemek için inner join içine boþ dönecek bir query yazdýk.). Bu durumda bize bu ürünü içermeyen sipariþlerin bilgileri gelmiþ oldu.				
 SELECT *
 FROM sale.customer X
 WHERE NOT EXISTS ( SELECT A.product_id, A.product_name, B.product_id, B.order_id, C.order_id, C.customer_id, D. *
@@ -30,9 +41,10 @@ WHERE NOT EXISTS ( SELECT A.product_id, A.product_name, B.product_id, B.order_id
 					AND X.state=D.state
 					)
 
+
 --VÝEWS
 
--- 2019 yýlýnda üretilen ürünlerin bulunduðu bir NEW_PRODUCTS view oluþturun
+-- 2019 yýlýnda üretilen ürünlerin bulunduðu bir NEW_PRODUCTS view oluþturun.
 
 CREATE VIEW NEW_PRODUCTS AS
 SELECT A.*
@@ -42,37 +54,46 @@ WHERE A.model_year =  '2019'
 SELECT * 
 FROM NEW_PRODUCTS
 
+
 --CTE(Common Table Expression)
 
--- Sharyn Hopkins isimli müþterinin son sipariþinden önce sipariþ vermiþ 
---ve San Diego þehrinde ikamet eden müþterileri listeleyin.
+--List customers who have an order prior to the last order of a customer named Sharyn Hopkins and are residents of the city of San Diego.
+--Sharyn Hopkins isimli müþterinin son sipariþinden önce sipariþ vermiþ ve San Diego þehrinde ikamet eden müþterileri listeleyin.
 
 SELECT *
 FROM sale.customer
 
 -- önce Sharyn Hopkins isimli müþterinin son sipariþ tarihini bulduk. Order_id büyük olan veya order_date yeni olan
 
-SELECT TOP 1 A.order_date last_purchase    -- max(order_date) bana buradan tarih almam lazým.
-FROM sale.customer B, sale.orders A   -- Burada bir join yapmýþ olduk.
+SELECT *
+FROM sale.customer A, sale.orders B
 WHERE A.customer_id=B.customer_id
-AND B.first_name='Sharyn' 
-AND B.last_name='Hopkins'
-ORDER BY order_date DESC
+AND A.first_name='Sharyn'
+AND A.last_name='Hopkins'
+
+
+SELECT max(order_date) last_purchase    -- SELECT TOP 1 B.order_date last_purchase  kullanabiliriz.
+FROM sale.customer A, sale.orders B   -- Burada bir join yapmýþ olduk.
+WHERE A.customer_id=B.customer_id
+AND A.first_name='Sharyn' 
+AND A.last_name='Hopkins'
+--ORDER BY order_date DESC
+
 
 
 WITH T1 AS  --Aþaðýdaki query bir sonraki query de yani bir üst query de kullanacaðým. Buna T1 dedim.
-(SELECT TOP 1 A.order_date last_purchase    -- max(order_date) bana buradan tarih almam lazým.
-FROM sale.customer B, sale.orders A   -- Burada bir join yapmýþ olduk.
+(SELECT max(order_date) last_purchase     -- max(order_date) bana buradan tarih almam lazým.
+FROM sale.customer A, sale.orders B   -- Burada bir join yapmýþ olduk.
 WHERE A.customer_id=B.customer_id
-AND B.first_name='Sharyn' 
-AND B.last_name='Hopkins'
-ORDER BY order_date DESC
+AND A.first_name='Sharyn' 
+AND A.last_name='Hopkins'
 )
 SELECT DISTINCT A.order_date, A.order_id, B.customer_id, B.first_name, B.last_name, B.city
 FROM sale.orders A, sale.customer B, T1
 WHERE A.customer_id=B.customer_id
-AND A.order_date < T1.last_purchase   --order_date nin T1 den gelen order_date büyük olanlarý aldýk.
+AND A.order_date < T1.last_purchase   --order_date nin T1 den gelen order_date küçük olanlarý aldýk.
 AND B.city='San Diego' 
+
 
 --2.çözüm
 
@@ -89,6 +110,8 @@ where b.order_date < (select * from last_cust) and a.city = 'San Diego'
 
 
 --Question:
+
+--List all customers who orders on the same dates as Abby Parks.
 --Abby	Parks isimli müþterinin alýþveriþ yaptýðý tarihte/tarihlerde alýþveriþ yapan tüm müþterileri listeleyin.
 --Müþteri adý, soyadý ve sipariþ tarihi bilgilerini listeleyin.
 
@@ -105,6 +128,8 @@ FROM sale.orders A, sale.customer B, T1
 WHERE A.customer_id=B.customer_id
 AND A.order_date IN (T1.purchase)   --order_date, T1 den gelen order_dateleri içerecek. = kullanýlabilir. 
 
+
+
 --2.çözüm:
 
 with new_query as 
@@ -119,18 +144,22 @@ where b.order_date in (select * from new_query)
 
 
 
+--Recursive CTE:
+
 WITH T1 AS   -- AS unutma
-(SELECT 1 AS NUM  --ilk olarak 1 atadýk. Bu birinci query
- UNION ALL     --bunun ile iki query birleþtiriyoruz.
- SELECT NUM+1   -- Bu ikinci query
+(SELECT 1 AS NUM  --Ýlk olarak 1 atadýk. Bu birinci query
+ UNION ALL     --Bunun ile iki query birleþtiriyoruz.
+ SELECT NUM+1   -- Bu ikinci query. Kaçar kaçar artýrmak istiyorsak.
  FROM T1
  WHERE NUM < 9   --Iterasyonu sonlandýracak rakamý yazmamýz lazým yoksa sonsuza kadar gider.
 )
 SELECT *
 FROM T1
 
+
 --SET OPERATORS
 
+--List Customer's last names in Sacramento and Monroe
 --Sacramento þehrindeki müþteriler ile Monroe þehrindeki müþterilerin soyisimlerini listeleyin.
 
 
@@ -145,9 +174,10 @@ UNION ALL          -- iki tabloyu birleþtirdik. Ayný olanlarý getirir.
 SELECT last_name   --2.tablo
 FROM sale.customer
 WHERE city='Monroe'
-ORDER BY last_name   -- sýralamayý en sona yazdýk.
+ORDER BY last_name   -- sýralamayý en sona manuel olarak yazdýk.
 
 --UNION
+--Union All dan farklý olarak ayný olanlarý tek satýr olarak getirdi ve sýralamayý kendi yaptý.
 
 SELECT last_name   -- 1.tablo
 FROM sale.customer
@@ -158,6 +188,8 @@ UNION           -- iki tabloyu birleþtirdik. Ayný olanlarý getirmedi. Sýralamayý
 SELECT last_name   --2.tablo
 FROM sale.customer
 WHERE city='Monroe'  
+
+
 
 -- ADI CARTER VEYA SOYADI CARTER OLAN MÜÞTERÝLERÝ LÝSTELEYÝN ANCAK OR KULLANMAYIN.
 
