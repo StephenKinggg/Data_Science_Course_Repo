@@ -232,6 +232,10 @@ FROM product.product
 SELECT DISTINCT category_id, MIN(list_price) OVER(PARTITION BY category_id)
 FROM product.product
 
+--Write a query that returns how many products are in each order?
+
+--How many different bikes are in each brand in each category?
+
 
 ---Window Frames
 
@@ -246,3 +250,28 @@ SELECT	category_id, product_id,
 		COUNT(*) OVER(PARTITION BY category_id  ROWS BETWEEN 2 PRECEDING AND 3 FOLLOWING) specified_columns_2
 FROM	product.product
 ORDER BY category_id, product_id
+
+
+
+--First value:
+
+SELECT B.customer_id, A.first_name, B.order_date,
+	first_value(order_date) OVER (ORDER BY B.order_date DESC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) last_date
+FROM sale.customer A, sale.orders B
+WHERE A.customer_id=B.customer_id
+
+
+
+--Last Value:
+--WF farkýna dikkat edelim.
+
+SELECT B.customer_id, A.first_name, B.order_date,
+	last_value(order_date) OVER (ORDER BY B.order_date DESC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) last_date
+FROM sale.customer A, sale.orders B
+WHERE A.customer_id=B.customer_id
+
+
+SELECT B.customer_id, A.first_name, B.order_date,
+	last_value(order_date) OVER (ORDER BY B.order_date DESC ROWS BETWEEN CURRENT ROW AND  1 FOLLOWING) last_date
+FROM sale.customer A, sale.orders B
+WHERE A.customer_id=B.customer_id
