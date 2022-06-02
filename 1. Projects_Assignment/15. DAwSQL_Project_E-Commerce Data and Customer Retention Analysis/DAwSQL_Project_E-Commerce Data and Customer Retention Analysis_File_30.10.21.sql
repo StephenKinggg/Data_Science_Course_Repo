@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS combined_table
 
 CREATE TABLE combined_table AS
 
-SELECT * INTO combined_table
+SELECT * INTO combined_table --Aþaðýdaki tablo sonucunu bu tabloya kopyalamýþ oluyoruz.
 FROM (SELECT E.Ord_id,E.Cust_id,E.Ship_id,E.Prod_id, 
 	   A.Order_Date,A.Order_Priority,
 	   B.Customer_Name,B.Customer_Segment,B.Province,B.Region,
@@ -47,7 +47,12 @@ SELECT A.Cust_id, A.Customer_Name, T1.count_of_order
 FROM cust_dimen A, T1
 WHERE T1.Cust_id=A.Cust_id
 
+--2.YÖNTEM:
 
+SELECT	TOP(3)cust_id, COUNT (Ord_id) count_of_orders
+FROM	combined_table
+GROUP BY Cust_id
+ORDER BY count_of_orders desc
 
 --/////////////////////////////////
 
@@ -94,6 +99,7 @@ FROM combined_table A
 WHERE DATENAME(MONTH, A.Order_Date)='January'
 AND DATENAME(YEAR, A.Order_Date)=2011
 
+
 SELECT COUNT(DISTINCT(A.Cust_id))  --Bunlarýn sayýsýný bulduk.
 FROM combined_table A
 WHERE DATENAME(MONTH, A.Order_Date)='January'
@@ -110,6 +116,20 @@ AND A.Cust_id IN (SELECT DISTINCT(A.Cust_id)
 GROUP BY DATEPART(MONTH, A.Order_Date)
 
 
+--2.YÖNTEM:
+
+SELECT MONTH(order_date) [MONTH], COUNT(DISTINCT cust_id) MONTHLY_NUM_OF_CUST
+FROM	Combined_table A
+WHERE EXISTS
+			(
+				SELECT  Cust_id
+				FROM	combined_table B
+				WHERE	YEAR(Order_Date) = 2011
+				AND		MONTH (Order_Date) = 1
+				AND		A.Cust_id = B.Cust_id
+			)
+AND	YEAR (Order_Date) = 2011
+GROUP BY MONTH(order_date)
 
 --////////////////////////////////////////////
 
@@ -117,6 +137,17 @@ GROUP BY DATEPART(MONTH, A.Order_Date)
 --6. write a query to return for each user the time elapsed between the first purchasing and the third purchasing, 
 --in ascending order by Customer ID
 --Use "MIN" with Window Functions
+
+/*Aþaðýdaki gibi 1000 numaralý müþterinin bilgilerine baktýk. Ancak order_date göre ayný tarihte farklý sipariþler var.
+Eðer order_date göre alýrsak bu durumda 3.sipariþ bize yanlýþ gelir. 
+Bunu önlemek için önce customer_id ile group by yapýp sonra order_date göre 
+ayný tarihli sipariþlere dense_rank ile sýralamýz gerekir.
+*/
+SELECT * --1000 numaralý müþterinin bilgilerine baktýk.
+FROM combined_table
+WHERE cust_id='Cust_1000'
+ORDER BY order_date
+
 
 
 WITH T1 AS
@@ -132,6 +163,23 @@ FROM combined_table A, T1
 WHERE A.Cust_id = T1.Cust_id
 AND T1.DENSE_NUMBER=3
 ORDER BY A.Cust_id
+
+--2.YÖNTEM:
+
+SELECT DISTINCT 
+		cust_id,
+		order_date,
+		dense_number,
+		FIRST_ORDER_DATE,
+		DATEDIFF(day, FIRST_ORDER_DATE, order_date) DAYS_ELAPSED
+FROM	
+		(
+		SELECT	Cust_id, ord_id, order_DATE,
+				MIN (Order_Date) OVER (PARTITION BY cust_id) FIRST_ORDER_DATE,
+				DENSE_RANK () OVER (PARTITION BY cust_id ORDER BY Order_date) dense_number
+		FROM	combined_table
+		) A
+WHERE	dense_number = 3
 
 
 
@@ -165,6 +213,24 @@ WHERE A.Cust_id=T1.Cust_id
 GROUP BY A.Cust_id
 
 
+--2.YÖNTEM:
+
+WITH T1 AS
+(
+SELECT	Cust_id,
+		SUM (CASE WHEN Prod_id = 'Prod_11' THEN Order_Quantity ELSE 0 END) P11,
+		SUM (CASE WHEN Prod_id = 'Prod_14' THEN Order_Quantity ELSE 0 END) P14,
+		SUM (Order_Quantity) TOTAL_PROD
+FROM	combined_table
+GROUP BY Cust_id
+HAVING
+		SUM (CASE WHEN Prod_id = 'Prod_11' THEN Order_Quantity ELSE 0 END) >= 1 AND
+		SUM (CASE WHEN Prod_id = 'Prod_14' THEN Order_Quantity ELSE 0 END) >= 1
+)
+SELECT	Cust_id, P11, P14, TOTAL_PROD,
+		CAST (1.0*P11/TOTAL_PROD AS NUMERIC (3,2)) AS RATIO_P11,
+		CAST (1.0*P14/TOTAL_PROD AS NUMERIC (3,2)) AS RATIO_P14
+FROM T1
 
 --/////////////////
 
@@ -185,6 +251,14 @@ SELECT DISTINCT cust_id, [Year], [Month]
 FROM Cust_Log
 
 
+--2.YÖNTEM:
+
+CREATE VIEW Cust_Log AS
+SELECT Cust_id, YEAR(Order_Date) ORD_YEAR, MONTH(Order_Date) ORD_MONTH
+FROM	combined_table
+
+ORDER BY 1,2,3
+
 --//////////////////////////////////
 
 
@@ -198,12 +272,22 @@ ORDER BY Cust_id, [YEAR]
 
 
 
-CREATE VIEW Monthly_Visit AS
+CREATE VIEW Monthly_Visit AS --Tabloyu view olarak kaydettik.
 SELECT DISTINCT Cust_id, [Year], [Month],
 		COUNT(*) OVER(PARTITION BY Cust_id,[Year],[Month] ORDER BY Cust_id,[Year],[Month]) AS Num_of_Log  --COUNT([Month]) ile COUNT(*) burada ayný sonucu veriyor.
 FROM Cust_Log
 
+SELECT *
+FROM Monthly_Visit
 
+--2.YÖNTEM:
+
+CREATE VIEW CNT_CUSTOMER_LOGS AS
+SELECT DISTINCT Cust_id, YEAR(Order_Date) ORD_YEAR, MONTH(Order_Date) ORD_MONTH, COUNT (*) OVER (PARTITION BY cust_id) CNT_LOG
+FROM	combined_table
+
+SELECT *
+FROM CNT_CUSTOMER_LOGS
 
 --//////////////////////////////////
 
@@ -217,6 +301,7 @@ FROM Cust_Log
 SELECT *
 FROM Monthly_Visit
 ORDER BY 1,2,3,4
+
 ---
 
 SELECT  *,
@@ -227,12 +312,15 @@ ORDER BY 1,2,3,4
 
 CREATE VIEW Next_Month_Visit AS
 SELECT *, 
-		LEAD(Current_Month,1) OVER(PARTITION BY Cust_id ORDER BY Current_Month)  Next_Month_Visit
+		LEAD(Current_Month,1) OVER(PARTITION BY Cust_id ORDER BY Current_Month)  Next_Month_Visit --Herbir müþterinin sipariþlerini kendi içinde deðerlendirdik.
 FROM (
 		SELECT *,
 				DENSE_RANK() OVER(ORDER BY [Year],[Month] ASC) AS Current_Month
 		FROM Monthly_Visit
 ) A
+
+
+
 
 --SELECT *, DENSE_RANK() OVER (PARTITION BY ORD_MONTH ORDER BY ORD_MONTH) FROM CNT_CUSTOMER_LOGS 
 --BURADA ROW_NUMBER KULLANILMAZ.
@@ -252,6 +340,25 @@ FROM Next_Month_Visit
 SELECT * 
 FROM Time_Gaps
 
+
+--2.YÖNTEM:
+
+CREATE VIEW VISITS AS 
+SELECT *, LEAD(CURRENT_MONTH, 1) OVER (PARTITION BY cust_id ORDER BY CURRENT_MONTH) NEXT_VISIT_MONTH
+FROM(SELECT *, DENSE_RANK() OVER (ORDER BY ORD_YEAR, ORD_MONTH) CURRENT_MONTH
+	FROM	CNT_CUSTOMER_LOGS 
+	) A
+
+SELECT * FROM VISITS
+
+
+CREATE VIEW TIME_GAPS AS
+SELECT *, NEXT_VISIT_MONTH - CURRENT_MONTH TIME_GAPS
+FROM VISITS
+
+
+SELECT * FROM TIME_GAPS
+
 --/////////////////////////////////////////
 
 
@@ -261,17 +368,42 @@ FROM Time_Gaps
 --	Labeled as regular if the customer has made a purchase every month.
 --  Etc.
 
+
+SELECT cust_id, AVG(Time_Gap) Avg_Time_Gap
+FROM Time_Gaps
+GROUP BY cust_id
+
+--DROP VIEW IF EXISTS Label_Gap
+
 CREATE VIEW Label_Gap AS
-SELECT DISTINCT Cust_id,
+SELECT Cust_id,
 		AVG(Time_Gap) OVER(PARTITION BY Cust_id) Avg_Time_Gap,
-		CASE WHEN AVG(Time_Gap) OVER(PARTITION BY Cust_id) > 0 THEN 'Irregular' ELSE 'Churn' END  Cust_Label
+		CASE WHEN AVG(Time_Gap) OVER(PARTITION BY Cust_id) IS NULL THEN 'CHURN'
+			 WHEN AVG(Time_Gap) OVER(PARTITION BY Cust_id) = 1 THEN 'REGULAR'
+			 WHEN AVG(Time_Gap) OVER(PARTITION BY Cust_id) > 1 THEN 'IRREGULAR'
+		  	 ELSE 'UNKNOWN'
+		END  Cust_Label
 FROM Time_Gaps
 
 
 SELECT *
 FROM Label_Gap
 
+--2.YÖNTEM:
 
+WITH T1 AS
+(
+	SELECT cust_id, AVG(TIME_GAPS) AVG_TIME_GAP
+	FROM TIME_GAPS
+	GROUP BY cust_id
+) 
+SELECT cust_id,
+		CASE WHEN AVG_TIME_GAP IS NULL THEN 'CHURN'
+				WHEN AVG_TIME_GAP = 1 THEN 'REGULAR'
+				WHEN AVG_TIME_GAP > 1 THEN 'IRREGULAR'
+				ELSE 'UNKNOWN'
+		END AS CUST_SEGMENT
+FROM	T1
 
 --/////////////////////////////////////
 
@@ -287,9 +419,13 @@ FROM Label_Gap
 --1. Find the number of customers retained month-wise. (You can use time gaps)
 --Use Time Gaps
 
-/**Burada önemli husus birbirini takip eden aylarda gelen müþterileri bulmak. 
-Yani 2.ayda gelen müþterilerden kaç tanesi 1.ayda gelenlerden oluþuyor. Amaç bunu bulmak. Bunu sýrasýyla 2-3, 3-4 gibi aylar için yapmamýz gerekir.
-Bu kapsamda aþaðýdaki iþlem ile ardýþýk iki ayýn kesiþim iþlemini yapýyoruz. */
+/**Burada birbirini takip eden iki ayda gelen müþteri retention ratelarini hesaplayacaðýz.
+Burada önemli husus birbirini takip eden aylarda gelen müþterileri bulmak. 
+Yani 2.ayda gelen müþterilerden kaç tanesi 1.ayda gelenlerden oluþuyor. Amaç bunu bulmak. 
+Bunu sýrasýyla 2-3, 3-4 gibi aylar için yapmamýz gerekir.
+Bu kapsamda aþaðýdaki iþlem ile ardýþýk iki ayýn kesiþim iþlemini yapýyoruz. Bunu a olarak kabul edelim.
+Daha sonra 2. ayda gelenleri b olarak kabul edelim.
+a/b bulmak */
 
 CREATE VIEW Retention_Month_Val AS
 SELECT * ,
@@ -299,6 +435,26 @@ FROM(SELECT *
 	WHERE Time_Gap=1) A
     ORDER BY Cust_id
 
+--2.YÖNTEM:
+
+CREATE VIEW CNT_RETAINED_CUST AS
+SELECT *, COUNT(cust_id) OVER (PARTITION BY NEXT_VISIT_MONTH) CNT_RETAINED_CUST
+FROM TIME_GAPS
+WHERE TIME_GAPS = 1
+
+
+SELECT * FROM CNT_RETAINED_CUST
+
+
+
+CREATE VIEW CNT_TOTAL_CUST AS
+SELECT *, COUNT (cust_id) OVER (PARTITION BY CURRENT_MONTH) CNT_TOTAL_CUST
+FROM TIME_GAPS
+WHERE CURRENT_MONTH > 1
+
+
+
+SELECT * FROM CNT_TOTAL_CUST WHERE TIME_GAPS = 1
 
 
 --//////////////////////
