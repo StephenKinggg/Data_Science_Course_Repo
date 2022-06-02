@@ -427,13 +427,20 @@ Bu kapsamda aþaðýdaki iþlem ile ardýþýk iki ayýn kesiþim iþlemini yapýyoruz. Bun
 Daha sonra 2. ayda gelenleri b olarak kabul edelim.
 a/b bulmak */
 
+SELECT *
+FROM Time_Gaps --Burada bizim için önemli olan Time_Gaps=1 olanlardýr. Yani ardýþýk aylar.
+WHERE Time_Gap=1
+ORDER BY Next_Month_Visit
+
+--Ýlk olarak içindeki ay ile sonraki ayýn kesiþim kümesini yani bir önceki aydan gelen müþteri sayýsýný bulduk.
+
 CREATE VIEW Retention_Month_Val AS
 SELECT * ,
 	COUNT(Cust_id) OVER(PARTITION BY [Year],Current_Month,Next_Month_Visit) Retention_Month
 FROM(SELECT *
 	FROM Time_Gaps
 	WHERE Time_Gap=1) A
-    ORDER BY Cust_id
+ORDER BY Cust_id
 
 --2.YÖNTEM:
 
@@ -445,8 +452,12 @@ WHERE TIME_GAPS = 1
 
 SELECT * FROM CNT_RETAINED_CUST
 
+/*Burada gelen her ay için gelen toplam müþteri sayýsýný bulduk. Mesela 1.ay için 138. Kesiþim 11 den çýkarýnca 127 kaldý.
+2. ay için 101. kesiþimi çýkarýnca 90 kaldý. Burada hesaplamak istediðimiz 11/101 dir.
+*/
 
 
+--1.ay öncesi gelen müþteri sayýsýný bilmediðimden dolayý 1.ayý çýkarýyorum.
 CREATE VIEW CNT_TOTAL_CUST AS
 SELECT *, COUNT (cust_id) OVER (PARTITION BY CURRENT_MONTH) CNT_TOTAL_CUST
 FROM TIME_GAPS
@@ -509,7 +520,18 @@ FROM Retention_Rate_Month
 WHERE Retention_Rate IS NOT NULL
 
 
+--2.YÖNTEM:
 
+WITH T1 AS
+(
+	SELECT	DISTINCT A.Cust_id, A.NEXT_VISIT_MONTH, A.CNT_RETAINED_CUST, B.CNT_TOTAL_CUST
+	FROM	CNT_RETAINED_CUST A, CNT_TOTAL_CUST B
+	WHERE	B.CURRENT_MONTH = A. NEXT_VISIT_MONTH
+	AND		B.TIME_GAPS = 1
+) 
+SELECT DISTINCT NEXT_VISIT_MONTH, CAST (1.0* CNT_RETAINED_CUST/CNT_TOTAL_CUST AS NUMERIC (3,2)) AS  MONTHLY_WISE_RETENTION_RATE
+FROM T1
+ORDER BY 1
 
 
 ---///////////////////////////////////
