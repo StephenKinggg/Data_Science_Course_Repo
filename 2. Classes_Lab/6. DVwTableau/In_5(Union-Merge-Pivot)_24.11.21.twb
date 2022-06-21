@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 
-<!-- build 20213.21.1018.0949                               -->
-<workbook original-version='18.1' source-build='2021.3.3 (20213.21.1018.0949)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+<!-- build 20213.22.0514.0325                               -->
+<workbook original-version='18.1' source-build='2021.3.12 (20213.22.0514.0325)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <document-format-change-manifest>
     <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
     <_.fcp.MarkAnimation.true...MarkAnimation />
@@ -21,11 +21,11 @@
     </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
   </_.fcp.AnimationOnByDefault.false...style>
   <datasources>
-    <datasource caption='Exam Scores A1:F6++ (Exam_Scores)' inline='true' name='federated.1bqnd1i093djmr101nxh61witl8m' version='18.1'>
+    <datasource caption='Exam Scores (Exam_Scores)' inline='true' name='federated.17pf4a104lbx1b17e1pyj1km4agw' version='18.1'>
       <connection class='federated'>
         <named-connections>
-          <named-connection caption='Exam_Scores' name='excel-direct.0jgui660iytzij14wxl6u1qrimiq'>
-            <connection class='excel-direct' cleaning='yes' compat='no' dataRefreshTime='' filename='C:/Users/HP/DATA_SCIENCE_COURSE_NOTES/2. Classes_Lab/6. DVwTableau/Tableau_Data/Union/Exam_Scores.xlsx' interpretationMode='1' password='' server='' validate='no' />
+          <named-connection caption='Exam_Scores' name='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j'>
+            <connection class='excel-direct' cleaning='yes' compat='no' dataRefreshTime='' filename='C:/Users/HP/Data_Science_Course_Repo/2. Classes_Lab/6. DVwTableau/Tableau_Data/Union/Exam_Scores.xlsx' interpretationMode='1' password='' server='' validate='no' />
           </named-connection>
         </named-connections>
         <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='Pivot' type='pivot'>
@@ -66,7 +66,7 @@
                 <column datatype='string' name='Sheet' />
                 <column datatype='string' name='Table Name' />
               </columns>
-              <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
+              <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
                 <columns gridOrigin='A1:F6:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                   <column datatype='integer' name='Student Number' ordinal='0' />
                   <column datatype='string' name='Gender' ordinal='1' />
@@ -76,7 +76,7 @@
                   <column datatype='integer' name='History' ordinal='5' />
                 </columns>
               </relation>
-              <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
+              <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
                 <columns gridOrigin='A10:F14:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                   <column datatype='integer' name='No' ordinal='0' />
                   <column datatype='string' name='Gender' ordinal='1' />
@@ -127,7 +127,7 @@
                 <column datatype='string' name='Sheet' />
                 <column datatype='string' name='Table Name' />
               </columns>
-              <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
+              <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
                 <columns gridOrigin='A1:F6:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                   <column datatype='integer' name='Student Number' ordinal='0' />
                   <column datatype='string' name='Gender' ordinal='1' />
@@ -137,7 +137,7 @@
                   <column datatype='integer' name='History' ordinal='5' />
                 </columns>
               </relation>
-              <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
+              <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
                 <columns gridOrigin='A10:F14:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                   <column datatype='integer' name='No' ordinal='0' />
                   <column datatype='string' name='Gender' ordinal='1' />
@@ -169,7 +169,7 @@
             <local-type>integer</local-type>
             <aggregation>Sum</aggregation>
             <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Gender</remote-name>
@@ -182,7 +182,7 @@
             <aggregation>Count</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LTR_RTR_S2' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>School Name</remote-name>
@@ -195,7 +195,7 @@
             <aggregation>Count</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LTR_RTR_S2' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Sheet</remote-name>
@@ -208,7 +208,7 @@
             <aggregation>Count</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LTR_RTR_S2' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Table Name</remote-name>
@@ -221,7 +221,7 @@
             <aggregation>Count</aggregation>
             <contains-null>true</contains-null>
             <collation flag='1' name='LTR_RTR_S2' />
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Pivot Field Names</remote-name>
@@ -233,7 +233,7 @@
             <local-type>string</local-type>
             <aggregation>Count</aggregation>
             <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
           <metadata-record class='column'>
             <remote-name>Pivot Field Values</remote-name>
@@ -245,12 +245,14 @@
             <local-type>integer</local-type>
             <aggregation>Sum</aggregation>
             <contains-null>true</contains-null>
-            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
           </metadata-record>
         </metadata-records>
       </connection>
       <aliases enabled='yes' />
-      <_.fcp.ObjectModelTableType.true...column caption='Exam Scores A1:F6' datatype='table' name='[__tableau_internal_object_id__].[Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C]' role='measure' type='quantitative' />
+      <column caption='Lessons' datatype='string' name='[Pivot Field Names]' role='dimension' type='nominal' />
+      <column caption='Scores' datatype='integer' name='[Pivot Field Values]' role='measure' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='Exam Scores A1:F6' datatype='table' name='[__tableau_internal_object_id__].[Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB]' role='measure' type='quantitative' />
       <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
       <semantic-values>
         <semantic-value key='[Country].[Name]' value='&quot;Turkey&quot;' />
@@ -258,7 +260,7 @@
       <date-options start-of-week='monday' />
       <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
         <objects>
-          <object caption='Exam Scores A1:F6' id='Exam Scores$A01:F06_088B85CCD17E400F9BB328C31A33EA1C'>
+          <object caption='Exam Scores A1:F6' id='Exam Scores$A01:F06_B7BC3733ED454222B561E3A50C7C84EB'>
             <properties context=''>
               <relation name='Pivot' type='pivot'>
                 <columns>
@@ -298,7 +300,7 @@
                       <column datatype='string' name='Sheet' />
                       <column datatype='string' name='Table Name' />
                     </columns>
-                    <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
+                    <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A1:F6' table='[Exam Scores$A01:F06]' type='table'>
                       <columns gridOrigin='A1:F6:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                         <column datatype='integer' name='Student Number' ordinal='0' />
                         <column datatype='string' name='Gender' ordinal='1' />
@@ -308,7 +310,7 @@
                         <column datatype='integer' name='History' ordinal='5' />
                       </columns>
                     </relation>
-                    <relation connection='excel-direct.0jgui660iytzij14wxl6u1qrimiq' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
+                    <relation connection='excel-direct.0qng1bt1p4huz11ewxpkj0xvnl5j' name='Exam Scores A10:F14' table='[Exam Scores$A10:F14]' type='table'>
                       <columns gridOrigin='A10:F14:no:A1:F16:1' lost='0' outcome='1' processed='12'>
                         <column datatype='integer' name='No' ordinal='0' />
                         <column datatype='string' name='Gender' ordinal='1' />
@@ -331,7 +333,16 @@
     <worksheet name='Sheet 1'>
       <table>
         <view>
-          <datasources />
+          <datasources>
+            <datasource caption='Exam Scores (Exam_Scores)' name='federated.17pf4a104lbx1b17e1pyj1km4agw' />
+          </datasources>
+          <datasource-dependencies datasource='federated.17pf4a104lbx1b17e1pyj1km4agw'>
+            <column datatype='string' name='[Gender]' role='dimension' type='nominal' />
+            <column caption='Scores' datatype='integer' name='[Pivot Field Values]' role='measure' type='quantitative' />
+            <column-instance column='[Pivot Field Values]' derivation='Avg' name='[avg:Pivot Field Values:ok]' pivot='key' type='ordinal' />
+            <column-instance column='[Pivot Field Values]' derivation='Avg' name='[avg:Pivot Field Values:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Gender]' derivation='None' name='[none:Gender:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
           <aggregation value='true' />
         </view>
         <style />
@@ -341,12 +352,20 @@
               <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
+            <encodings>
+              <text column='[federated.17pf4a104lbx1b17e1pyj1km4agw].[avg:Pivot Field Values:qk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+              </style-rule>
+            </style>
           </pane>
         </panes>
-        <rows />
+        <rows>([federated.17pf4a104lbx1b17e1pyj1km4agw].[none:Gender:nk] / [federated.17pf4a104lbx1b17e1pyj1km4agw].[avg:Pivot Field Values:ok])</rows>
         <cols />
       </table>
-      <simple-id uuid='{EC991D72-8F5B-4BAF-9610-0E822DDD723F}' />
+      <simple-id uuid='{9E4E7CF2-C0E9-4D3F-9C28-414B79599288}' />
     </worksheet>
   </worksheets>
   <windows source-height='30'>
@@ -371,23 +390,82 @@
           </strip>
         </edge>
       </cards>
-      <simple-id uuid='{70E96C1C-4C5B-41D1-B4A0-61841D207087}' />
+      <simple-id uuid='{C331CAE4-24EA-4813-B401-1CDF6D7D21C7}' />
     </window>
   </windows>
   <thumbnails>
-    <thumbnail height='192' name='Sheet 1' width='192'>
-      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
-      AAACFUlEQVR4nO3TMQEAIAzAMMC/5yFjRxMFfXpnZg5Eve0A2GQA0gxAmgFIMwBpBiDNAKQZ
-      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
-      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQD
-      kGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBp
-      BiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA
-      0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDN
-      AKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxA
-      mgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZ
-      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
-      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKR9Y+0F
-      fBUOM1sAAAAASUVORK5CYII=
+    <thumbnail height='64' name='Sheet 1' width='192'>
+      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
+      NpUAAAAASUVORK5CYII=
     </thumbnail>
   </thumbnails>
 </workbook>
